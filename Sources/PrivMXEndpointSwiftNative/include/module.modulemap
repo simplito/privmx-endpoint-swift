@@ -1,0 +1,10 @@
+module PrivMXEndpointSwiftNative {
+	header "PrivMXUtils.hpp"
+	header "NativeCoreApiWrapper.hpp"
+	header "NativeCryptoApiWrapper.hpp"
+	header "NativeStoreApiWrapper.hpp"
+	header "NativeThreadApiWrapper.hpp"
+	
+    requires cplusplus17
+    export *
+}
