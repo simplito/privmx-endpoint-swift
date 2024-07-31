@@ -3,14 +3,14 @@
 PrivMX Endpoint Swift is a minimal wrapper library bringing C++ error handling to Swift for our PrivMX Platform.
 
 This library consists of two Targets:
- - `PrivMXEndpointSwiftNative`, which provides exception handling of C++ library.
- - `PrivMXEndpointSwift`, which provides Swift side of exception handling (Swift classes and throwing methods).  
+ - `PrivMXEndpointSwiftNative`, which provides exception handling of the C++ library;
+ - `PrivMXEndpointSwift`, which provides the Swift side of exception handling (Swift classes and throwing methods).  
 —————————————————
 
 ## Installation
-To use this package simply add it add it as a Dependency in your Xcode project or in your `Package.swift` file.
+To use this package add it as a Dependency in your Xcode project or your `Package.swift` file.
 
-You can do so by selecting `Add Package Dependencies...` in Project navigator context menu then pasting `https://github.com/simplito/privmx-endpoint-swift` in `Search or Enter Package URL` field.
+You can do so by selecting `Add Package Dependencies...` in the Project navigator context menu then pasting `https://github.com/simplito/privmx-endpoint-swift` in `Search or Enter Package URL` field.
 
 When you want to add it to a Swift Package of yours, add
 ```swift
@@ -24,7 +24,7 @@ To `dependencies` array in `Package.swift`.
 
 ## Usage
 
-For information about PrivMX Platform and documentation, go [HERE](https://docs.privmx.cloud).  
+Go to our [documentation](https://docs.privmx.cloud/) to learn more about PrivMX.
 —————————————————
 
 ### Copyright © 2024 Simplito sp. z o.o.
