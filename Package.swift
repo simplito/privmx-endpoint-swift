@@ -44,7 +44,7 @@ let package = Package(
 			checksum: "8205e94228823c901c709515cd765420e08a259e8e1145679da7f51c367667c7"),
 		.binaryTarget(
 			name:"PSON",
-			url: "https://builds.simplito.com/swift/main/pson/pson.xcframework.zip",
+			url: "https://builds.simplito.com/swift/main/pson/1.0.2/pson.xcframework.zip",
 			checksum: "1f4d9abc00c195c0bf3259eac07133188c3f612dc40690ae5e88774e7a74b88e"),
 		.binaryTarget(
 			name:"OpenSSL",
