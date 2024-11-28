@@ -38,6 +38,38 @@ public class Connection{
 	internal var api: privmx.NativeConnectionWrapper
 	
 	/// Creates a new connection instance to PrivMX platform using a private key.
+	///
+	/// The path to the certificates must be set beforehand using `setCertsPath()`. This connection is used to interact with secured operations such as Inboxes, Threads, and Stores.
+	///
+	/// - Parameter userPrivKey: The user's private key in WIF format, required for authentication.
+	/// - Parameter solutionId: The ID of the Solution that the connection targets.
+	/// - Parameter bridgeUrl: The URL of PrivMX platform endpoint.
+	///
+	/// - Throws: `PrivMXEndpointError.failedConnecting` if establishing the connection fails.
+	///
+	/// - Returns: A `Connection` instance that can be used for further operations.
+	public static func connect(
+		userPrivKey: std.string,
+		solutionId: std.string,
+		bridgeUrl: std.string
+	) throws -> Connection{
+		let res = privmx.NativeConnectionWrapper.connect(userPrivKey,
+														 solutionId,
+														 bridgeUrl)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedConnecting(res.error.value!)
+		}
+		guard let result = res.result.value else{
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly received nil result"
+			throw PrivMXEndpointError.failedConnecting(err)
+		}
+		
+		return Connection(api:result.pointee)
+	}
+	
+	/// Creates a new connection instance to PrivMX platform using a private key.
     ///
     /// The path to the certificates must be set beforehand using `setCertsPath()`. This connection is used to interact with secured operations such as Inboxes, Threads, and Stores.
     ///
@@ -48,7 +80,8 @@ public class Connection{
     /// - Throws: `PrivMXEndpointError.failedConnecting` if establishing the connection fails.
     ///
     /// - Returns: A `Connection` instance that can be used for further operations.
-    public static func connect(
+	@available(*, deprecated, renamed: "connect(userPrivKey:solutionId:bridgeUrl:)")
+	public static func connect(
 		userPrivKey: std.string,
 		solutionId: std.string,
 		platformUrl: std.string
@@ -74,17 +107,47 @@ public class Connection{
     /// The path to the certificates must be set beforehand using `setCertsPath()`. This type of connection is primarily used for public operations, such as inbound Inbox traffic, where authentication is not required.
     ///
     /// - Parameter solutionId: The ID of the Solution that the connection targets.
-    /// - Parameter platformUrl: The URL of PrivMX platform endpoint.
+    /// - Parameter bridgeUrl: The URL of PrivMX platform endpoint.
     ///
     /// - Throws: `PrivMXEndpointError.failedConnecting` if establishing the connection fails.
     ///
     /// - Returns: A public `Connection` instance that can be used for non-authenticated operations.
     public static func connectPublic(
 		solutionId: std.string,
+		bridgeUrl: std.string
+	) throws -> Connection{
+		let res = privmx.NativeConnectionWrapper.connectPublic(solutionId,
+															   bridgeUrl)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedConnecting(res.error.value!)
+		}
+		guard let result = res.result.value else{
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly received nil result"
+			throw PrivMXEndpointError.failedConnecting(err)
+		}
+		
+		return Connection(api:result.pointee)
+	}
+	
+	/// Creates a new public connection to PrivMX platform.
+    ///
+    /// The path to the certificates must be set beforehand using `setCertsPath()`. This type of connection is primarily used for public operations, such as inbound Inbox traffic, where authentication is not required.
+    ///
+    /// - Parameter solutionId: The ID of the Solution that the connection targets.
+    /// - Parameter platformUrl: The URL of PrivMX platform endpoint.
+    ///
+    /// - Throws: `PrivMXEndpointError.failedConnecting` if establishing the connection fails.
+    ///
+    /// - Returns: A public `Connection` instance that can be used for non-authenticated operations.
+	@available(*, deprecated, renamed: "connectPublic(solutionId:bridgeUrl:)")
+    public static func connectPublic(
+		solutionId: std.string,
 		platformUrl: std.string
 	) throws -> Connection{
 		let res = privmx.NativeConnectionWrapper.platformConnectPublic(solutionId,
-																		  platformUrl)
+																	   platformUrl)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedConnecting(res.error.value!)
 		}

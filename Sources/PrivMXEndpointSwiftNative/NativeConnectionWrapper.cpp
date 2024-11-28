@@ -28,10 +28,16 @@ NativeConnectionWrapper::NativeConnectionWrapper(std::shared_ptr<core::Connectio
 ResultWithError<std::shared_ptr<NativeConnectionWrapper>> NativeConnectionWrapper::platformConnect(const std::string &userPrivKey,
 																								   const std::string &solutionId,
 																								   const std::string &platformUrl){
+	return connect(userPrivKey, solutionId, platformUrl);
+}
+
+ResultWithError<std::shared_ptr<NativeConnectionWrapper>> NativeConnectionWrapper::connect(const std::string &userPrivKey,
+																						   const std::string &solutionId,
+																						   const std::string &platformUrl){
 	ResultWithError<std::shared_ptr<NativeConnectionWrapper>> res;
 	std::shared_ptr<NativeConnectionWrapper> x;
 	try{
-		auto conn = NativeConnectionWrapper(std::make_shared<core::Connection>(core::Connection::platformConnect(userPrivKey,
+		auto conn = NativeConnectionWrapper(std::make_shared<core::Connection>(core::Connection::connect(userPrivKey,
 																												 solutionId,
 																												 platformUrl)));
 		res.result = std::make_shared<NativeConnectionWrapper>(conn);
@@ -57,12 +63,16 @@ ResultWithError<std::shared_ptr<NativeConnectionWrapper>> NativeConnectionWrappe
 }
 
 ResultWithError<std::shared_ptr<NativeConnectionWrapper>> NativeConnectionWrapper::platformConnectPublic(const std::string &solutionId,
-																											const std::string &platformUrl){
+																										 const std::string &platformUrl){
+	return connectPublic(solutionId, platformUrl);
+}
+ResultWithError<std::shared_ptr<NativeConnectionWrapper>> NativeConnectionWrapper::connectPublic(const std::string &solutionId,
+																								 const std::string &platformUrl){
 	ResultWithError<std::shared_ptr<NativeConnectionWrapper>> res;
 	std::shared_ptr<NativeConnectionWrapper> x;
 	try{
-		auto conn = NativeConnectionWrapper(std::make_shared<core::Connection>(core::Connection::platformConnectPublic(solutionId,
-																													   platformUrl)));
+		auto conn = NativeConnectionWrapper(std::make_shared<core::Connection>(core::Connection::connectPublic(solutionId,
+																											   platformUrl)));
 		res.result = std::make_shared<NativeConnectionWrapper>(conn);
 	}catch(core::Exception& err){
 		res.error = {
