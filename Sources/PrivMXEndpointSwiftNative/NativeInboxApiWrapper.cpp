@@ -52,7 +52,8 @@ ResultWithError<std::string> NativeInboxApiWrapper::createInbox(const std::strin
 																const UserWithPubKeyVector& managers,
 																const endpoint::core::Buffer& publicMeta,
 																const endpoint::core::Buffer& privateMeta,
-																const OptionalInboxFilesConfig& filesConfig) {
+																const OptionalInboxFilesConfig& filesConfig,
+																const OptionalContainerPolicyWithoutItem& policies) {
 	ResultWithError<std::string> res;
 	try {
 		res.result = getapi()->createInbox(contextId,
@@ -90,7 +91,8 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::updateInbox(const std::string&
 															  const OptionalInboxFilesConfig& filesConfig,
 															  const int64_t version,
 															  const bool force,
-															  const bool forceGenerateNewKey){
+															  const bool forceGenerateNewKey,
+															  const OptionalContainerPolicyWithoutItem& policies){
 	ResultWithError<nullptr_t> res;
 	try {
 		getapi()->updateInbox(inboxId,
@@ -101,7 +103,8 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::updateInbox(const std::string&
 							  filesConfig,
 							  version,
 							  force,
-							  forceGenerateNewKey);
+							  forceGenerateNewKey,
+							  policies);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),

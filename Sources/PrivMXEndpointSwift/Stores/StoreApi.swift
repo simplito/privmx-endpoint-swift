@@ -122,13 +122,21 @@ public class StoreApi{
 		users: privmx.UserWithPubKeyVector,
 		managers: privmx.UserWithPubKeyVector,
 		publicMeta: privmx.endpoint.core.Buffer,
-		privateMeta: privmx.endpoint.core.Buffer
+		privateMeta: privmx.endpoint.core.Buffer,
+		policies: privmx.endpoint.core.ContainerPolicy? = nil
 	) throws -> std.string{
-		let res = api.createStore(contextId, 
+		
+		var optPolicies = privmx.OptionalContainerPolicy()
+		if let policies{
+			optPolicies = privmx.makeOptional(policies)
+		}
+		
+		let res = api.createStore(contextId,
 								  users, 
 								  managers,
 								  publicMeta,
-								  privateMeta)
+								  privateMeta,
+								  optPolicies)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedCreatingStore(res.error.value!)
 		}
@@ -164,8 +172,15 @@ public class StoreApi{
 		publicMeta: privmx.endpoint.core.Buffer,
 		privateMeta: privmx.endpoint.core.Buffer,
 		force: Bool,
-		forceGenerateNewKey: Bool
+		forceGenerateNewKey: Bool,
+		policies: privmx.endpoint.core.ContainerPolicy? = nil
 	) throws -> Void {
+		
+		var optPolicies = privmx.OptionalContainerPolicy()
+		if let policies{
+			optPolicies = privmx.makeOptional(policies)
+		}
+		
 		let res = api.updateStore(storeId,
 								  users,
 								  managers,
@@ -173,7 +188,8 @@ public class StoreApi{
 								  privateMeta,
 								  version,
 								  force,
-								  forceGenerateNewKey)
+								  forceGenerateNewKey,
+								  optPolicies)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUpdatingStore(res.error.value!)
 		}

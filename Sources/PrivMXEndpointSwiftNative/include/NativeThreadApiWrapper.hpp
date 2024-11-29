@@ -42,14 +42,15 @@ public:
 	 * @param users : `const UserWithPubKeyVector&` — who can access the Thread
 	 * @param managers : `const UserWithPubKeyVector&` — who can manage the thread
 	 * @param title : `const std::string&` — the title of the thread
-	 *
+	 * @param policies additional container access policies
 	 * @return Id of the newly created Thread wrapped in a`ResultWithError` structure for error handling.
 	 */
 	ResultWithError<std::string> createThread(const std::string& contextId,
 											  const UserWithPubKeyVector& users,
 											  const UserWithPubKeyVector& managers,
 											  const endpoint::core::Buffer& publicMeta,
-											  const endpoint::core::Buffer& privateMeta);
+											  const endpoint::core::Buffer& privateMeta,
+											  const OptionalContainerPolicy& policies = std::nullopt);
 	
 	/**
 	 * Retrieves information about a thread.
@@ -73,7 +74,7 @@ public:
 	 * @param force : `const bool` — force the update by disregarding the cersion check
 	 * @param generateNewKeyId : `const bool` — force regeneration of new keyId for Thread
 	 * @param accessToOldDataForNewUsers : `const bool` — placeholder parameter (does nothing for now)
-	 *
+	 * @param policies additional container access policies
 	 *
 	 * @return `ResultWithError` structure for error handling.
 	 */
@@ -84,7 +85,8 @@ public:
 												 const endpoint::core::Buffer& privateMeta,
 												 const int64_t version,
 												 const bool force,
-												 const bool forceGenerateNewKey);
+												 const bool forceGenerateNewKey,
+												 const OptionalContainerPolicy& policies = std::nullopt);
 	
 	/**
 	 * Deletes a Thread.

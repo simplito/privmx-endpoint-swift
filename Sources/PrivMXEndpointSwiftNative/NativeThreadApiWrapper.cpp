@@ -47,14 +47,16 @@ ResultWithError<std::string> NativeThreadApiWrapper::createThread(const std::str
 																  const UserWithPubKeyVector& users,
 																  const UserWithPubKeyVector& managers,
 																  const core::Buffer& publicMeta,
-																  const core::Buffer& privateMeta){
+																  const core::Buffer& privateMeta,
+																  const OptionalContainerPolicy& policies){
 	ResultWithError<std::string> res;
 	try {
 		res.result = getapi()->createThread(contextId,
 											users,
 											managers,
 											publicMeta,
-											privateMeta);
+											privateMeta,
+											policies);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -266,7 +268,8 @@ ResultWithError<std::nullptr_t> NativeThreadApiWrapper::updateThread(const std::
 																	 const core::Buffer& privateMeta,
 																	 const int64_t version,
 																	 const bool force,
-																	 const bool generateNewKeyId){
+																	 const bool generateNewKeyId,
+																	 const OptionalContainerPolicy& policies){
 	ResultWithError<std::nullptr_t> res;
 	try {
 		getapi()->updateThread(threadId,
@@ -276,7 +279,8 @@ ResultWithError<std::nullptr_t> NativeThreadApiWrapper::updateThread(const std::
 							   privateMeta,
 							   version,
 							   force,
-							   generateNewKeyId);
+							   generateNewKeyId,
+							   policies);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),

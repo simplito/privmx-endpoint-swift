@@ -60,7 +60,9 @@ public:
 	 * @param contextId : `const std::string&` — in which Context should the Store be created
 	 * @param users : `const UserWithPubKeyVector&` — who can access the Store
 	 * @param managers : `const UserWithPubKeyVector&` — who can manage the Store
-	 * @param name : `const endpoint::core::Buffer&` — the name of the Store
+	 * @param publicMeta public (unencrypted) metadata
+	 * @param privateMeta private (encrypted) metadata
+	 * @param policies additional container access policies
 	 *
 	 * @return Id of the newly created Store wrapped in a`ResultWithError` structure for error handling.
 	 */
@@ -68,7 +70,8 @@ public:
 											 const UserWithPubKeyVector& users,
 											 const UserWithPubKeyVector& managers,
 											 const endpoint::core::Buffer& publicMeta,
-											 const endpoint::core::Buffer& privateMeta);
+											 const endpoint::core::Buffer& privateMeta,
+											 const OptionalContainerPolicy& policies = std::nullopt);
 	
 	/**
 	 * Deletes a Store.
@@ -87,12 +90,12 @@ public:
 	 * @param storeId : `const std::string&` — which Store is to be updated
 	 * @param users : `const UserWithPubKeyVector&` — who can access the Store
 	 * @param managers : `const UserWithPubKeyVector&` — who can manage the Store
-	 * @param title : `const std::string&` — the title of the Store
+	 * @param publicMeta public (unencrypted) metadata
+	 * @param privateMeta private (encrypted) metadata
 	 * @param version : `const int64_t` — current version of the Store
 	 * @param force : `const bool` — force the update by disregarding the cersion check
-	 * @param generateNewKeyId : `const bool` — force regeneration of new keyId for Store
-	 * @param accessToOldDataForNewUsers : `const bool` — placeholder parameter (does nothing for now)
-	 *
+	 * @param forceGenerateNewKey force to regenerate a key for the Store
+	 * @param policies additional container access policies
 	 *
 	 * @return `ResultWithError` structure for error handling.
 	 */
@@ -103,7 +106,8 @@ public:
 												const endpoint::core::Buffer& privateMeta,
 												const int64_t version,
 												const bool force,
-												const bool forceGenerateNewKey);
+												const bool forceGenerateNewKey,
+												const OptionalContainerPolicy& = std::nullopt);
 	
 	/**
 	 * Retrieves information about a File

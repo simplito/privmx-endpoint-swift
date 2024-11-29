@@ -75,7 +75,8 @@ public class InboxApi{
 		managers: privmx.UserWithPubKeyVector,
 		publicMeta: privmx.endpoint.core.Buffer,
 		privateMeta: privmx.endpoint.core.Buffer,
-		filesConfig: privmx.endpoint.inbox.FilesConfig?
+		filesConfig: privmx.endpoint.inbox.FilesConfig?,
+		policies: privmx.endpoint.core.ContainerPolicyWithoutItem? = nil
 	) throws -> std.string {
 		
 		var optFilesConfig = privmx.OptionalInboxFilesConfig()
@@ -84,12 +85,18 @@ public class InboxApi{
 			optFilesConfig = privmx.makeOptional(filesConfig)
 		}
 		
+		var optPolicies = privmx.OptionalContainerPolicyWithoutItem()
+		if let policies{
+			optPolicies = privmx.makeOptional(policies)
+		}
+		
 		let res = api.createInbox(contextId,
 								  users,
 								  managers,
 								  publicMeta,
 								  privateMeta,
-								  optFilesConfig)
+								  optFilesConfig,
+								  optPolicies)
 		
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedCreatingInbox(res.error.value!)
@@ -126,14 +133,19 @@ public class InboxApi{
 		filesConfig: privmx.endpoint.inbox.FilesConfig?,
 		version: Int64,
 		force: Bool,
-		forceGenerateNewKey: Bool
+		forceGenerateNewKey: Bool,
+		policies: privmx.endpoint.core.ContainerPolicyWithoutItem? = nil
 	) throws -> Void {
-		
 		
 		var optFilesConfig = privmx.OptionalInboxFilesConfig()
 		
 		if let filesConfig{
 			optFilesConfig = privmx.makeOptional(filesConfig)
+		}
+		
+		var optPolicies = privmx.OptionalContainerPolicyWithoutItem()
+		if let policies{
+			optPolicies = privmx.makeOptional(policies)
 		}
 		
 		let res = api.updateInbox(inboxId,
@@ -144,7 +156,8 @@ public class InboxApi{
 								  optFilesConfig,
 								  version,
 								  force,
-								  forceGenerateNewKey)
+								  forceGenerateNewKey,
+								  optPolicies)
 		
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUpdatingInbox(res.error.value!)

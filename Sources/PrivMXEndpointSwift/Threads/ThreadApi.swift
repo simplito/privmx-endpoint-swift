@@ -68,13 +68,21 @@ public class ThreadApi{
 		users: privmx.UserWithPubKeyVector,
 		managers: privmx.UserWithPubKeyVector,
 		publicMeta: privmx.endpoint.core.Buffer,
-		privateMeta: privmx.endpoint.core.Buffer
+		privateMeta: privmx.endpoint.core.Buffer,
+		policies: privmx.endpoint.core.ContainerPolicy? = nil
 	)throws -> std.string {
+		
+		var optPolicies = privmx.OptionalContainerPolicy()
+		if let policies{
+			optPolicies = privmx.makeOptional(policies)
+		}
+		
 		let res = api.createThread(contextId,
 								   users,
 								   managers,
 								   publicMeta,
-								   privateMeta)
+								   privateMeta,
+								   optPolicies)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedCreatingThread(res.error.value!)
 		}
@@ -134,8 +142,15 @@ public class ThreadApi{
 		publicMeta: privmx.endpoint.core.Buffer,
 		privateMeta: privmx.endpoint.core.Buffer,
 		force: Bool,
-		forceGenerateNewKey: Bool
+		forceGenerateNewKey: Bool,
+		policies: privmx.endpoint.core.ContainerPolicy? = nil
 	) throws -> Void {
+		
+		var optPolicies = privmx.OptionalContainerPolicy()
+		if let policies{
+			optPolicies = privmx.makeOptional(policies)
+		}
+		
 		let res = api.updateThread(threadId,
 								   users,
 								   managers,
@@ -143,7 +158,8 @@ public class ThreadApi{
 								   privateMeta,
 								   version,
 								   force,
-								   forceGenerateNewKey)
+								   forceGenerateNewKey,
+								   optPolicies)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUpdatingThread(res.error.value!)
 		}
