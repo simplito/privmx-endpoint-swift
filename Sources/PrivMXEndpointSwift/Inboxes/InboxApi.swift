@@ -57,6 +57,8 @@ public class InboxApi{
 	}
 	
 	/// Creates a new Inbox in the specified context.
+	///
+	/// If `policies` argument is set to `nil`, the default policies will be applied.
     ///
     /// - Parameters:
     ///   - contextId: The ID of the context where the Inbox should be created.
@@ -65,6 +67,7 @@ public class InboxApi{
     ///   - publicMeta: Public metadata that is not encrypted.
     ///   - privateMeta: Private metadata that is encrypted.
     ///   - filesConfig: An optional configuration for file storage.
+	///   - policies: A set of policies for the Container.
     ///
     /// - Throws: `PrivMXEndpointError.failedCreatingInbox` if Inbox creation fails.
     ///
@@ -111,6 +114,8 @@ public class InboxApi{
 	}
 	
 	/// Updates an existing Inbox with new metadata and configuration.
+	///
+	/// If `policies` argument is set to `nil`, the default policies will be applied.
     ///
     /// - Parameters:
     ///   - inboxId: The ID of the Inbox to be updated.
@@ -122,6 +127,7 @@ public class InboxApi{
     ///   - version: The current version of the Inbox for version control.
     ///   - force: Whether to force the update, ignoring version control.
     ///   - forceGenerateNewKey: Whether to force regeneration of a new key for the Inbox.
+	///   - policies: New set of policies for the Container.
     ///
     /// - Throws: `PrivMXEndpointError.failedUpdatingInbox` if the update process fails.
     public func updateInbox(

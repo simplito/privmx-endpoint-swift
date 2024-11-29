@@ -106,6 +106,8 @@ public class StoreApi{
 	/// Creates a new Store within a specified Context.
     ///
     /// This method creates a new Store with specified users and managers. Note that managers must be added as users to gain access to the Store.
+	///
+	/// If `policies` argument is set to `nil`, the default policies will be applied.
     ///
     /// - Parameters:
     ///   - contextId: The Context in which the Store should be created.
@@ -113,6 +115,7 @@ public class StoreApi{
     ///   - managers: A vector of managers responsible for the Store.
     ///   - publicMeta: Public metadata for the Store, which will not be encrypted.
     ///   - privateMeta: Private metadata for the Store, which will be encrypted.
+	///   - policies: A set of policies for the Container.
     ///
     /// - Throws: `PrivMXEndpointError.failedCreatingStore` if Store creation fails.
     ///
@@ -152,6 +155,8 @@ public class StoreApi{
 	/// Updates an existing Store.
     ///
     /// The provided values will override the existing ones. You can also force regeneration of the Store's key if needed.
+	///
+	/// If `policies` argument is set to `nil`, the default policies will be applied.
     ///
     /// - Parameters:
     ///   - storeId: The unique identifier of the Store to be updated.
@@ -162,6 +167,7 @@ public class StoreApi{
     ///   - privateMeta: New private metadata for the Store, which will be encrypted.
     ///   - force: Whether to force the update, bypassing version control.
     ///   - forceGenerateNewKey: Whether to generate a new key for the Store.
+	///   - policies: New set of policies for the Container.
     ///
     /// - Throws: `PrivMXEndpointError.failedUpdatingStore` if updating the Store fails.
     public func updateStore(
