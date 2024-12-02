@@ -53,12 +53,15 @@ public class ThreadApi{
 	///
 	/// This method creates a new Thread in the specified context, assigning users and managers to it. Note that managers must be added explicitly as users to access the Thread.
 	///
+	/// If `policies` argument is set to `nil`, the default policies will be applied.
+	///
 	/// - Parameters:
 	///   - contextId: The context in which the Thread should be created.
 	///   - users: A vector of users who will have access to the Thread.
 	///   - managers: A vector of managers responsible for the Thread.
 	///   - publicMeta: Public metadata for the Thread, which will not be encrypted.
 	///   - privateMeta: Private metadata for the Thread, which will be encrypted.
+	///   - policies: A set of policies for the Container.
 	///
 	/// - Throws: `PrivMXEndpointError.failedCreatingThread` if the Thread creation fails.
 	///
@@ -68,13 +71,21 @@ public class ThreadApi{
 		users: privmx.UserWithPubKeyVector,
 		managers: privmx.UserWithPubKeyVector,
 		publicMeta: privmx.endpoint.core.Buffer,
-		privateMeta: privmx.endpoint.core.Buffer
+		privateMeta: privmx.endpoint.core.Buffer,
+		policies: privmx.endpoint.core.ContainerPolicy? = nil
 	)throws -> std.string {
+		
+		var optPolicies = privmx.OptionalContainerPolicy()
+		if let policies{
+			optPolicies = privmx.makeOptional(policies)
+		}
+		
 		let res = api.createThread(contextId,
 								   users,
 								   managers,
 								   publicMeta,
-								   privateMeta)
+								   privateMeta,
+								   optPolicies)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedCreatingThread(res.error.value!)
 		}
@@ -115,6 +126,8 @@ public class ThreadApi{
 	///
 	/// This method updates the metadata, users, and managers of a Thread. The update can be forced, and a new key can be generated if needed.
 	///
+	/// If `policies` argument is set to `nil`, the default policies will be applied.
+	///
 	/// - Parameters:
 	///   - threadId: The unique identifier of the Thread to be updated.
 	///   - version: The current version of the Thread to ensure version consistency.
@@ -124,6 +137,7 @@ public class ThreadApi{
 	///   - privateMeta: New private metadata for the Thread, which will be encrypted.
 	///   - force: Whether to force the update, bypassing version control.
 	///   - forceGenerateNewKey: Whether to generate a new key for the Thread.
+	///   - policies: A new set of policies for the Container.
 	///
 	/// - Throws: `PrivMXEndpointError.failedUpdatingThread` if the update process fails.
 	public func updateThread(
@@ -134,8 +148,15 @@ public class ThreadApi{
 		publicMeta: privmx.endpoint.core.Buffer,
 		privateMeta: privmx.endpoint.core.Buffer,
 		force: Bool,
-		forceGenerateNewKey: Bool
+		forceGenerateNewKey: Bool,
+		policies: privmx.endpoint.core.ContainerPolicy? = nil
 	) throws -> Void {
+		
+		var optPolicies = privmx.OptionalContainerPolicy()
+		if let policies{
+			optPolicies = privmx.makeOptional(policies)
+		}
+		
 		let res = api.updateThread(threadId,
 								   users,
 								   managers,
@@ -143,7 +164,8 @@ public class ThreadApi{
 								   privateMeta,
 								   version,
 								   force,
-								   forceGenerateNewKey)
+								   forceGenerateNewKey,
+								   optPolicies)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUpdatingThread(res.error.value!)
 		}

@@ -54,6 +54,10 @@ using UserWithPubKeyVector = std::vector<endpoint::core::UserWithPubKey>;
 
 using OptionalInboxFilesConfig = std::optional<endpoint::inbox::FilesConfig>;
 
+using OptionalItemPolicy = std::optional<endpoint::core::ItemPolicy>;
+using OptionalContainerPolicy = std::optional<endpoint::core::ContainerPolicy>;
+using OptionalContainerPolicyWithoutItem = std::optional<endpoint::core::ContainerPolicyWithoutItem>;
+
 using ContextList = endpoint::core::PagingList<endpoint::core::Context>;
 using ThreadList = endpoint::core::PagingList<endpoint::thread::Thread>;
 using MessageList = endpoint::core::PagingList<endpoint::thread::Message>;
@@ -104,7 +108,22 @@ static OptionalString makeOptional(const std::string& val){
 }
 
 /// Creates a C++ `std::optional` containing the provided `FilesConfig`
-static OptionalInboxFilesConfig makeOptional(const privmx::endpoint::inbox::FilesConfig& val){
+static OptionalInboxFilesConfig makeOptional(const endpoint::inbox::FilesConfig& val){
+	return std::make_optional(val);
+}
+
+/// Creates a C++ `std::optional` containing the provided `ItemPolicy`
+static OptionalItemPolicy makeOptional(const endpoint::core::ItemPolicy& val){
+	return std::make_optional(val);
+}
+
+/// Creates a C++ `std::optional` containing the provided `ContainerPolicy`
+static OptionalContainerPolicy makeOptional(const endpoint::core::ContainerPolicy& val){
+	return std::make_optional(val);
+}
+
+/// Creates a C++ `std::optional` containing the provided `ContainerPolicyWithoutItem`
+static OptionalContainerPolicyWithoutItem makeOptional(const endpoint::core::ContainerPolicyWithoutItem& val){
 	return std::make_optional(val);
 }
 

@@ -99,10 +99,16 @@ ResultWithError<std::string> NativeStoreApiWrapper::createStore(const std::strin
 																const UserWithPubKeyVector& users,
 																const UserWithPubKeyVector& managers,
 																const core::Buffer& publicMeta,
-																const core::Buffer& privateMeta){
+																const core::Buffer& privateMeta,
+																const OptionalContainerPolicy& policies){
 	ResultWithError<std::string> res;
 	try{
-		res.result = getapi()->createStore(contextId, users, managers, publicMeta,privateMeta);
+		res.result = getapi()->createStore(contextId,
+										   users,
+										   managers,
+										   publicMeta,
+										   privateMeta,
+										   policies);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -131,7 +137,8 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::updateStore(const std::st
 																   const core::Buffer& privateMeta,
 																   const int64_t version,
 																   const bool force,
-																   const bool forceGenerateNewKey){
+																   const bool forceGenerateNewKey,
+																   const OptionalContainerPolicy& policies){
 	ResultWithError<std::nullptr_t> res;
 	try{
 		getapi()->updateStore(storeId,
@@ -141,7 +148,8 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::updateStore(const std::st
 							  privateMeta,
 							  version,
 							  force,
-							  forceGenerateNewKey);
+							  forceGenerateNewKey,
+							  policies);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
