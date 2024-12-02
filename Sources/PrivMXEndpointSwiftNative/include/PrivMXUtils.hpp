@@ -108,22 +108,22 @@ static OptionalString makeOptional(const std::string& val){
 }
 
 /// Creates a C++ `std::optional` containing the provided `FilesConfig`
-static OptionalInboxFilesConfig makeOptional(const privmx::endpoint::inbox::FilesConfig& val){
+static OptionalInboxFilesConfig makeOptional(const endpoint::inbox::FilesConfig& val){
 	return std::make_optional(val);
 }
 
-/// Creates a C++ `std::optional` containing the provided `FilesConfig`
-static OptionalItemPolicy makeOptional(const privmx::endpoint::core::ItemPolicy& val){
+/// Creates a C++ `std::optional` containing the provided `ItemPolicy`
+static OptionalItemPolicy makeOptional(const endpoint::core::ItemPolicy& val){
 	return std::make_optional(val);
 }
 
-/// Creates a C++ `std::optional` containing the provided `FilesConfig`
-static OptionalContainerPolicy makeOptional(const privmx::endpoint::core::ContainerPolicy& val){
+/// Creates a C++ `std::optional` containing the provided `ContainerPolicy`
+static OptionalContainerPolicy makeOptional(const endpoint::core::ContainerPolicy& val){
 	return std::make_optional(val);
 }
 
-/// Creates a C++ `std::optional` containing the provided `FilesConfig`
-static OptionalContainerPolicyWithoutItem makeOptional(const privmx::endpoint::core::ContainerPolicyWithoutItem& val){
+/// Creates a C++ `std::optional` containing the provided `ContainerPolicyWithoutItem`
+static OptionalContainerPolicyWithoutItem makeOptional(const endpoint::core::ContainerPolicyWithoutItem& val){
 	return std::make_optional(val);
 }
 
