@@ -1,6 +1,7 @@
 name: Feature Request
 description: Suggest an idea for this project
-title: "[FEATURE]: "
+title: "[FEAURE]: "
+labels: []
 projects: ["simplito/12"]
 body:
   - type: textarea
@@ -39,17 +40,18 @@ body:
     id: system
     attributes:
       label: "**System Name and Version**:"
-      placeholder: [e.g. iOS 18.0.1]
+      placeholder: "[e.g. iOS 18.0.1]"
     validations:
       required: true
   - type: textfield
     id: extra-details
     attributes:
       label: "**Other Details**:"
-      placeholder: [e.g. hardware specifics]
+      placeholder: "[e.g. hardware specifics]"
   - type: checkboxes
     id: check
     attributes:
       label: "#### **Acknowledgment**"
         options:
           - label: I confirm that this feature request is not already logged.
+          - required: true
