@@ -1,0 +1,85 @@
+name: Bug Report
+description: Create a report to help us improve
+title: "[BUG]: "
+labels: ["bug", "triage"]
+projects: ["simplito/12"]
+body:
+  - type: textarea
+    id: problem-desc
+    attributes:
+      label: "Description"
+      placeholder: "Provide a clear and concise description of the issue."
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: "Steps to Reproduce"
+      placeholder: |
+        List the steps to reproduce the issue;
+        **Optionally:**
+        - Link to the reproducible code repository
+        - Include the specific code block causing the error in a code snippet
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: "Expected Behavior"
+      placeholder: "Describe what you expected to happen."
+    validations:
+      required: true
+  - type: textarea
+    id: screen-log
+    attributes:
+      label: "Screenshots or Logs"
+      placeholder: "If applicable, attach screenshots or relevant logs to help illustrate the issue."
+  - type: markdown
+    id: en-det-md
+    attributes:
+      value: |
+        ## **Environment Details** 
+        Provide details about your environment:
+  - type: input
+    id: device
+    attributes:
+      label: "Device:"
+      description: "On what device did the problem occur?"
+      placeholder: "[e.g., iPhone 12]"
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: "OS Version:"
+      description: "On what OS version did the problem occur?"
+      placeholder: "[e.g., iOS 14.4]"
+    validations:
+      required: true
+  - type: input
+    id: privmx-ver
+    attributes:
+      label: "Endpoint Library Used:"
+      description: "What version of the library were you using?"
+      placeholder: "[e.g., 2.1.0]"
+    validations:
+      required: true
+  - type: input
+    id: proj-lang
+    attributes:
+      label: "Project Language:"
+      placeholder: "[e.g., Swift 6]"
+    validations:
+      required: true
+  - type: input
+    id: proj-env
+    attributes:
+      label: "Project Environment Version:"
+      placeholder: "[e.g., Xcode 16]"
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: "Additional Context"
+      description: "Add any other context about the problem here."
