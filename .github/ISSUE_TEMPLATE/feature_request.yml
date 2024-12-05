@@ -1,57 +1,57 @@
 name: Feature Request
 description: Suggest an idea for this project
-title: "[FEAURE]: "
+title: "[FEATURE]: "
 labels: []
 projects: ["simplito/12"]
 body:
   - type: textarea
     id: description
     attributes:
-      label: "#### **Problem or Need**"
-      description: A clear and concise description of the problem or need your feature request addresses.
+      label: "Problem or Need"
+      placeholder: A clear and concise description of the problem or need your feature request addresses.
     validations:
       required: true
   - type: textarea
     id: solution
     attributes:
-      label: "#### **Proposed Solution"
-      description: |
+      label: "Proposed Solution"
+      placeholder: |
         Describe the desired solution clearly and concisely.
     validations:
       required: true
   - type: textarea
     id: alternatives
     attributes:
-      label: "#### **Alternatives Considered**"
-      description: Provide a description of any alternative solutions or features you have thought about.
+      label: "Alternatives Considered"
+      placeholder: Provide a description of any alternative solutions or features you have thought about.
     validations:
       required: true
   - type: textarea
     id: extras
     attributes:
-      label: "#### **Additional Context**"
-      description: If applicable, attach screenshots or relevant logs to help illustrate the issue.
+      label: "Additional Context"
+      placeholder: If applicable, attach screenshots or relevant logs to help illustrate the issue.
   - type: markdown
     attributes:
       value: |
-        #### **Environment Details** 
+        ## **Environment Details** 
         Provide the environment where this feature is needed:
   - type: input
     id: system
     attributes:
-      label: "**System Name and Version**:"
+      label: "System Name and Version:"
       placeholder: "[e.g. iOS 18.0.1]"
     validations:
       required: true
   - type: textarea
     id: extra-details
     attributes:
-      label: "**Other Details**:"
+      label: "Other Details:"
       placeholder: "[e.g. hardware specifics]"
   - type: checkboxes
     id: check
     attributes:
-      label: "#### **Acknowledgment**"
+      label: "Acknowledgment"
       options:
         - label: I confirm that this feature request is not already logged.
           required: true
