@@ -52,6 +52,6 @@ body:
     id: check
     attributes:
       label: "#### **Acknowledgment**"
-        options:
-          - label: I confirm that this feature request is not already logged.
-          - required: true
+      options:
+        - label: I confirm that this feature request is not already logged.
+        - required: true

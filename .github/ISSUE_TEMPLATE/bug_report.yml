@@ -7,14 +7,14 @@ body:
   - type: textarea
     id: description
     attributes:
-      label:
+      label:"#### **Description**"
       description: "Provide a clear and concise description of the issue."
     validations:
       required: true
   - type: textarea
     id: steps
     attributes:
-      label: "#### **Steps to Reproduce"
+      label: "#### **Steps to Reproduce**"
       description: |
         List the steps to reproduce the issue;
         **Optionally:**
