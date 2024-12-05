@@ -45,7 +45,7 @@ body:
     attributes:
       label: "Device:"
       description: "On what device did the problem occur?"
-      placeholder: [e.g., iPhone 12]
+      placeholder: "[e.g., iPhone 12]"
     validations:
       required: true
   - type: input
