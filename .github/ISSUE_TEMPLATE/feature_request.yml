@@ -43,7 +43,7 @@ body:
       placeholder: "[e.g. iOS 18.0.1]"
     validations:
       required: true
-  - type: textfield
+  - type: textarea
     id: extra-details
     attributes:
       label: "**Other Details**:"
@@ -54,4 +54,4 @@ body:
       label: "#### **Acknowledgment**"
       options:
         - label: I confirm that this feature request is not already logged.
-        - required: true
+          required: true
