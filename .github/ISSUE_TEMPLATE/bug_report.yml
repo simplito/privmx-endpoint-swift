@@ -5,7 +5,7 @@ labels: ["bug", "triage"]
 projects: ["simplito/12"]
 body:
   - type: textarea
-    id: description
+    id: problem-desc
     attributes:
       label: "#### **Description**"
       description: "Provide a clear and concise description of the issue."
