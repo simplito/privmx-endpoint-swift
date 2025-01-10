@@ -45,10 +45,10 @@ ResultWithError<NativeStoreApiWrapper> NativeStoreApiWrapper::create(NativeConne
 }
 
 ResultWithError<StoreList> NativeStoreApiWrapper::listStores(const std::string& contextId,
-															const core::PagingQuery& query){
+															const core::PagingQuery& pagingQuery){
 	ResultWithError<StoreList> res;
 	try{
-		res.result = getapi()->listStores(contextId, query);
+		res.result = getapi()->listStores(contextId, pagingQuery);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
