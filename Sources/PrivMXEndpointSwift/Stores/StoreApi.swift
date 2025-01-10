@@ -56,16 +56,16 @@ public class StoreApi{
     ///
     /// - Parameters:
     ///   - contextId: The Context from which the Stores should be listed.
-    ///   - query: A `PagingQuery` object to filter and paginate the results.
+    ///   - pagingQuery: A `PagingQuery` object to filter and paginate the results.
     ///
     /// - Throws: `PrivMXEndpointError.failedListingStores` if listing Stores fails.
     ///
     /// - Returns: A `privmx.StoreList` instance containing the list of Stores.
     public func listStores(
 		contextId: std.string,
-		query: privmx.endpoint.core.PagingQuery
+		pagingQuery: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.StoreList {
-		let res = api.listStores(contextId, query)
+		let res = api.listStores(contextId, pagingQuery)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedListingStores(res.error.value!)
 		}
@@ -246,16 +246,16 @@ public class StoreApi{
     ///
     /// - Parameters:
     ///   - storeId: The Store from which to list files.
-    ///   - query: A `PagingQuery` object to filter and paginate the results.
+    ///   - pagingQuery: A `PagingQuery` object to filter and paginate the results.
     ///
     /// - Throws: `PrivMXEndpointError.failedListingFiles` if listing the files fails.
     ///
     /// - Returns: A `privmx.FileList` instance containing the list of files.
     public func listFiles(
 		storeId: std.string,
-		query: privmx.endpoint.core.PagingQuery
+		pagingQuery: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.FileList{
-		let res = api.listFiles(storeId, query)
+		let res = api.listFiles(storeId, pagingQuery)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedListingFiles(res.error.value!)
 		}
