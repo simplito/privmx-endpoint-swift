@@ -76,7 +76,14 @@ public class StoreApi{
 			throw PrivMXEndpointError.failedListingStores(err)
 		}
 		return result
-		
+	}
+	
+	@available(*, deprecated, renamed: "listStores(contextId:pagingQuery:)")
+	public func listStores(
+		contextId: std.string,
+		query: privmx.endpoint.core.PagingQuery
+	) throws -> privmx.StoreList {
+		try listStores(contextId: contextId, pagingQuery: query)
 	}
 	
 	/// Retrieves detailed information about a specified Store.
@@ -266,6 +273,14 @@ public class StoreApi{
 			throw PrivMXEndpointError.failedListingFiles(err)
 		}
 		return result
+	}
+	
+	@available(*, deprecated, renamed:"listFiles(storeId:pagingQuery:)")
+	public func listFiles(
+		storeId: std.string,
+		query: privmx.endpoint.core.PagingQuery
+	) throws -> privmx.FileList{
+		try listFiles(storeId: storeId, pagingQuery: query)
 	}
 	
 	/// Creates a new file handle for writing in a Store.
