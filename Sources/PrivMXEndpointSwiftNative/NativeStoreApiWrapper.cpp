@@ -278,6 +278,33 @@ ResultWithError<StoreFileHandle> NativeStoreApiWrapper::updateFile(const std::st
 	return res;
 }
 
+ResultWithError<std::nullptr_t> NativeStoreApiWrapper::updateFileMeta(const std::string& fileId,
+																 const core::Buffer& publicMeta,
+																 const core::Buffer& privateMeta){
+	ResultWithError<std::nullptr_t> res;
+	try{
+		getapi()->updateFileMeta(fileId, publicMeta, privateMeta);
+		} catch(core::Exception& err) {
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
 ResultWithError<StoreFileHandle> NativeStoreApiWrapper::openFile(const std::string& fileId){
 	ResultWithError<StoreFileHandle> res;
 	try{
