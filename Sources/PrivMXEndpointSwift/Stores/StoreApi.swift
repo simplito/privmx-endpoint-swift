@@ -364,6 +364,24 @@ public class StoreApi{
 		return result
 	}
 	
+	/// Updates the metadata of an existing File.
+	/// - Parameters:
+	///   - fileId: id of a File to be updated
+	///   - publicMeta: new public metadata
+	///   - privateMeta: new private metadata
+	///
+	/// - Throws: When an error occurs during updating metadata.
+	public func updateFileMeta(
+		fileId: std.string,
+		publicMeta:privmx.endpoint.core.Buffer,
+		privateMeta:privmx.endpoint.core.Buffer
+	) throws -> Void {
+		let res = api.updateFileMeta(fileId, publicMeta, privateMeta)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedUpdatingFile(res.error.value!)
+		}
+	}
+	
 	/// Closes an open file handle.
     ///
     /// This method finalizes a file operation, such as writing or updating.

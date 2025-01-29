@@ -165,6 +165,16 @@ public:
 											  int64_t size);
 	
 	/**
+	 * Update metadata of an existing file in a Store.
+	 *
+	 * @param fileId ID of the file to update
+	 * @param publicMeta public file metadata
+	 * @param privateMeta private file metadata
+	 */
+	ResultWithError<std::nullptr_t> updateFileMeta(const std::string& fileId,
+												   const endpoint::core::Buffer& publicMeta,
+												   const endpoint::core::Buffer& privateMeta);
+	/**
 	 * Creates a new file handle for reading a File.
 	 *
 	 * @param fileId : `const std::string&` — which File should be opened
