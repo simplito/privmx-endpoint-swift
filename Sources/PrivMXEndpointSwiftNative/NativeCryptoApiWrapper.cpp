@@ -72,6 +72,31 @@ ResultWithError<std::string> NativeCryptoApiWrapper::generatePrivateKey(const Op
 	return res;
 }
 
+ResultWithError<std::string> NativeCryptoApiWrapper::generatePrivateKey2(const OptionalString& randomSeed){
+	ResultWithError<std::string> res;
+	try {
+		res.result = getapi()->generatePrivateKey2(randomSeed);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
 ResultWithError<std::string> NativeCryptoApiWrapper::derivePublicKey(const std::string& privKey){
 	ResultWithError<std::string> res;
 	try {
@@ -209,6 +234,33 @@ ResultWithError<std::string> NativeCryptoApiWrapper::derivePrivateKey(const std:
 	ResultWithError<std::string> res;
 	try {
 		res.result = getapi()->derivePrivateKey(password,
+												salt);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<std::string> NativeCryptoApiWrapper::derivePrivateKey2(const std::string &password,
+																	 const std::string &salt){
+	ResultWithError<std::string> res;
+	try {
+		res.result = getapi()->derivePrivateKey2(password,
 												salt);
 		}catch(core::Exception& err){
 		res.error = {

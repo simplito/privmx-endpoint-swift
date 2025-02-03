@@ -134,7 +134,43 @@ public class CryptoApi{
 	///   - `PrivMXEndpointError.failedGeneratingPrivKey` if the key generation fails, potentially due to a system error or invalid seed.
 	///
 	/// **Security Note:** Private keys should be stored securely, ideally in an encrypted keystore or hardware security module (HSM).
+	@available(*, deprecated, renamed: "generatePrivateKey2(password:salt:)")
 	public func generatePrivateKey(
+		randomSeed: std.string?
+	) throws -> std.string {
+		var bs = privmx.OptionalString()
+		
+		if let randomSeed{
+			bs = privmx.makeOptional(randomSeed)
+		}
+		let res = api.generatePrivateKey(bs)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedGeneratingPrivKey(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly received nil result"
+			throw PrivMXEndpointError.failedGeneratingPrivKey(err)
+		}
+		return result
+	}
+	
+	/// Generates a new private key in WIF (Wallet Import Format).
+	///
+	/// The private key can be used for various cryptographic operations such as signing data, generating public keys, and encrypting sensitive information. You can optionally provide a seed to generate a deterministic key, or omit the seed to generate a random key. Here it can be used for identifying and authorizing User (after previous adding its Public Key to PrivMX Bridge)
+	///
+	/// **Use case:** Private keys are used in both asymmetric encryption and signing operations. This method is useful when you need a fresh key pair for a new user or system process.
+	///
+	/// - Parameter randomSeed: An optional seed to generate a deterministic private key. If `nil` is provided, a random key will be generated.
+	///
+	/// - Returns: The generated private key in WIF format.
+	///
+	/// - Throws:
+	///   - `PrivMXEndpointError.failedGeneratingPrivKey` if the key generation fails, potentially due to a system error or invalid seed.
+	///
+	/// **Security Note:** Private keys should be stored securely, ideally in an encrypted keystore or hardware security module (HSM).
+	public func generatePrivateKey2(
 		randomSeed: std.string?
 	) throws -> std.string {
 		var bs = privmx.OptionalString()
@@ -171,12 +207,46 @@ public class CryptoApi{
 	///   - `PrivMXEndpointError.failedGeneratingPrivKey` if the key derivation fails, such as when using invalid input or a weak password.
 	///
 	/// **Security Note:** Passwords should never be stored or transmitted in plain text. Ensure that the salt is unique and sufficiently random to prevent predictable key generation.
+	@available(*,deprecated,renamed: "derivePrivateKey2(password:salt:)")
 	public func derivePrivateKey(
 		password: std.string,
 		salt: std.string
 	) throws -> std.string{
 		
 		let res = api.derivePrivateKey(password, salt)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedGeneratingPrivKey(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly received nil result"
+			throw PrivMXEndpointError.failedGeneratingPrivKey(err)
+		}
+		return result
+	}
+	/// Derives a private key from a given password and salt using a key derivation function.
+	///
+	/// This method generates a private key based on a user-provided password and salt. The combination of the two ensures that the key is unique for each user and is always generated deterministically, and the salt prevents dictionary attacks.
+	///
+	/// **Use case:** Useful in scenarios where users are authenticated via passwords, but cryptographic operations require a private key. By deriving the key from a password, you avoid directly storing or transferring the private key.
+	///
+	/// - Parameters:
+	///   - password: The base string (usually a user password) used for deriving the key.
+	///   - salt: The salt value that makes the derived key unique, even if the same password is used by multiple users.
+	///
+	/// - Returns: The derived private key in WIF format.
+	///
+	/// - Throws:
+	///   - `PrivMXEndpointError.failedGeneratingPrivKey` if the key derivation fails, such as when using invalid input or a weak password.
+	///
+	/// **Security Note:** Passwords should never be stored or transmitted in plain text. Ensure that the salt is unique and sufficiently random to prevent predictable key generation.
+	public func derivePrivateKey2(
+		password: std.string,
+		salt: std.string
+	) throws -> std.string{
+		
+		let res = api.derivePrivateKey2(password, salt)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGeneratingPrivKey(res.error.value!)
 		}
