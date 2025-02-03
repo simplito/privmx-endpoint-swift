@@ -37,6 +37,20 @@ public:
 	 * @return Shared pointer to a Connection object, wrapped in the `ResultWithError` for error handling.
 	 *
 	 */
+	static ResultWithError<std::shared_ptr<NativeConnectionWrapper>> connect(const std::string& userPrivKey,
+																			 const std::string& solutionId,
+																			 const std::string& bridgeUrl);
+	/**
+	 * Connects to the PrivMX Bridge server.
+	 *
+	 * @param userPrivKey user's private key
+	 * @param solutionId ID of the Solution
+	 * @param platformUrl Platform's Endpoint URL
+	 *
+	 * @return Shared pointer to a Connection object, wrapped in the `ResultWithError` for error handling.
+	 *
+	 */
+	[[deprecated]]
 	static ResultWithError<std::shared_ptr<NativeConnectionWrapper>> platformConnect(const std::string& userPrivKey,
 																					 const std::string& solutionId,
 																					 const std::string& platformUrl);
@@ -50,8 +64,20 @@ public:
 	 * @return Shared pointer to a Connection object, wrapped in `ResultWithError` for error handling.
 	 *
 	 */
+	static ResultWithError<std::shared_ptr<NativeConnectionWrapper>> connectPublic(const std::string& solutionId,
+																				   const std::string& bridgeUrl);
+	/**
+	 * Connects to the PrivMX Bridge Server as a guest user.
+	 *
+	 * @param solutionId ID of the Solution
+	 * @param platformUrl Platform's Endpoint URL
+	 *
+	 * @return Shared pointer to a Connection object, wrapped in `ResultWithError` for error handling.
+	 *
+	 */
+	[[deprecated]]
 	static ResultWithError<std::shared_ptr<NativeConnectionWrapper>> platformConnectPublic(const std::string& solutionId,
-																					 const std::string& platformUrl);
+																						   const std::string& platformUrl);
 	
 	/**
 	 * Sets the path to.pem  file with certificates.

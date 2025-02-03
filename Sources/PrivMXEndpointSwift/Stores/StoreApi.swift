@@ -56,16 +56,16 @@ public class StoreApi{
     ///
     /// - Parameters:
     ///   - contextId: The Context from which the Stores should be listed.
-    ///   - query: A `PagingQuery` object to filter and paginate the results.
+    ///   - pagingQuery: A `PagingQuery` object to filter and paginate the results.
     ///
     /// - Throws: `PrivMXEndpointError.failedListingStores` if listing Stores fails.
     ///
     /// - Returns: A `privmx.StoreList` instance containing the list of Stores.
     public func listStores(
 		contextId: std.string,
-		query: privmx.endpoint.core.PagingQuery
+		pagingQuery: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.StoreList {
-		let res = api.listStores(contextId, query)
+		let res = api.listStores(contextId, pagingQuery)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedListingStores(res.error.value!)
 		}
@@ -76,7 +76,14 @@ public class StoreApi{
 			throw PrivMXEndpointError.failedListingStores(err)
 		}
 		return result
-		
+	}
+	
+	@available(*, deprecated, renamed: "listStores(contextId:pagingQuery:)")
+	public func listStores(
+		contextId: std.string,
+		query: privmx.endpoint.core.PagingQuery
+	) throws -> privmx.StoreList {
+		try listStores(contextId: contextId, pagingQuery: query)
 	}
 	
 	/// Retrieves detailed information about a specified Store.
@@ -106,6 +113,8 @@ public class StoreApi{
 	/// Creates a new Store within a specified Context.
     ///
     /// This method creates a new Store with specified users and managers. Note that managers must be added as users to gain access to the Store.
+	///
+	/// If `policies` argument is set to `nil`, the default policies will be applied.
     ///
     /// - Parameters:
     ///   - contextId: The Context in which the Store should be created.
@@ -113,6 +122,7 @@ public class StoreApi{
     ///   - managers: A vector of managers responsible for the Store.
     ///   - publicMeta: Public metadata for the Store, which will not be encrypted.
     ///   - privateMeta: Private metadata for the Store, which will be encrypted.
+	///   - policies: A set of policies for the Container.
     ///
     /// - Throws: `PrivMXEndpointError.failedCreatingStore` if Store creation fails.
     ///
@@ -122,13 +132,21 @@ public class StoreApi{
 		users: privmx.UserWithPubKeyVector,
 		managers: privmx.UserWithPubKeyVector,
 		publicMeta: privmx.endpoint.core.Buffer,
-		privateMeta: privmx.endpoint.core.Buffer
+		privateMeta: privmx.endpoint.core.Buffer,
+		policies: privmx.endpoint.core.ContainerPolicy? = nil
 	) throws -> std.string{
-		let res = api.createStore(contextId, 
+		
+		var optPolicies = privmx.OptionalContainerPolicy()
+		if let policies{
+			optPolicies = privmx.makeOptional(policies)
+		}
+		
+		let res = api.createStore(contextId,
 								  users, 
 								  managers,
 								  publicMeta,
-								  privateMeta)
+								  privateMeta,
+								  optPolicies)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedCreatingStore(res.error.value!)
 		}
@@ -144,6 +162,8 @@ public class StoreApi{
 	/// Updates an existing Store.
     ///
     /// The provided values will override the existing ones. You can also force regeneration of the Store's key if needed.
+	///
+	/// If `policies` argument is set to `nil`, the default policies will be applied.
     ///
     /// - Parameters:
     ///   - storeId: The unique identifier of the Store to be updated.
@@ -154,6 +174,7 @@ public class StoreApi{
     ///   - privateMeta: New private metadata for the Store, which will be encrypted.
     ///   - force: Whether to force the update, bypassing version control.
     ///   - forceGenerateNewKey: Whether to generate a new key for the Store.
+	///   - policies: New set of policies for the Container.
     ///
     /// - Throws: `PrivMXEndpointError.failedUpdatingStore` if updating the Store fails.
     public func updateStore(
@@ -164,8 +185,15 @@ public class StoreApi{
 		publicMeta: privmx.endpoint.core.Buffer,
 		privateMeta: privmx.endpoint.core.Buffer,
 		force: Bool,
-		forceGenerateNewKey: Bool
+		forceGenerateNewKey: Bool,
+		policies: privmx.endpoint.core.ContainerPolicy? = nil
 	) throws -> Void {
+		
+		var optPolicies = privmx.OptionalContainerPolicy()
+		if let policies{
+			optPolicies = privmx.makeOptional(policies)
+		}
+		
 		let res = api.updateStore(storeId,
 								  users,
 								  managers,
@@ -173,7 +201,8 @@ public class StoreApi{
 								  privateMeta,
 								  version,
 								  force,
-								  forceGenerateNewKey)
+								  forceGenerateNewKey,
+								  optPolicies)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUpdatingStore(res.error.value!)
 		}
@@ -224,16 +253,16 @@ public class StoreApi{
     ///
     /// - Parameters:
     ///   - storeId: The Store from which to list files.
-    ///   - query: A `PagingQuery` object to filter and paginate the results.
+    ///   - pagingQuery: A `PagingQuery` object to filter and paginate the results.
     ///
     /// - Throws: `PrivMXEndpointError.failedListingFiles` if listing the files fails.
     ///
     /// - Returns: A `privmx.FileList` instance containing the list of files.
     public func listFiles(
 		storeId: std.string,
-		query: privmx.endpoint.core.PagingQuery
+		pagingQuery: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.FileList{
-		let res = api.listFiles(storeId, query)
+		let res = api.listFiles(storeId, pagingQuery)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedListingFiles(res.error.value!)
 		}
@@ -244,6 +273,14 @@ public class StoreApi{
 			throw PrivMXEndpointError.failedListingFiles(err)
 		}
 		return result
+	}
+	
+	@available(*, deprecated, renamed:"listFiles(storeId:pagingQuery:)")
+	public func listFiles(
+		storeId: std.string,
+		query: privmx.endpoint.core.PagingQuery
+	) throws -> privmx.FileList{
+		try listFiles(storeId: storeId, pagingQuery: query)
 	}
 	
 	/// Creates a new file handle for writing in a Store.
@@ -325,6 +362,24 @@ public class StoreApi{
 			throw PrivMXEndpointError.failedUpdatingFile(err)
 		}
 		return result
+	}
+	
+	/// Updates the metadata of an existing File.
+	/// - Parameters:
+	///   - fileId: id of a File to be updated
+	///   - publicMeta: new public metadata
+	///   - privateMeta: new private metadata
+	///
+	/// - Throws: When an error occurs during updating metadata.
+	public func updateFileMeta(
+		fileId: std.string,
+		publicMeta:privmx.endpoint.core.Buffer,
+		privateMeta:privmx.endpoint.core.Buffer
+	) throws -> Void {
+		let res = api.updateFileMeta(fileId, publicMeta, privateMeta)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedUpdatingFile(res.error.value!)
+		}
 	}
 	
 	/// Closes an open file handle.

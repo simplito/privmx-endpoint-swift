@@ -45,10 +45,10 @@ ResultWithError<NativeStoreApiWrapper> NativeStoreApiWrapper::create(NativeConne
 }
 
 ResultWithError<StoreList> NativeStoreApiWrapper::listStores(const std::string& contextId,
-															const core::PagingQuery& query){
+															const core::PagingQuery& pagingQuery){
 	ResultWithError<StoreList> res;
 	try{
-		res.result = getapi()->listStores(contextId, query);
+		res.result = getapi()->listStores(contextId, pagingQuery);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -99,10 +99,16 @@ ResultWithError<std::string> NativeStoreApiWrapper::createStore(const std::strin
 																const UserWithPubKeyVector& users,
 																const UserWithPubKeyVector& managers,
 																const core::Buffer& publicMeta,
-																const core::Buffer& privateMeta){
+																const core::Buffer& privateMeta,
+																const OptionalContainerPolicy& policies){
 	ResultWithError<std::string> res;
 	try{
-		res.result = getapi()->createStore(contextId, users, managers, publicMeta,privateMeta);
+		res.result = getapi()->createStore(contextId,
+										   users,
+										   managers,
+										   publicMeta,
+										   privateMeta,
+										   policies);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -131,7 +137,8 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::updateStore(const std::st
 																   const core::Buffer& privateMeta,
 																   const int64_t version,
 																   const bool force,
-																   const bool forceGenerateNewKey){
+																   const bool forceGenerateNewKey,
+																   const OptionalContainerPolicy& policies){
 	ResultWithError<std::nullptr_t> res;
 	try{
 		getapi()->updateStore(storeId,
@@ -141,7 +148,8 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::updateStore(const std::st
 							  privateMeta,
 							  version,
 							  force,
-							  forceGenerateNewKey);
+							  forceGenerateNewKey,
+							  policies);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -250,6 +258,33 @@ ResultWithError<StoreFileHandle> NativeStoreApiWrapper::updateFile(const std::st
 	try{
 		res.result = getapi()->updateFile(fileId, publicMeta, privateMeta, size);
 		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<std::nullptr_t> NativeStoreApiWrapper::updateFileMeta(const std::string& fileId,
+																 const core::Buffer& publicMeta,
+																 const core::Buffer& privateMeta){
+	ResultWithError<std::nullptr_t> res;
+	try{
+		getapi()->updateFileMeta(fileId, publicMeta, privateMeta);
+		} catch(core::Exception& err) {
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
