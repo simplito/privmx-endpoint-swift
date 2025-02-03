@@ -36,12 +36,12 @@ public:
 	 * Lists Stores the user has access to in the provided Context.
 	 *
 	 * @param contextId : `const std::string&` — from which Context should the Threads be listed
-	 * @param query : `privmx::endpoint::core::PagingQuery` — parameters of the query
+	 * @param pagingQuery : `privmx::endpoint::core::PagingQuery` — parameters of the query
 	 *
 	 * @return `privmx::StoreList` aka `privmx::endpoint::core::PagingList<privmx::endpoint::store::Store>` instance wrapped in a `ResultWithError` structure for error handling.
 	 */
 	ResultWithError<StoreList> listStores(const std::string& contextId,
-														   const endpoint::core::PagingQuery& query);
+														   const endpoint::core::PagingQuery& pagingQuery);
 	
 	/**
 	 * Retrieves information about a Store.
@@ -130,7 +130,7 @@ public:
 	 * @return `privmx::FileList` wrapped in a`ResultWithError` structure for error handling.
 	 */
 	ResultWithError<FileList> listFiles(const std::string& storeId,
-										const endpoint::core::PagingQuery& sortOrder);
+										const endpoint::core::PagingQuery& pagingQuery);
 	
 	/**
 	 * Creates a new file handle for writing in a Store
@@ -164,6 +164,16 @@ public:
 											  const endpoint::core::Buffer& privateMeta,
 											  int64_t size);
 	
+	/**
+	 * Update metadata of an existing file in a Store.
+	 *
+	 * @param fileId ID of the file to update
+	 * @param publicMeta public file metadata
+	 * @param privateMeta private file metadata
+	 */
+	ResultWithError<std::nullptr_t> updateFileMeta(const std::string& fileId,
+												   const endpoint::core::Buffer& publicMeta,
+												   const endpoint::core::Buffer& privateMeta);
 	/**
 	 * Creates a new file handle for reading a File.
 	 *

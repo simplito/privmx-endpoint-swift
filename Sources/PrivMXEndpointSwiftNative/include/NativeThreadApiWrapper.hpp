@@ -106,7 +106,7 @@ public:
 	 * @return `privmx::ThreadList`instance wrapped in a `ResultWithError` structure for error handling.
 	 */
 	ResultWithError<ThreadList> listThreads(const std::string& contextId,
-										  const endpoint::core::PagingQuery& query);
+										  const endpoint::core::PagingQuery& pagingQuery);
 	
 	/**
 	 * Sends a message in a thread
@@ -151,7 +151,7 @@ public:
 	 * @return `privmx::MessageList`instance wrapped in a `ResultWithError` structure for error handling.
 	 */
 	ResultWithError<MessageList> listMessages(const std::string& threadId,
-											  const endpoint::core::PagingQuery& query);
+											  const endpoint::core::PagingQuery& pagingQuery);
 	
 	/**
 	 * Sends message in a Thread.

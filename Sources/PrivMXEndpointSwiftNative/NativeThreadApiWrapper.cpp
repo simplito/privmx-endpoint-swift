@@ -105,12 +105,12 @@ ResultWithError<thread::Thread> NativeThreadApiWrapper::getThread(const std::str
 }
 
 ResultWithError<ThreadList> NativeThreadApiWrapper::listThreads(const std::string& contextId,
-															   const core::PagingQuery& query){
+															   const core::PagingQuery& pagingQuery){
 	ResultWithError<ThreadList> res;
 	try {
 		
 		
-		res.result = getapi()->listThreads(contextId,query);
+		res.result = getapi()->listThreads(contextId,pagingQuery);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -133,10 +133,10 @@ ResultWithError<ThreadList> NativeThreadApiWrapper::listThreads(const std::strin
 }
 
 ResultWithError<MessageList> NativeThreadApiWrapper::listMessages(const std::string& threadId,
-																  const core::PagingQuery& query){
+																  const core::PagingQuery& pagingQuery){
 	ResultWithError<MessageList> res;
 	try {
-		res.result = getapi()->listMessages(threadId,query);
+		res.result = getapi()->listMessages(threadId,pagingQuery);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),

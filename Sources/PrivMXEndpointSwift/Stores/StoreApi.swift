@@ -56,16 +56,16 @@ public class StoreApi{
     ///
     /// - Parameters:
     ///   - contextId: The Context from which the Stores should be listed.
-    ///   - query: A `PagingQuery` object to filter and paginate the results.
+    ///   - pagingQuery: A `PagingQuery` object to filter and paginate the results.
     ///
     /// - Throws: `PrivMXEndpointError.failedListingStores` if listing Stores fails.
     ///
     /// - Returns: A `privmx.StoreList` instance containing the list of Stores.
     public func listStores(
 		contextId: std.string,
-		query: privmx.endpoint.core.PagingQuery
+		pagingQuery: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.StoreList {
-		let res = api.listStores(contextId, query)
+		let res = api.listStores(contextId, pagingQuery)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedListingStores(res.error.value!)
 		}
@@ -76,7 +76,14 @@ public class StoreApi{
 			throw PrivMXEndpointError.failedListingStores(err)
 		}
 		return result
-		
+	}
+	
+	@available(*, deprecated, renamed: "listStores(contextId:pagingQuery:)")
+	public func listStores(
+		contextId: std.string,
+		query: privmx.endpoint.core.PagingQuery
+	) throws -> privmx.StoreList {
+		try listStores(contextId: contextId, pagingQuery: query)
 	}
 	
 	/// Retrieves detailed information about a specified Store.
@@ -246,16 +253,16 @@ public class StoreApi{
     ///
     /// - Parameters:
     ///   - storeId: The Store from which to list files.
-    ///   - query: A `PagingQuery` object to filter and paginate the results.
+    ///   - pagingQuery: A `PagingQuery` object to filter and paginate the results.
     ///
     /// - Throws: `PrivMXEndpointError.failedListingFiles` if listing the files fails.
     ///
     /// - Returns: A `privmx.FileList` instance containing the list of files.
     public func listFiles(
 		storeId: std.string,
-		query: privmx.endpoint.core.PagingQuery
+		pagingQuery: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.FileList{
-		let res = api.listFiles(storeId, query)
+		let res = api.listFiles(storeId, pagingQuery)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedListingFiles(res.error.value!)
 		}
@@ -266,6 +273,14 @@ public class StoreApi{
 			throw PrivMXEndpointError.failedListingFiles(err)
 		}
 		return result
+	}
+	
+	@available(*, deprecated, renamed:"listFiles(storeId:pagingQuery:)")
+	public func listFiles(
+		storeId: std.string,
+		query: privmx.endpoint.core.PagingQuery
+	) throws -> privmx.FileList{
+		try listFiles(storeId: storeId, pagingQuery: query)
 	}
 	
 	/// Creates a new file handle for writing in a Store.
@@ -347,6 +362,24 @@ public class StoreApi{
 			throw PrivMXEndpointError.failedUpdatingFile(err)
 		}
 		return result
+	}
+	
+	/// Updates the metadata of an existing File.
+	/// - Parameters:
+	///   - fileId: id of a File to be updated
+	///   - publicMeta: new public metadata
+	///   - privateMeta: new private metadata
+	///
+	/// - Throws: When an error occurs during updating metadata.
+	public func updateFileMeta(
+		fileId: std.string,
+		publicMeta:privmx.endpoint.core.Buffer,
+		privateMeta:privmx.endpoint.core.Buffer
+	) throws -> Void {
+		let res = api.updateFileMeta(fileId, publicMeta, privateMeta)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedUpdatingFile(res.error.value!)
+		}
 	}
 	
 	/// Closes an open file handle.

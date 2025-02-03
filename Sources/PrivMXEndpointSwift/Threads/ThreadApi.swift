@@ -190,16 +190,16 @@ public class ThreadApi{
 	///
 	/// - Parameters:
 	///   - contextId: The unique identifier of the context from which to list Threads.
-	///   - query: A query object to filter and paginate the results.
+	///   - pagingQuery: A query object to filter and paginate the results.
 	///
 	/// - Throws: `PrivMXEndpointError.failedListingThreads` if the listing process fails.
 	///
 	/// - Returns: A `privmx.ThreadList` instance containing the list of Threads.
 	public func listThreads(
 		contextId: std.string,
-		query: privmx.endpoint.core.PagingQuery
+		pagingQuery: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.ThreadList {
-		let res = api.listThreads(contextId,query)
+		let res = api.listThreads(contextId,pagingQuery)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedListingThreads(res.error.value!)
 		}
@@ -210,6 +210,13 @@ public class ThreadApi{
 			throw PrivMXEndpointError.failedListingThreads(err)
 		}
 		return result
+	}
+	@available(*, deprecated, renamed: "listThreads(contextId:pagingQuery:)")
+	public func listThreads(
+		contextId: std.string,
+		query: privmx.endpoint.core.PagingQuery
+	) throws -> privmx.ThreadList{
+		try listThreads(contextId: contextId, pagingQuery: query)
 	}
 	
 	/// Sends a message in a Thread.
@@ -287,16 +294,16 @@ public class ThreadApi{
 	///
 	/// - Parameters:
 	///   - threadId: The unique identifier of the Thread from which to list messages.
-	///   - query: A query object to filter and paginate the results.
+	///   - pagingQuery: A query object to filter and paginate the results.
 	///
 	/// - Throws: `PrivMXEndpointError.failedListingMessages` if listing the messages fails.
 	///
 	/// - Returns: A `privmx.MessageList` instance containing the list of messages.
 	public func listMessages(
 		threadId: std.string,
-		query: privmx.endpoint.core.PagingQuery
+		pagingQuery: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.MessageList {
-		let res = api.listMessages(threadId,query)
+		let res = api.listMessages(threadId,pagingQuery)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedListingMessages(res.error.value!)
 		}
@@ -309,6 +316,13 @@ public class ThreadApi{
 		return result
 	}
 	
+	@available(*, deprecated, renamed: "listMessages(threadId:pagingQuery:)")
+	public func listMessages(
+		threadId: std.string,
+		query: privmx.endpoint.core.PagingQuery
+	) throws -> privmx.MessageList {
+		try listMessages(threadId: threadId, pagingQuery: query)
+	}
 	/// Updates an existing message with new metadata and content.
 	///
 	/// - Parameters:
