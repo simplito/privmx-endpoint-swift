@@ -36,7 +36,18 @@ public:
 	 * @return WIF Private Key, wrapped in a`ResultWithError` structure for error handling.
 	 *
 	 */
+	[[deprecated("Use generatePrivateKey2(const std::optional<std::string>& randomSeed).")]]
 	ResultWithError<std::string> generatePrivateKey(const OptionalString& basestring);
+	
+	/**
+	 * Generates a new Private Key.
+	 *
+	 * @param baseString  : `const OptionalString&` aka `const std::optional<std:string>&` — Optional base for generating the key
+	 *
+	 * @return WIF Private Key, wrapped in a`ResultWithError` structure for error handling.
+	 *
+	 */
+	ResultWithError<std::string> generatePrivateKey2(const OptionalString& basestring);
 	
 	/**
 	 * Generates a new Private Key from two strings.
@@ -47,7 +58,20 @@ public:
 	 * @return Private WIF key wrapped in a`ResultWithError` structure for error handling.
 	 *
 	 */
+	[[deprecated("Use derivePrivateKey2(const std::string& password, const std::string& salt).")]]
 	ResultWithError<std::string> derivePrivateKey(const std::string& password,
+												 const std::string& salt);
+	
+	/**
+	 * Generates a new Private Key from two strings.
+	 *
+	 * @param password  : `const std::string&`
+	 * @param salt : `const std::string&`
+	 *
+	 * @return Private WIF key wrapped in a`ResultWithError` structure for error handling.
+	 *
+	 */
+	ResultWithError<std::string> derivePrivateKey2(const std::string& password,
 												 const std::string& salt);
 	
 	/**
