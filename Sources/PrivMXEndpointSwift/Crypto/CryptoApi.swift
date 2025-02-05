@@ -178,7 +178,7 @@ public class CryptoApi{
 		if let randomSeed{
 			bs = privmx.makeOptional(randomSeed)
 		}
-		let res = api.generatePrivateKey(bs)
+		let res = api.generatePrivateKey2(bs)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGeneratingPrivKey(res.error.value!)
 		}
