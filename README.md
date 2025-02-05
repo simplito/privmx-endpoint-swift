@@ -67,5 +67,5 @@ Copyright © 2024 Simplito sp. z o.o.
 This project is part of the PrivMX Platform (https://privmx.dev).
 This software is Licensed under the MIT License.
 
-PrivMX Endpoint and PrivMX Bridge are licensed under the PrivMX Free License.
+PrivMX Endpoint and PrivMX Bridge are licensed under the [PrivMX Free License](https://github.com/simplito/privmx-endpoint).
 See the License for the specific language governing permissions and limitations.
