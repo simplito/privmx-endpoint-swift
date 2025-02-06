@@ -134,51 +134,15 @@ public class CryptoApi{
 	///   - `PrivMXEndpointError.failedGeneratingPrivKey` if the key generation fails, potentially due to a system error or invalid seed.
 	///
 	/// **Security Note:** Private keys should be stored securely, ideally in an encrypted keystore or hardware security module (HSM).
-	@available(*, deprecated, renamed: "generatePrivateKey2(password:salt:)")
 	public func generatePrivateKey(
 		randomSeed: std.string?
 	) throws -> std.string {
-		var bs = privmx.OptionalString()
+		var rs = privmx.OptionalString()
 		
 		if let randomSeed{
-			bs = privmx.makeOptional(randomSeed)
+			rs = privmx.makeOptional(randomSeed)
 		}
-		let res = api.generatePrivateKey(bs)
-		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedGeneratingPrivKey(res.error.value!)
-		}
-		guard let result = res.result.value else {
-			var err = privmx.InternalError()
-			err.name = "Value error"
-			err.description = "Unexpectedly received nil result"
-			throw PrivMXEndpointError.failedGeneratingPrivKey(err)
-		}
-		return result
-	}
-	
-	/// Generates a new private key in WIF (Wallet Import Format).
-	///
-	/// The private key can be used for various cryptographic operations such as signing data, generating public keys, and encrypting sensitive information. You can optionally provide a seed to generate a deterministic key, or omit the seed to generate a random key. Here it can be used for identifying and authorizing User (after previous adding its Public Key to PrivMX Bridge)
-	///
-	/// **Use case:** Private keys are used in both asymmetric encryption and signing operations. This method is useful when you need a fresh key pair for a new user or system process.
-	///
-	/// - Parameter randomSeed: An optional seed to generate a deterministic private key. If `nil` is provided, a random key will be generated.
-	///
-	/// - Returns: The generated private key in WIF format.
-	///
-	/// - Throws:
-	///   - `PrivMXEndpointError.failedGeneratingPrivKey` if the key generation fails, potentially due to a system error or invalid seed.
-	///
-	/// **Security Note:** Private keys should be stored securely, ideally in an encrypted keystore or hardware security module (HSM).
-	public func generatePrivateKey2(
-		randomSeed: std.string?
-	) throws -> std.string {
-		var bs = privmx.OptionalString()
-		
-		if let randomSeed{
-			bs = privmx.makeOptional(randomSeed)
-		}
-		let res = api.generatePrivateKey2(bs)
+		let res = api.generatePrivateKey(rs)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGeneratingPrivKey(res.error.value!)
 		}
