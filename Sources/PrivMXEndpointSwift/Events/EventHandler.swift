@@ -637,10 +637,59 @@ public enum EventHandler{
 	/// - Parameter eventHolder: The `EventHolder` instance containing an event to check.
 	/// - Returns: `true` if the `EventHolder` contains a `ThreadDeletedMessageEvent`; otherwise, `false`.
 	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if an error occurs during querying.
+	@available(*, deprecated, renamed: "isThreadMessageDeletedEvent(eventHolder:)", message: "This method has been renamed")
 	public static func isThreadDeletedMessageEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> Bool {
 		let res = privmx.ThreadEventHandler.isThreadDeletedMessageEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly received nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	
+	/// Checks if the `EventHolder` contains a `ThreadMessageEvent`.
+	///
+	/// This method verifies whether the provided `EventHolder` instance contains an event
+	/// that corresponds to a `privmx.endpoint.thread.ThreadDeletedMessageEvent`.
+	///
+	/// - Parameter eventHolder: The `EventHolder` instance containing an event to check.
+	/// - Returns: `true` if the `EventHolder` contains a `ThreadDeletedMessageEvent`; otherwise, `false`.
+	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if an error occurs during querying.
+	public static func isThreadMessageDeletedEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.ThreadEventHandler.isThreadMessageDeletedEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly received nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	
+	/// Checks if the `EventHolder` contains a `ThreadDeletedMessageEvent`.
+	///
+	/// This method verifies whether the provided `EventHolder` instance contains an event
+	/// that corresponds to a `privmx.endpoint.thread.ThreadDeletedMessageEvent`.
+	///
+	/// - Parameter eventHolder: The `EventHolder` instance containing an event to check.
+	/// - Returns: `true` if the `EventHolder` contains a `ThreadDeletedMessageEvent`; otherwise, `false`.
+	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if an error occurs during querying.
+	public static func isThreadMessageUpdatedEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.ThreadEventHandler.isThreadMessageUpdatedEvent(eventHolder)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
 		}
@@ -765,10 +814,53 @@ public enum EventHandler{
 	/// - Parameter eventHolder: An `EventHolder` instance containing the `ThreadDeletedMessageEvent`.
 	/// - Returns: The extracted `ThreadDeletedMessageEvent`.
 	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if extraction fails.
+	@available(*, deprecated, renamed: "extractThreadMessageDeletedEvent(eventHolder:)")
 	public static func extractThreadDeletedMessageEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.thread.ThreadMessageDeletedEvent {
 		let res = privmx.ThreadEventHandler.extractThreadDeletedMessageEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly received nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
+
+	/// Extracts a `ThreadMessageDeletedEvent` from the provided `EventHolder`.
+	///
+	/// - Parameter eventHolder: An `EventHolder` instance containing the `ThreadMessageDeletedEvent`.
+	/// - Returns: The extracted `ThreadMessageDeletedEvent`.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if extraction fails.
+	public static func extractThreadMessageDeletedEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.thread.ThreadMessageDeletedEvent {
+		let res = privmx.ThreadEventHandler.extractThreadMessageDeletedEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly received nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
+	
+	/// Extracts a `ThreadMessageDeletedEvent` from the provided `EventHolder`.
+	///
+	/// - Parameter eventHolder: An `EventHolder` instance containing the `ThreadMessageUpdatedEvent`.
+	/// - Returns: The extracted `ThreadMessageUpdatedEvent`.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if extraction fails.
+	public static func extractThreadMessageUpdatedEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.thread.ThreadMessageUpdatedEvent {
+		let res = privmx.ThreadEventHandler.extractThreadMessageUpdatedEvent(eventHolder)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
 		}
