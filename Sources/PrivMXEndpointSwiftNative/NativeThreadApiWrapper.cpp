@@ -685,6 +685,31 @@ ResultWithError<bool> ThreadEventHandler::isThreadMessageDeletedEvent(const core
 	return res;
 }
 
+ResultWithError<bool> ThreadEventHandler::isThreadMessageUpdatedEvent(const core::EventHolder& eventHolder){
+	ResultWithError<bool> res;
+	try{
+		res.result = thread::Events::isThreadMessageUpdatedEvent(eventHolder);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
 ResultWithError<thread::ThreadMessageDeletedEvent> ThreadEventHandler::extractThreadDeletedMessageEvent(const core::EventHolder& eventHolder){
 	ResultWithError<thread::ThreadMessageDeletedEvent> res;
 	try{
