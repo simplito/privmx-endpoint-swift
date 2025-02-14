@@ -61,7 +61,8 @@ ResultWithError<std::string> NativeInboxApiWrapper::createInbox(const std::strin
 										   managers,
 										   publicMeta,
 										   privateMeta,
-										   filesConfig);
+										   filesConfig,
+										   policies);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
