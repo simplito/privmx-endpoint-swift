@@ -419,9 +419,9 @@ public func prepareEntry(
 	/// Writes a chunk of data to a file in the Inbox.
 	///
 	/// - Parameters:
-	///   - inboxHandle: The handle of the Inbox containing the file.
-	///   - inboxFileHandle: The file handle to write data to.
-	///   - dataChunk: The chunk of data to write.
+	///   - inboxHandle: Handle to the prepared Inbox entry
+	///   - inboxFileHandle: handle to the file where the uploaded chunk belongs
+	///   - Buffer: dataChunk - file chunk to send
 	///
 	/// - Throws: `PrivMXEndpointError.failedWritingToFile` if writing the data chunk fails.
 	public func writeToFile(

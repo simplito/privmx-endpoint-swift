@@ -510,7 +510,7 @@ ResultWithError<nullptr_t> NativeStoreApiWrapper::subscribeForStoreEvents(){
 ResultWithError<nullptr_t> NativeStoreApiWrapper::unsubscribeFromStoreEvents(){
 	ResultWithError<std::nullptr_t> res;
 	try {
-		getapi()->subscribeForStoreEvents();
+		getapi()->unsubscribeFromStoreEvents();
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -558,7 +558,7 @@ ResultWithError<nullptr_t> NativeStoreApiWrapper::subscribeForFileEvents(const s
 ResultWithError<nullptr_t> NativeStoreApiWrapper::unsubscribeFromFileEvents(const std::string& storeId){
 	ResultWithError<std::nullptr_t> res;
 	try {
-		getapi()->subscribeForFileEvents(storeId);
+		getapi()->unsubscribeFromFileEvents(storeId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),

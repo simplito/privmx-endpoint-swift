@@ -231,6 +231,33 @@ ResultWithError<std::string> NativeCryptoApiWrapper::derivePrivateKey(const std:
 	return res;
 }
 
+ResultWithError<std::string> NativeCryptoApiWrapper::derivePrivateKey2(const std::string &password,
+																	 const std::string &salt){
+	ResultWithError<std::string> res;
+	try {
+		res.result = getapi()->derivePrivateKey2(password,
+												salt);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
 ResultWithError<bool> NativeCryptoApiWrapper::verifySignature(
 	const endpoint::core::Buffer& data,
 	const endpoint::core::Buffer& signature,
