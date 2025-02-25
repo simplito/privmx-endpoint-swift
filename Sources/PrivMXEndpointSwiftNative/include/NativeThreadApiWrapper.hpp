@@ -274,7 +274,28 @@ static ResultWithError<endpoint::thread::ThreadNewMessageEvent> extractThreadNew
  * @return Boolean value wrapped in a `ResultWithError` structure for error handling.
  *
  */
+[[deprecated("Has been renamed, use isThreadDeletedMessageEvent")]]
 static ResultWithError<bool> isThreadDeletedMessageEvent(const endpoint::core::EventHolder& eventHolder);
+
+/**
+ * Checks if an EventHolder contains an `privmx::endpoint::thread::ThreadDeletedMessageEvent`
+ *
+ * @param eventHolder  : `const endpoint::core::EventHolder&`
+ *
+ * @return Boolean value wrapped in a `ResultWithError` structure for error handling.
+ *
+ */
+static ResultWithError<bool> isThreadMessageDeletedEvent(const endpoint::core::EventHolder& eventHolder);
+
+/**
+ * Checks if an EventHolder contains an `privmx::endpoint::thread::ThreadDeletedMessageEvent`
+ *
+ * @param eventHolder  : `const endpoint::core::EventHolder&`
+ *
+ * @return Boolean value wrapped in a `ResultWithError` structure for error handling.
+ *
+ */
+static ResultWithError<bool> isThreadMessageUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
 
 /**
  * Extracts an `privmx::endpoint::thread::ThreadDeletedMessageEvent` from the `privmx::endpoint::core::EventHolder`
@@ -283,7 +304,26 @@ static ResultWithError<bool> isThreadDeletedMessageEvent(const endpoint::core::E
  *
  * @return Extracted `privmx::endpoint::thread::ThreadDeletedMessageEvent` wrapped in a `ResultWithError` structure for error handling.
  */
+[[deprecated("Has been renamed, use extractThreadMessageDeletedEvent")]]
 static ResultWithError<endpoint::thread::ThreadMessageDeletedEvent> extractThreadDeletedMessageEvent(const endpoint::core::EventHolder& eventHolder);
+
+/**
+ * Extracts an `privmx::endpoint::thread::ThreadDeletedMessageEvent` from the `privmx::endpoint::core::EventHolder`
+ *
+ * @param eventHolder  : `const endpoint::core::EventHolder&`
+ *
+ * @return Extracted `privmx::endpoint::thread::ThreadDeletedMessageEvent` wrapped in a `ResultWithError` structure for error handling.
+ */
+static ResultWithError<endpoint::thread::ThreadMessageDeletedEvent> extractThreadMessageDeletedEvent(const endpoint::core::EventHolder& eventHolder);
+
+/**
+ * Extracts an `privmx::endpoint::thread::ThreadDeletedMessageEvent` from the `privmx::endpoint::core::EventHolder`
+ *
+ * @param eventHolder  : `const endpoint::core::EventHolder&`
+ *
+ * @return Extracted `privmx::endpoint::thread::ThreadDeletedMessageEvent` wrapped in a `ResultWithError` structure for error handling.
+ */
+static ResultWithError<endpoint::thread::ThreadMessageUpdatedEvent> extractThreadMessageUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
 
 /**
  * Checks if an EventHolder contains an `privmx::endpoint::thread::ThreadStatsEvent`

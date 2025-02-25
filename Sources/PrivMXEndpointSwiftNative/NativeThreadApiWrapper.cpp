@@ -660,10 +660,109 @@ ResultWithError<bool> ThreadEventHandler::isThreadDeletedMessageEvent(const core
 	return res;
 }
 
+ResultWithError<bool> ThreadEventHandler::isThreadMessageDeletedEvent(const core::EventHolder& eventHolder){
+	ResultWithError<bool> res;
+	try{
+		res.result = thread::Events::isThreadDeletedMessageEvent(eventHolder);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<bool> ThreadEventHandler::isThreadMessageUpdatedEvent(const core::EventHolder& eventHolder){
+	ResultWithError<bool> res;
+	try{
+		res.result = thread::Events::isThreadMessageUpdatedEvent(eventHolder);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
 ResultWithError<thread::ThreadMessageDeletedEvent> ThreadEventHandler::extractThreadDeletedMessageEvent(const core::EventHolder& eventHolder){
 	ResultWithError<thread::ThreadMessageDeletedEvent> res;
 	try{
 		res.result = thread::Events::extractThreadMessageDeletedEvent(eventHolder);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<thread::ThreadMessageDeletedEvent> ThreadEventHandler::extractThreadMessageDeletedEvent(const core::EventHolder& eventHolder){
+	ResultWithError<thread::ThreadMessageDeletedEvent> res;
+	try{
+		res.result = thread::Events::extractThreadMessageDeletedEvent(eventHolder);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+ResultWithError<thread::ThreadMessageUpdatedEvent> ThreadEventHandler::extractThreadMessageUpdatedEvent(const core::EventHolder& eventHolder){
+	ResultWithError<thread::ThreadMessageUpdatedEvent> res;
+	try{
+		res.result = thread::Events::extractThreadMessageUpdatedEvent(eventHolder);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),

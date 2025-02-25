@@ -61,7 +61,8 @@ ResultWithError<std::string> NativeInboxApiWrapper::createInbox(const std::strin
 										   managers,
 										   publicMeta,
 										   privateMeta,
-										   filesConfig);
+										   filesConfig,
+										   policies);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -601,7 +602,7 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::subscribeForEntryEvents(const 
 ResultWithError<nullptr_t> NativeInboxApiWrapper::unsubscribeFromEntryEvents(const std::string& inboxId){
 	ResultWithError<nullptr_t> res;
 	try {
-		getapi()->subscribeForEntryEvents(inboxId);
+		getapi()->unsubscribeFromEntryEvents(inboxId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),

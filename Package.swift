@@ -36,24 +36,25 @@ let package = Package(
 						   ]),
 		.binaryTarget(
 			name:"GMP",
-			url: "https://github.com/simplito/privmx-endpoint-xcframeworks/releases/download/2.2.0/gmp-6.3.0.xcframework.zip",
-			checksum: "afe394297118b3a62df848ac2edc816687178b58032eb2f81d79e99e1bb7644a"),
+			url: "https://github.com/simplito/privmx-endpoint-xcframeworks/releases/download/2.2.4/gmp-6.3.0.xcframework.zip",
+			checksum: "ffaad3ee205ae4cd4b7bd28fcc176a095a66cd731b38f50f1121cec62fa9ec72"),
 		.binaryTarget(
 			name:"POCO",
-			url: "https://github.com/simplito/privmx-endpoint-xcframeworks/releases/download/2.2.0/poco-1.13.2.xcframework.zip",
-			checksum: "4aab8e7e08e6bfee399be7d143b835f24c0f3ad974a49abd5c5e4bef40a587fb"),
+			url: "https://github.com/simplito/privmx-endpoint-xcframeworks/releases/download/2.2.4/poco-1.13.2.xcframework.zip",
+			checksum: "a6f94eee099c9571bd2e15dd484a1159c55887b7f46ee29d643ab9a310a38114"),
 		.binaryTarget(
 			name:"PSON",
-			url: "https://github.com/simplito/privmx-endpoint-xcframeworks/releases/download/2.2.0/pson-1.0.7.xcframework.zip",
-			checksum: "105df5a8e587d37e6a598fb7f9d203f91a435eade1772c7c791ad58479095f60"),
+			url: "https://github.com/simplito/privmx-endpoint-xcframeworks/releases/download/2.2.4/pson-1.0.7.xcframework.zip",
+			checksum: "3169b764154456600475deebc01cabad0dd508c74b4458cf020454e10e0ff5e1"),
 		.binaryTarget(
 			name:"OpenSSL",
-			url:"https://github.com/simplito/privmx-endpoint-xcframeworks/releases/download/2.2.0/openssl-3.0.15.xcframework.zip",
-			checksum: "f040129a6bbf6ce39babb61f697d1f4a54a07ef56ab038b823672b784a6a9f29"),
+			url:"https://github.com/simplito/privmx-endpoint-xcframeworks/releases/download/2.2.4/openssl-3.0.16.xcframework.zip",
+			checksum: "d2464decace0e9fec9c64e448d87a99e54bf4ebbc1b8616833cda31184d204c9"),
 		.binaryTarget(
 			name:"PrivMXEndpoint",
-			url: "https://github.com/simplito/privmx-endpoint-xcframeworks/releases/download/2.2.0/privmx-endpoint-2.2.0.xcframework.zip",
-			checksum: "81de4840b8860253ae26005ad6c050642c3c2545c7046992134c4d09815ec465")
+			url: "https://github.com/simplito/privmx-endpoint-xcframeworks/releases/download/2.2.4/privmx-endpoint-2.2.4.xcframework.zip",
+			checksum: "a9b2c0bf4348adca4fad290a5cfc235d219a58baea4963bb86fa88dd697b7944")
+
 	],
 	cxxLanguageStandard: .cxx17
 )
