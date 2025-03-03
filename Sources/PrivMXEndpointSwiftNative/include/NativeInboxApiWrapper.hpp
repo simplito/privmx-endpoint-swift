@@ -115,7 +115,7 @@ public:
 	 * @param userPrivKey optional sender's private key which can be used later to encrypt data for that sender
 	 * @return int64_t Inbox handle
 	 */
-	ResultWithError<InboxHandle> prepareEntry(const std::string& inboxId,
+	ResultWithError<EntryHandle> prepareEntry(const std::string& inboxId,
 											  const endpoint::core::Buffer& data,
 											  const InboxFileHandleVector& inboxFileHandles = InboxFileHandleVector(),
 											  const OptionalString& userPrivKey = std::nullopt);
@@ -126,7 +126,7 @@ public:
 	 *
 	 * @param inboxHandle ID of the Inbox to which the request applies
 	 */
-	ResultWithError<nullptr_t> sendEntry(const InboxHandle inboxHandle);
+	ResultWithError<nullptr_t> sendEntry(const EntryHandle inboxHandle);
 	
 	/**
 	 * Gets an entry from an Inbox.
@@ -175,7 +175,7 @@ public:
 	 * @param inboxFileHandle handle to the file where the uploaded chunk belongs
 	 * @param Buffer dataChunk - file chunk to send
 	 */
-	ResultWithError<nullptr_t> writeToFile(const InboxHandle inboxHandle,
+	ResultWithError<nullptr_t> writeToFile(const EntryHandle entryHandle,
 										   const InboxFileHandle inboxFileHandle,
 										   const endpoint::core::Buffer& dataChunk);
 
