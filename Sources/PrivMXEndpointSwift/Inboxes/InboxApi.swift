@@ -275,7 +275,7 @@ public class InboxApi{
 	///
 	/// - Throws: `PrivMXEndpointError.failedPreparingEntry` if preparing the entry fails.
 	///
-	/// - Returns: An `InboxHandle` representing the prepared entry, which should then be sent.
+	/// - Returns: An `EntryHandle` representing the prepared entry, which should then be sent.
 	public func prepareEntry(
 		inboxId: std.string,
 		data: privmx.endpoint.core.Buffer,
@@ -431,11 +431,25 @@ public class InboxApi{
 	/// Writes a chunk of data to a file in the Inbox.
 	///
 	/// - Parameters:
-	///   - inboxHandle: Handle to the prepared Inbox entry
+	///   - entryHandle: Handle to the prepared Inbox entry
 	///   - inboxFileHandle: handle to the file where the uploaded chunk belongs
 	///   - Buffer: dataChunk - file chunk to send
 	///
 	/// - Throws: `PrivMXEndpointError.failedWritingToFile` if writing the data chunk fails.
+	public func writeToFile(
+		entryHandle: privmx.EntryHandle,
+		inboxFileHandle: privmx.InboxFileHandle,
+		dataChunk: privmx.endpoint.core.Buffer
+	) throws -> Void {
+		let res = api.writeToFile(entryHandle,
+								  inboxFileHandle,
+								  dataChunk)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedWritingToFile(res.error.value!)
+		}
+	}
+
+	@available(*, deprecated, renamed: "writeToFile(entryHandle:inboxFileHandle:dataChunk:)")
 	public func writeToFile(
 		inboxHandle: privmx.EntryHandle,
 		inboxFileHandle: privmx.InboxFileHandle,
