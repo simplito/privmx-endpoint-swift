@@ -228,4 +228,19 @@ public class Connection{
 	}
 	
 	
+	public func getContextUsers(
+		contextId: std.string
+	) throws -> privmx.UserInfoVector {
+		let res = api.getContextUsers(contextId)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedGettingContextUsers(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedGettingContextUsers(err)
+		}
+		return result
+	}
 }

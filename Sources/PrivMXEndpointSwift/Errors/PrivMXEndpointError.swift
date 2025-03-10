@@ -45,6 +45,8 @@ public enum PrivMXEndpointError : Error{
 	case failedDisconnecting(privmx.InternalError)
 	/// Failed to list Contexts
 	case failedListingContexts(privmx.InternalError)
+	/// Falied to get a list of Users from a Context
+	case failedGettingContextUsers(privmx.InternalError)
 	
 	/// Failed to instantiate `ThreadApi`
 	case failedInstantiatingThreadApi(privmx.InternalError)
@@ -179,6 +181,7 @@ public enum PrivMXEndpointError : Error{
 					.failedConnecting(let err),
 					.failedDisconnecting(let err),
 					.failedListingContexts(let err),
+					.failedGettingContextUsers(let err),
 					.failedCreatingThread(let err),
 					.failedGettingThread(let err),
 					.failedListingThreads(let err),
@@ -251,6 +254,7 @@ public enum PrivMXEndpointError : Error{
 					.failedConnecting(let err),
 					.failedDisconnecting(let err),
 					.failedListingContexts(let err),
+					.failedGettingContextUsers(let err),
 					.failedCreatingThread(let err),
 					.failedGettingThread(let err),
 					.failedListingThreads(let err),
@@ -323,6 +327,7 @@ public enum PrivMXEndpointError : Error{
 					.failedConnecting(let err),
 					.failedDisconnecting(let err),
 					.failedListingContexts(let err),
+					.failedGettingContextUsers(let err),
 					.failedCreatingThread(let err),
 					.failedGettingThread(let err),
 					.failedListingThreads(let err),
@@ -394,6 +399,7 @@ public enum PrivMXEndpointError : Error{
 					.failedConnecting(let err),
 					.failedDisconnecting(let err),
 					.failedListingContexts(let err),
+					.failedGettingContextUsers(let err),
 					.failedCreatingThread(let err),
 					.failedGettingThread(let err),
 					.failedListingThreads(let err),

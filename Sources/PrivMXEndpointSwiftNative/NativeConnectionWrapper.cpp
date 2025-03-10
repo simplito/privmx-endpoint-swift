@@ -172,6 +172,31 @@ ResultWithError<ContextList> NativeConnectionWrapper::listContexts(const core::P
 	return res;
 }
 
+ResultWithError<UserInfoVector> NativeConnectionWrapper::getContextUsers(const std::string &contextId){
+	ResultWithError<UserInfoVector> res;
+	try{
+		res.result = getApi()->getContextUsers(contextId);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
 ResultWithError<int64_t> NativeConnectionWrapper::getConnectionId(){
 	ResultWithError<int64_t> res;
 	try {

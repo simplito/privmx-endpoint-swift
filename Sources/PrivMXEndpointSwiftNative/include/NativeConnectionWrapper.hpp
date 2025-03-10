@@ -111,6 +111,8 @@ public:
 	 * @return struct containing a list of Contexts wrapped in a `ResultWithError` object for error handling.
 	 */
 	ResultWithError<ContextList> listContexts(const endpoint::core::PagingQuery& query);
+	
+	ResultWithError<UserInfoVector> getContextUsers(const std::string& contextId);
 private:
 	
 	std::shared_ptr<endpoint::core::Connection> getApi();
