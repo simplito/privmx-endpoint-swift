@@ -41,5 +41,11 @@ private:
 	
 	NativeEventApiWrapper(NativeConnectionWrapper& connection);
 };
+
+class CustomEventHandler{
+public:
+	static ResultWithError<bool> isContextCustomEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<endpoint::event::ContextCustomEvent> extractContextCustomEvent(const endpoint::core::EventHolder& eventHolder);
+};
 }
 #endif /* _PRIVMX_ENDPOINT_SWIFT_NATIVE_NativeEventApiWrapper_hpp */

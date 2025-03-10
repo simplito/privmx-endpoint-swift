@@ -128,4 +128,40 @@ ResultWithError<std::nullptr_t> NativeEventApiWrapper::unsubscribeFromCustomEven
 	return res;
 }
 
+ResultWithError<bool> CustomEventHandler::isContextCustomEvent(const core::EventHolder &eventHolder){
+	auto res = ResultWithError<bool>();
+	try{
+		res.result = event::Events::isContextCustomEvent(eventHolder);
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<event::ContextCustomEvent> CustomEventHandler::extractContextCustomEvent(const endpoint::core::EventHolder &eventHolder) {
+	auto res = ResultWithError<event::ContextCustomEvent>();
+	try{
+		res.result = event::Events::extractContextCustomEvent(eventHolder);
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
 }
