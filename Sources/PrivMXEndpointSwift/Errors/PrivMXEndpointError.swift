@@ -159,6 +159,18 @@ public enum PrivMXEndpointError : Error{
 	/// Failed to send a request to the backend
 	case failedRequestingBackend(privmx.InternalError)
 	
+	/// Failed to instantiate `EventApi`
+	case FailedInstantiatingEventApi(privmx.InternalError)
+	
+	/// Failed to emit a `CustomEvent`
+	case FailedEmittingCustomEvent(privmx.InternalError)
+
+	/// Failed to subscribe for Custom Events
+	case FailedSubscribingForCustomEvents(privmx.InternalError)
+	
+	/// Failed to subscribe for Custom Events
+	case FailedUnsubscribingFromCustomEvents(privmx.InternalError)
+	
 	/// Gets the Message of the error
 	///
 	///  - Returns: Message of the error
@@ -226,7 +238,11 @@ public enum PrivMXEndpointError : Error{
 					.failedListingEntries(let err),
 					.failedGeneratingSymmetricKey(let err),
 					.failedVerifyingSignature(let err),
-					.failedCreatingFileHandle(let err):
+					.failedCreatingFileHandle(let err),
+					.FailedInstantiatingEventApi(let err),
+					.FailedEmittingCustomEvent(let err),
+					.FailedSubscribingForCustomEvents(let err),
+					.FailedUnsubscribingFromCustomEvents(let err):
 				return String(err.message)
 		}
 	}
@@ -298,7 +314,11 @@ public enum PrivMXEndpointError : Error{
 					.failedListingEntries(let err),
 					.failedGeneratingSymmetricKey(let err),
 					.failedVerifyingSignature(let err),
-					.failedCreatingFileHandle(let err):
+					.failedCreatingFileHandle(let err),
+					.FailedInstantiatingEventApi(let err),
+					.FailedEmittingCustomEvent(let err),
+					.FailedSubscribingForCustomEvents(let err),
+					.FailedUnsubscribingFromCustomEvents(let err):
 				return err.code.value
 		}
 	}
@@ -370,7 +390,11 @@ public enum PrivMXEndpointError : Error{
 					.failedListingEntries(let err),
 					.failedGeneratingSymmetricKey(let err),
 					.failedVerifyingSignature(let err),
-					.failedCreatingFileHandle(let err):
+					.failedCreatingFileHandle(let err),
+					.FailedInstantiatingEventApi(let err),
+					.FailedEmittingCustomEvent(let err),
+					.FailedSubscribingForCustomEvents(let err),
+					.FailedUnsubscribingFromCustomEvents(let err):
 				return String(err.name)
 		}
 	}
@@ -441,7 +465,11 @@ public enum PrivMXEndpointError : Error{
 					.failedListingEntries(let err),
 					.failedGeneratingSymmetricKey(let err),
 					.failedVerifyingSignature(let err),
-					.failedCreatingFileHandle(let err):
+					.failedCreatingFileHandle(let err),
+					.FailedInstantiatingEventApi(let err),
+					.FailedEmittingCustomEvent(let err),
+					.FailedSubscribingForCustomEvents(let err),
+					.FailedUnsubscribingFromCustomEvents(let err):
 				return String(err.description)
 		}
 	}
