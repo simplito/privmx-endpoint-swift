@@ -228,11 +228,11 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::deleteInbox(const std::string 
 	return res;
 }
 
-ResultWithError<InboxHandle> NativeInboxApiWrapper::prepareEntry(const std::string& inboxId,
+ResultWithError<EntryHandle> NativeInboxApiWrapper::prepareEntry(const std::string& inboxId,
 																 const endpoint::core::Buffer& data,
 																 const InboxFileHandleVector& inboxFileHandles,
 																 const OptionalString& userPrivKey){
-	ResultWithError<InboxHandle> res;
+	ResultWithError<EntryHandle> res;
 	try {
 		res.result = getapi()->prepareEntry(inboxId,
 											data,
@@ -260,10 +260,10 @@ ResultWithError<InboxHandle> NativeInboxApiWrapper::prepareEntry(const std::stri
 }
 
 
-ResultWithError<nullptr_t> NativeInboxApiWrapper::sendEntry(const InboxHandle inboxHandle){
+ResultWithError<nullptr_t> NativeInboxApiWrapper::sendEntry(const EntryHandle entryHandle){
 	ResultWithError<nullptr_t> res;
 	try {
-		getapi()->sendEntry(inboxHandle);
+		getapi()->sendEntry(entryHandle);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -391,12 +391,12 @@ ResultWithError<InboxFileHandle> NativeInboxApiWrapper::createFileHandle(const e
 	return res;
 }
 
-ResultWithError<nullptr_t> NativeInboxApiWrapper::writeToFile(const InboxHandle inboxHandle,
+ResultWithError<nullptr_t> NativeInboxApiWrapper::writeToFile(const EntryHandle entryHandle,
 															  const InboxFileHandle inboxFileHandle,
 															  const endpoint::core::Buffer& dataChunk){
 	ResultWithError<nullptr_t> res;
 	try {
-		getapi()->writeToFile(inboxHandle,
+		getapi()->writeToFile(entryHandle,
 							  inboxFileHandle,
 							  dataChunk);
 		}catch(core::Exception& err){

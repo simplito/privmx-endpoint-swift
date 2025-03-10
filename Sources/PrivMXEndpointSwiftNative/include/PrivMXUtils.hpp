@@ -44,8 +44,10 @@ class NullApiException : std::exception{
 	}
 };
 
+
 using StoreFileHandle = int64_t;
-using InboxHandle = int64_t;
+using InboxHandle [[deprecated("Use EntryHandle instead")]] = int64_t;
+using EntryHandle = int64_t;
 using InboxFileHandle = int64_t;
 using InboxFileHandleVector = std::vector<InboxFileHandle>;
 using StringVector = std::vector<std::string>;
