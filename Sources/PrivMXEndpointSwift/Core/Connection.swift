@@ -227,7 +227,13 @@ public class Connection{
 		return result
 	}
 	
-	
+	/// Retrieves a list of Users from a particular Context.
+	///
+	/// - parameter contextId: Id of the Context.
+	///
+	/// - throws: When the operation fails.
+	///
+	/// - returns: a list of UserInfo objects.
 	public func getContextUsers(
 		contextId: std.string
 	) throws -> privmx.UserInfoVector {
