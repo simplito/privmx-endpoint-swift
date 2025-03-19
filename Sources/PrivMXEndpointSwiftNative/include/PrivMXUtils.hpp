@@ -51,6 +51,7 @@ using EntryHandle = int64_t;
 using InboxFileHandle = int64_t;
 using InboxFileHandleVector = std::vector<InboxFileHandle>;
 using StringVector = std::vector<std::string>;
+using FileVector = std::vector<endpoint::store::File>;
 using OptionalString = std::optional<std::string>;
 using UserWithPubKeyVector = std::vector<endpoint::core::UserWithPubKey>;
 using UserInfoVector = std::vector<endpoint::core::UserInfo>;
@@ -132,6 +133,11 @@ static OptionalContainerPolicyWithoutItem makeOptional(const endpoint::core::Con
 
 /// Exposes vector comaprison in Swift
 static bool compareVectors(const StringVector& lhs, const StringVector& rhs){
+	return lhs == rhs;
+}
+
+/// Exposes vector comaprison in Swift
+static bool compareVectors(const FileVector& lhs, const FileVector& rhs){
 	return lhs == rhs;
 }
 
