@@ -138,13 +138,28 @@ static bool compareVectors(const StringVector& lhs, const StringVector& rhs){
 
 /// Exposes vector comaprison in Swift
 static bool compareVectors(const FileVector& lhs, const FileVector& rhs){
-	return lhs == rhs;
+	auto lim = lhs.size();
+	auto res = lim == rhs.size();
+	for(long i=0;res && i<lim;++i){
+		const endpoint::store::File& l=lhs.at(i),&r = rhs.at(i);
+		res = l.size == r.size
+		&& l.info.author == r.info.author
+		&& l.info.createDate == r.info.createDate
+		&& l.info.fileId == r.info.fileId
+		&& l.info.storeId == r.info.storeId
+		&& l.statusCode == r.statusCode
+		&& l.authorPubKey == r.authorPubKey
+		&& l.privateMeta.stdString() == r.privateMeta.stdString()
+		&& l.publicMeta.stdString() == r.publicMeta.stdString();
+	}
+	return res;
 }
 
 /// Returns a copy of the underlying `std::string` from the provided Buffer
 static std::string stringFromBuffer(const endpoint::core::Buffer& buf){
 	return std::string(buf.stdString());
 }
+
 }
 
 #endif /* _PRIVMX_ENDPOINT_SWIFT_NATIVE_PRIVMXUTILS */
