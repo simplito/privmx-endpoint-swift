@@ -1108,4 +1108,49 @@ public enum EventHandler{
 		return result
 	}
 
+	/// Determines if the event contained in the event holder is a Custom Event.
+	///
+	/// This method checks if the event within the provided `EventHolder` instance is a Custom Event.
+	///
+	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be checked.
+	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if there is an error during the check.
+	/// - Returns: A `Bool` indicating whether the event is a Custom Event (`true`) or not (`false`).
+	public static func isContextCustomEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.CustomEventHandler.isContextCustomEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	
+	/// Extracts the custom event from the provided event holder.
+	///
+	/// This method retrieves an `ContextCustomEvent` object from the event contained in the given `EventHolder`.
+	///
+	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
+	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Returns: An `ContextCustomEvent` that wa emitted by one of the users of the Context.
+	public static func extractContextCustomEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.event.ContextCustomEvent {
+		let res = privmx.CustomEventHandler.extractContextCustomEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
 }

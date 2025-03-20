@@ -23,7 +23,7 @@ ResultWithError<NativeStoreApiWrapper> NativeStoreApiWrapper::create(NativeConne
 	auto res = ResultWithError<NativeStoreApiWrapper>();
 	try {
 		res.result = NativeStoreApiWrapper(connection);
-		}catch(core::Exception& err){
+	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),

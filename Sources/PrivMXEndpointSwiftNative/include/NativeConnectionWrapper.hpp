@@ -26,6 +26,7 @@ class NativeConnectionWrapper {
 	friend class NativeThreadApiWrapper;
 	friend class NativeStoreApiWrapper;
 	friend class NativeInboxApiWrapper;
+	friend class NativeEventApiWrapper;
 public:
 	/**
 	 * Connects to the PrivMX Bridge server.

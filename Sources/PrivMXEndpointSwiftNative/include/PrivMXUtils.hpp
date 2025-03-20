@@ -35,6 +35,9 @@
 #include "privmx/endpoint/inbox/InboxApi.hpp"
 #include "privmx/endpoint/inbox/Types.hpp"
 #include "privmx/endpoint/inbox/Events.hpp"
+#include "privmx/endpoint/event/Events.hpp"
+#include "privmx/endpoint/event/EventApi.hpp"
+#include "privmx/endpoint/event/EventException.hpp"
 
 namespace privmx {
 
