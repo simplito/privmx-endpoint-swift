@@ -14,7 +14,7 @@ namespace privmx {
 
 using namespace endpoint;
 NativeCryptoApiWrapper::NativeCryptoApiWrapper(){
-	api = std::make_shared<crypto::CryptoApi>(crypto::CryptoApi::create());
+	api = std::make_shared<endpoint::crypto::CryptoApi>(endpoint::crypto::CryptoApi::create());
 }
 
 NativeCryptoApiWrapper NativeCryptoApiWrapper::create(){
