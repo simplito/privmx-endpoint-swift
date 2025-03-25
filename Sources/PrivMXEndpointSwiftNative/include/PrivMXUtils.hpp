@@ -163,6 +163,10 @@ static std::string stringFromBuffer(const endpoint::core::Buffer& buf){
 	return std::string(buf.stdString());
 }
 
+static std::string getChannelFrom(const endpoint::event::ContextCustomEvent& event){
+	return event.channel;
+}
+
 }
 
 #endif /* _PRIVMX_ENDPOINT_SWIFT_NATIVE_PRIVMXUTILS */
