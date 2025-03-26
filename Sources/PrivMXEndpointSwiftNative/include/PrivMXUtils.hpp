@@ -189,8 +189,9 @@ static std::string stringFromBuffer(const endpoint::core::Buffer& buf){
 class UserVerifier : public endpoint::core::UserVerifierInterface{
 public:
 	BoolVector verify(const VerificationRequestVector& request) override {
-		_cb(request);
+		return _cb(request);
 	}
+	
 	UserVerifier(VerificationImplementation cb){
 		_cb=cb;
 	}
