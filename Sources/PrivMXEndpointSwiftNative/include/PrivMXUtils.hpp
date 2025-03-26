@@ -89,6 +89,10 @@ using FileList = endpoint::core::PagingList<endpoint::store::File>;
 using InboxList = endpoint::core::PagingList<endpoint::inbox::Inbox>;
 using InboxEntryList = endpoint::core::PagingList<endpoint::inbox::InboxEntry>;
 
+using BoolVector = std::vector<bool>;
+using VerificationRequestVector = std::vector<endpoint::core::VerificationRequest>;
+
+typedef BoolVector(*VerificationImplementation)(const std::vector<endpoint::core::VerificationRequest>&);
 
 /**
 * Holds data extracted from the thrown Exception
@@ -180,6 +184,20 @@ static bool compareVectors(const FileVector& lhs, const FileVector& rhs){
 static std::string stringFromBuffer(const endpoint::core::Buffer& buf){
 	return std::string(buf.stdString());
 }
+
+
+class UserVerifier : public endpoint::core::UserVerifierInterface{
+public:
+	BoolVector verify(const VerificationRequestVector& request) override {
+		_cb(request);
+	}
+	UserVerifier(VerificationImplementation cb){
+		_cb=cb;
+	}
+private:
+	VerificationImplementation _cb;
+};
+
 
 }
 
