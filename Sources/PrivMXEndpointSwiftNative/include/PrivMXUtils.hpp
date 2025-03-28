@@ -185,6 +185,9 @@ static std::string stringFromBuffer(const endpoint::core::Buffer& buf){
 	return std::string(buf.stdString());
 }
 
+static std::string getChannelFrom(const endpoint::event::ContextCustomEvent& event){
+	return event.channel;
+}
 
 class UserVerifier : public endpoint::core::UserVerifierInterface{
 public:
@@ -198,7 +201,6 @@ public:
 private:
 	VerificationImplementation _cb;
 };
-
 
 }
 
