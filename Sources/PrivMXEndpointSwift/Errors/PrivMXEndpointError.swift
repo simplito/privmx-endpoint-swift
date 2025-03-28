@@ -173,7 +173,7 @@ public enum PrivMXEndpointError : Error{
 	/// Failed to subscribe for Custom Events
 	case FailedUnsubscribingFromCustomEvents(privmx.InternalError)
 	
-	case FailedSettingUseeVerifier(privmx.InternalError)
+	case FailedSettingUserVerifier(privmx.InternalError)
 	
 	/// Gets the Message of the error
 	///
@@ -248,7 +248,7 @@ public enum PrivMXEndpointError : Error{
 					.FailedEmittingCustomEvent(let err),
 					.FailedSubscribingForCustomEvents(let err),
 					.FailedUnsubscribingFromCustomEvents(let err),
-					.FailedSettingUseeVerifier(let err):
+					.FailedSettingUserVerifier(let err):
 				return String(err.message)
 		}
 	}
@@ -326,7 +326,7 @@ public enum PrivMXEndpointError : Error{
 					.FailedEmittingCustomEvent(let err),
 					.FailedSubscribingForCustomEvents(let err),
 					.FailedUnsubscribingFromCustomEvents(let err),
-					.FailedSettingUseeVerifier(let err):
+					.FailedSettingUserVerifier(let err):
 				return err.code.value
 		}
 	}
@@ -404,7 +404,7 @@ public enum PrivMXEndpointError : Error{
 					.FailedEmittingCustomEvent(let err),
 					.FailedSubscribingForCustomEvents(let err),
 					.FailedUnsubscribingFromCustomEvents(let err),
-					.FailedSettingUseeVerifier(let err):
+					.FailedSettingUserVerifier(let err):
 				return String(err.name)
 		}
 	}
@@ -481,7 +481,7 @@ public enum PrivMXEndpointError : Error{
 					.FailedEmittingCustomEvent(let err),
 					.FailedSubscribingForCustomEvents(let err),
 					.FailedUnsubscribingFromCustomEvents(let err),
-					.FailedSettingUseeVerifier(let err):
+					.FailedSettingUserVerifier(let err):
 				return String(err.description)
 		}
 	}

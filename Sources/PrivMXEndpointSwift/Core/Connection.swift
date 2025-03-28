@@ -265,7 +265,7 @@ public class Connection{
 	) throws -> Void {
 		let res = api.setUserVerifier(verifier)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.FailedSettingUseeVerifier(res.error.value!)
+			throw PrivMXEndpointError.FailedSettingUserVerifier(res.error.value!)
 		}
 	}
 }
