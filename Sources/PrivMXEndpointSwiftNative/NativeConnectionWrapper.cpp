@@ -222,6 +222,31 @@ ResultWithError<int64_t> NativeConnectionWrapper::getConnectionId(){
 	return res;
 }
 
+ResultWithError<std::nullptr_t> NativeConnectionWrapper::setUserVerifier(UserVerifier verifier) {
+	ResultWithError res;
+	try{
+		auto shuv = std::make_shared<UserVerifier>(verifier);
+		getApi()->setUserVerifier(shuv);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+}
+
 ResultWithError<bool> CoreEventHandlerWrapper::isLibPlatformDisconnectedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
 	try{

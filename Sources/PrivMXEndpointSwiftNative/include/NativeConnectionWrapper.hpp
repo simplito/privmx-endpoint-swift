@@ -114,6 +114,8 @@ public:
 	ResultWithError<ContextList> listContexts(const endpoint::core::PagingQuery& query);
 	
 	ResultWithError<UserInfoVector> getContextUsers(const std::string& contextId);
+	
+	ResultWithError<std::nullptr_t> setUserVerifier(UserVerifier verifier);
 private:
 	
 	std::shared_ptr<endpoint::core::Connection> getApi();

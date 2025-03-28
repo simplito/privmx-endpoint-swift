@@ -20,24 +20,40 @@
 
 #include "privmx/endpoint/core/Config.hpp"
 #include "privmx/endpoint/core/Exception.hpp"
+#include "privmx/endpoint/core/ConvertedExceptions.hpp"
+#include "privmx/endpoint/core/CoreException.hpp"
 #include "privmx/endpoint/core/Types.hpp"
 #include "privmx/endpoint/core/Connection.hpp"
-#include "privmx/endpoint/crypto/CryptoApi.hpp"
-#include "privmx/endpoint/store/StoreApi.hpp"
-#include "privmx/endpoint/store/Types.hpp"
-#include "privmx/endpoint/thread/ThreadApi.hpp"
-#include "privmx/endpoint/thread/Types.hpp"
 #include "privmx/endpoint/core/EventQueue.hpp"
 #include "privmx/endpoint/core/Events.hpp"
-#include "privmx/endpoint/thread/Events.hpp"
-#include "privmx/endpoint/store/Events.hpp"
 #include "privmx/endpoint/core/BackendRequester.hpp"
+#include "privmx/endpoint/core/Utils.hpp"
+#include "privmx/endpoint/core/UserVerifierInterface.hpp"
+
+#include "privmx/endpoint/crypto/CryptoApi.hpp"
+#include "privmx/endpoint/crypto/ExtKey.hpp"
+#include "privmx/endpoint/crypto/Types.hpp"
+
 #include "privmx/endpoint/inbox/InboxApi.hpp"
 #include "privmx/endpoint/inbox/Types.hpp"
 #include "privmx/endpoint/inbox/Events.hpp"
+#include "privmx/endpoint/inbox/InboxException.hpp"
+
+#include "privmx/endpoint/store/StoreApi.hpp"
+#include "privmx/endpoint/store/StoreException.hpp"
+#include "privmx/endpoint/store/Types.hpp"
+#include "privmx/endpoint/store/Events.hpp"
+
+#include "privmx/endpoint/thread/ThreadApi.hpp"
+#include "privmx/endpoint/thread/Types.hpp"
+#include "privmx/endpoint/thread/ThreadException.hpp"
+#include "privmx/endpoint/thread/Events.hpp"
+
 #include "privmx/endpoint/event/Events.hpp"
 #include "privmx/endpoint/event/EventApi.hpp"
 #include "privmx/endpoint/event/EventException.hpp"
+#include "privmx/endpoint/event/Types.hpp"
+
 
 namespace privmx {
 
@@ -73,6 +89,10 @@ using FileList = endpoint::core::PagingList<endpoint::store::File>;
 using InboxList = endpoint::core::PagingList<endpoint::inbox::Inbox>;
 using InboxEntryList = endpoint::core::PagingList<endpoint::inbox::InboxEntry>;
 
+using BoolVector = std::vector<bool>;
+using VerificationRequestVector = std::vector<endpoint::core::VerificationRequest>;
+
+typedef BoolVector(*VerificationImplementation)(const std::vector<endpoint::core::VerificationRequest>&);
 
 /**
 * Holds data extracted from the thrown Exception
@@ -108,6 +128,8 @@ struct ResultWithError{
 	 */
 	std::optional<InternalError> error;
 	};
+
+
 
 /// Creates a C++ `std::optional` containing the provided `std::string`
 static OptionalString makeOptional(const std::string& val){
@@ -166,6 +188,19 @@ static std::string stringFromBuffer(const endpoint::core::Buffer& buf){
 static std::string getChannelFrom(const endpoint::event::ContextCustomEvent& event){
 	return event.channel;
 }
+
+class UserVerifier : public endpoint::core::UserVerifierInterface{
+public:
+	BoolVector verify(const VerificationRequestVector& request) override {
+		return _cb(request);
+	}
+	
+	UserVerifier(VerificationImplementation cb){
+		_cb=cb;
+	}
+private:
+	VerificationImplementation _cb;
+};
 
 }
 
