@@ -68,8 +68,10 @@ public:
 	ResultWithError<std::nullptr_t> unsubscribeFromItemEvents(std::string kvdbId);
 	
 private:
+	NativeKvdbApiWrapper(NativeConnectionWrapper& connection);
+	NativeKvdbApiWrapper() = default;
+	
 	std::shared_ptr<endpoint::kvdb::KvdbApi> api;
-	std::shared_ptr<endpoint::kvdb::KvdbApi> getApi;
 	
 	std::shared_ptr<endpoint::kvdb::KvdbApi> getapi(){
 		if (!api) throw NullApiException();
