@@ -27,17 +27,24 @@
 #include "privmx/endpoint/store/Types.hpp"
 #include "privmx/endpoint/thread/ThreadApi.hpp"
 #include "privmx/endpoint/thread/Types.hpp"
+#include "privmx/endpoint/thread/ThreadException.hpp"
 #include "privmx/endpoint/core/EventQueue.hpp"
 #include "privmx/endpoint/core/Events.hpp"
 #include "privmx/endpoint/thread/Events.hpp"
 #include "privmx/endpoint/store/Events.hpp"
+#include "privmx/endpoint/store/StoreException.hpp"
 #include "privmx/endpoint/core/BackendRequester.hpp"
 #include "privmx/endpoint/inbox/InboxApi.hpp"
 #include "privmx/endpoint/inbox/Types.hpp"
 #include "privmx/endpoint/inbox/Events.hpp"
+#include "privmx/endpoint/inbox/InboxException.hpp"
 #include "privmx/endpoint/event/Events.hpp"
 #include "privmx/endpoint/event/EventApi.hpp"
 #include "privmx/endpoint/event/EventException.hpp"
+#include "privmx/endpoint/kvdb/Types.hpp"
+#include "privmx/endpoint/kvdb/KvdbException.hpp"
+#include "privmx/endpoint/kvdb/KvdbApi.hpp"
+#include "privmx/endpoint/kvdb/Events.hpp"
 
 namespace privmx {
 
@@ -59,6 +66,8 @@ using OptionalString = std::optional<std::string>;
 using UserWithPubKeyVector = std::vector<endpoint::core::UserWithPubKey>;
 using UserInfoVector = std::vector<endpoint::core::UserInfo>;
 
+using KvdbKey = std::string;
+
 using OptionalInboxFilesConfig = std::optional<endpoint::inbox::FilesConfig>;
 
 using OptionalItemPolicy = std::optional<endpoint::core::ItemPolicy>;
@@ -72,6 +81,11 @@ using StoreList = endpoint::core::PagingList<endpoint::store::Store>;
 using FileList = endpoint::core::PagingList<endpoint::store::File>;
 using InboxList = endpoint::core::PagingList<endpoint::inbox::Inbox>;
 using InboxEntryList = endpoint::core::PagingList<endpoint::inbox::InboxEntry>;
+
+using ItemList = endpoint::core::PagingList<endpoint::kvdb::Item>;
+using StringList = endpoint::core::PagingList<std::string>;
+using KvdbList = endpoint::core::PagingList<endpoint::kvdb::Kvdb>;
+
 
 
 /**
