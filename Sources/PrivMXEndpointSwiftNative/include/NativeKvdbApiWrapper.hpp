@@ -82,26 +82,26 @@ private:
 
 class KvdbEventHandler{
 public:
-	ResultWithError<bool> isKvdbCreatedEvent(const endpoint::core::EventHolder& eventHolder);
-	ResultWithError<endpoint::kvdb::KvdbCreatedEvent> extractKvdbCreatedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<bool> isKvdbCreatedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<endpoint::kvdb::KvdbCreatedEvent> extractKvdbCreatedEvent(const endpoint::core::EventHolder& eventHolder);
 	
-	ResultWithError<bool> isKvdbUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
-	ResultWithError<endpoint::kvdb::KvdbUpdatedEvent> extractKvdbUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<bool> isKvdbUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<endpoint::kvdb::KvdbUpdatedEvent> extractKvdbUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
 
-	ResultWithError<bool> isKvdbDeletedEvent(const endpoint::core::EventHolder& eventHolder);
-	ResultWithError<endpoint::kvdb::KvdbDeletedEvent> extractKvdbDeletedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<bool> isKvdbDeletedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<endpoint::kvdb::KvdbDeletedEvent> extractKvdbDeletedEvent(const endpoint::core::EventHolder& eventHolder);
 	
-	ResultWithError<bool> isKvdbStatsChangedEvent(const endpoint::core::EventHolder& eventHolder);
-	ResultWithError<endpoint::kvdb::KvdbStatsChangedEvent> extractKvdbStatsChangedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<bool> isKvdbStatsChangedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<endpoint::kvdb::KvdbStatsChangedEvent> extractKvdbStatsChangedEvent(const endpoint::core::EventHolder& eventHolder);
 
-	ResultWithError<bool> isKvdbNewItemEvent(const endpoint::core::EventHolder& eventHolder);
-	ResultWithError<endpoint::kvdb::KvdbNewItemEvent> extractKvdbNewItemEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<bool> isKvdbNewItemEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<endpoint::kvdb::KvdbNewItemEvent> extractKvdbNewItemEvent(const endpoint::core::EventHolder& eventHolder);
 
-	ResultWithError<bool> isKvdbItemUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
-	ResultWithError<endpoint::kvdb::KvdbItemUpdatedEvent> extractKvdbItemUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<bool> isKvdbItemUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<endpoint::kvdb::KvdbItemUpdatedEvent> extractKvdbItemUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
 
-	ResultWithError<bool> isKvdbItemDeletedEvent(const endpoint::core::EventHolder& eventHolder);
-	ResultWithError<endpoint::kvdb::KvdbItemDeletedEvent> extractKvdbItemDeletedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<bool> isKvdbItemDeletedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<endpoint::kvdb::KvdbItemDeletedEvent> extractKvdbItemDeletedEvent(const endpoint::core::EventHolder& eventHolder);
 
 };
 }
