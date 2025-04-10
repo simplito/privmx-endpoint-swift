@@ -163,15 +163,38 @@ public enum PrivMXEndpointError : Error{
 	
 	/// Failed to instantiate `EventApi`
 	case FailedInstantiatingEventApi(privmx.InternalError)
-	
 	/// Failed to emit a `CustomEvent`
 	case FailedEmittingCustomEvent(privmx.InternalError)
-
 	/// Failed to subscribe for Custom Events
 	case FailedSubscribingForCustomEvents(privmx.InternalError)
-	
 	/// Failed to subscribe for Custom Events
 	case FailedUnsubscribingFromCustomEvents(privmx.InternalError)
+	
+	/// Failed to instantiate `EventApi`
+	case FailedInstantiatingKvdbApi(privmx.InternalError)
+	/// Failed to create a Kvdb
+	case FailedCreatingKvdb(privmx.InternalError)
+	/// Failed to update a Kvdb
+	case FailedUpdatingKvdb(privmx.InternalError)
+	/// Failed to delete a Kvdb
+	case FailedDeletingKvdb(privmx.InternalError)
+	/// Falied to get a Kvdb
+	case FailedGettingKvdb(privmx.InternalError)
+	/// Falied to list Kvdbs
+	case FailedListingKvdbs(privmx.InternalError)
+	
+	/// Falied to get an Item
+	case FailedGettingItem(privmx.InternalError)
+	/// Falied to list Items
+	case FailedListingItems(privmx.InternalError)
+	/// Falied to list Item Keys
+	case FailedListingItemKeys(privmx.InternalError)
+	/// Falied to set an Item
+	case FailedSettingItem(privmx.InternalError)
+	/// Falied to delete an Item
+	case FailedDeletingItem(privmx.InternalError)
+	/// Falied to delete Items
+	case FailedDeletingItems(privmx.InternalError)
 	
 	/// Gets the Message of the error
 	///
@@ -245,7 +268,19 @@ public enum PrivMXEndpointError : Error{
 					.FailedInstantiatingEventApi(let err),
 					.FailedEmittingCustomEvent(let err),
 					.FailedSubscribingForCustomEvents(let err),
-					.FailedUnsubscribingFromCustomEvents(let err):
+					.FailedUnsubscribingFromCustomEvents(let err),
+					.FailedInstantiatingKvdbApi(let err),
+					.FailedCreatingKvdb(let err),
+					.FailedUpdatingKvdb(let err),
+					.FailedDeletingKvdb(let err),
+					.FailedGettingKvdb(let err),
+					.FailedListingKvdbs(let err),
+					.FailedSettingItem(let err),
+					.FailedGettingItem(let err),
+					.FailedListingItems(let err),
+					.FailedListingItemKeys(let err),
+					.FailedDeletingItem(let err),
+					.FailedDeletingItems(let err):
 				return String(err.message)
 		}
 	}
@@ -322,7 +357,19 @@ public enum PrivMXEndpointError : Error{
 					.FailedInstantiatingEventApi(let err),
 					.FailedEmittingCustomEvent(let err),
 					.FailedSubscribingForCustomEvents(let err),
-					.FailedUnsubscribingFromCustomEvents(let err):
+					.FailedUnsubscribingFromCustomEvents(let err),
+					.FailedInstantiatingKvdbApi(let err),
+					.FailedCreatingKvdb(let err),
+					.FailedUpdatingKvdb(let err),
+					.FailedDeletingKvdb(let err),
+					.FailedGettingKvdb(let err),
+					.FailedListingKvdbs(let err),
+					.FailedSettingItem(let err),
+					.FailedGettingItem(let err),
+					.FailedListingItems(let err),
+					.FailedListingItemKeys(let err),
+					.FailedDeletingItem(let err),
+					.FailedDeletingItems(let err):
 				return err.code.value
 		}
 	}
@@ -399,7 +446,19 @@ public enum PrivMXEndpointError : Error{
 					.FailedInstantiatingEventApi(let err),
 					.FailedEmittingCustomEvent(let err),
 					.FailedSubscribingForCustomEvents(let err),
-					.FailedUnsubscribingFromCustomEvents(let err):
+					.FailedUnsubscribingFromCustomEvents(let err),
+					.FailedInstantiatingKvdbApi(let err),
+					.FailedCreatingKvdb(let err),
+					.FailedUpdatingKvdb(let err),
+					.FailedDeletingKvdb(let err),
+					.FailedGettingKvdb(let err),
+					.FailedListingKvdbs(let err),
+					.FailedSettingItem(let err),
+					.FailedGettingItem(let err),
+					.FailedListingItems(let err),
+					.FailedListingItemKeys(let err),
+					.FailedDeletingItem(let err),
+					.FailedDeletingItems(let err):
 				return String(err.name)
 		}
 	}
@@ -475,7 +534,19 @@ public enum PrivMXEndpointError : Error{
 					.FailedInstantiatingEventApi(let err),
 					.FailedEmittingCustomEvent(let err),
 					.FailedSubscribingForCustomEvents(let err),
-					.FailedUnsubscribingFromCustomEvents(let err):
+					.FailedUnsubscribingFromCustomEvents(let err),
+					.FailedInstantiatingKvdbApi(let err),
+					.FailedCreatingKvdb(let err),
+					.FailedUpdatingKvdb(let err),
+					.FailedDeletingKvdb(let err),
+					.FailedGettingKvdb(let err),
+					.FailedListingKvdbs(let err),
+					.FailedSettingItem(let err),
+					.FailedGettingItem(let err),
+					.FailedListingItems(let err),
+					.FailedListingItemKeys(let err),
+					.FailedDeletingItem(let err),
+					.FailedDeletingItems(let err):
 				return String(err.description)
 		}
 	}
