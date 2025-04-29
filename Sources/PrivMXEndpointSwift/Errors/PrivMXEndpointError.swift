@@ -175,6 +175,20 @@ public enum PrivMXEndpointError : Error{
 	
 	case FailedSettingUserVerifier(privmx.InternalError)
 	
+	/// Failed to convert a PGP Asn1 key to Base58DER
+	case failedConvertingKeyToBase58DER(privmx.InternalError)
+	
+	/// Failed to generate a BIP39 instance
+	case failedGeneratingBIP39(privmx.InternalError)
+	
+	/// Failed to convert entropy to a mnemonic
+	case failedConvertingEntropyToMnemonic(privmx.InternalError)
+	
+	/// Failed to convert a mnemonic to Entropy
+	case failedConvertingMnemonicToEntropy(privmx.InternalError)
+	
+	
+	
 	/// Gets the Message of the error
 	///
 	///  - Returns: Message of the error
@@ -248,7 +262,11 @@ public enum PrivMXEndpointError : Error{
 					.FailedEmittingCustomEvent(let err),
 					.FailedSubscribingForCustomEvents(let err),
 					.FailedUnsubscribingFromCustomEvents(let err),
-					.FailedSettingUserVerifier(let err):
+					.FailedSettingUserVerifier(let err),
+					.failedConvertingKeyToBase58DER(let err),
+					.failedConvertingEntropyToMnemonic(let err),
+					.failedConvertingMnemonicToEntropy(let err),
+					.failedGeneratingBIP39(let err):
 				return String(err.message)
 		}
 	}
@@ -326,7 +344,11 @@ public enum PrivMXEndpointError : Error{
 					.FailedEmittingCustomEvent(let err),
 					.FailedSubscribingForCustomEvents(let err),
 					.FailedUnsubscribingFromCustomEvents(let err),
-					.FailedSettingUserVerifier(let err):
+					.FailedSettingUserVerifier(let err),
+					.failedConvertingKeyToBase58DER(let err),
+					.failedConvertingEntropyToMnemonic(let err),
+					.failedConvertingMnemonicToEntropy(let err),
+					.failedGeneratingBIP39(let err):
 				return err.code.value
 		}
 	}
@@ -404,7 +426,11 @@ public enum PrivMXEndpointError : Error{
 					.FailedEmittingCustomEvent(let err),
 					.FailedSubscribingForCustomEvents(let err),
 					.FailedUnsubscribingFromCustomEvents(let err),
-					.FailedSettingUserVerifier(let err):
+					.FailedSettingUserVerifier(let err),
+					.failedConvertingKeyToBase58DER(let err),
+					.failedConvertingEntropyToMnemonic(let err),
+					.failedConvertingMnemonicToEntropy(let err),
+					.failedGeneratingBIP39(let err):
 				return String(err.name)
 		}
 	}
@@ -481,7 +507,11 @@ public enum PrivMXEndpointError : Error{
 					.FailedEmittingCustomEvent(let err),
 					.FailedSubscribingForCustomEvents(let err),
 					.FailedUnsubscribingFromCustomEvents(let err),
-					.FailedSettingUserVerifier(let err):
+					.FailedSettingUserVerifier(let err),
+					.failedConvertingKeyToBase58DER(let err),
+					.failedConvertingEntropyToMnemonic(let err),
+					.failedConvertingMnemonicToEntropy(let err),
+					.failedGeneratingBIP39(let err):
 				return String(err.description)
 		}
 	}
