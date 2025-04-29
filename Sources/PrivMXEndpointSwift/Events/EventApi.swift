@@ -61,15 +61,15 @@ public class EventApi{
 	///
 	public func emitEvent(
 		contextId: std.string,
+		users: privmx.UserWithPubKeyVector,
 		channelName: std.string,
 		eventData: privmx.endpoint.core.Buffer,
-		users: privmx.UserWithPubKeyVector
 	) throws -> Void {
 		let res = api.emitEvent(
 			contextId,
+			users,
 			channelName,
-			eventData,
-			users)
+			eventData)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.FailedEmittingCustomEvent(res.error.value!)
 		}

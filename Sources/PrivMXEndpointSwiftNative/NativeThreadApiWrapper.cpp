@@ -660,10 +660,11 @@ ResultWithError<bool> ThreadEventHandler::isThreadDeletedMessageEvent(const core
 	return res;
 }
 
+
 ResultWithError<bool> ThreadEventHandler::isThreadMessageDeletedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
 	try{
-		res.result = thread::Events::isThreadDeletedMessageEvent(eventHolder);
+		res.result = thread::Events::isThreadMessageDeletedEvent(eventHolder);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
