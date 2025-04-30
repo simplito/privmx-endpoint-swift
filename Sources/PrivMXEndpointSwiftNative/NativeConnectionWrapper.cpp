@@ -33,13 +33,15 @@ ResultWithError<std::shared_ptr<NativeConnectionWrapper>> NativeConnectionWrappe
 
 ResultWithError<std::shared_ptr<NativeConnectionWrapper>> NativeConnectionWrapper::connect(const std::string &userPrivKey,
 																						   const std::string &solutionId,
-																						   const std::string &platformUrl){
+																						   const std::string &platformUrl,
+																						   const core::PKIVerificationOptions& verificationOptions){
 	ResultWithError<std::shared_ptr<NativeConnectionWrapper>> res;
 	std::shared_ptr<NativeConnectionWrapper> x;
 	try{
 		auto conn = NativeConnectionWrapper(std::make_shared<core::Connection>(core::Connection::connect(userPrivKey,
-																												 solutionId,
-																												 platformUrl)));
+																										 solutionId,
+																										 platformUrl,
+																										 verificationOptions)));
 		res.result = std::make_shared<NativeConnectionWrapper>(conn);
 	}catch(core::Exception& err){
 		res.error = {
@@ -67,12 +69,14 @@ ResultWithError<std::shared_ptr<NativeConnectionWrapper>> NativeConnectionWrappe
 	return connectPublic(solutionId, platformUrl);
 }
 ResultWithError<std::shared_ptr<NativeConnectionWrapper>> NativeConnectionWrapper::connectPublic(const std::string &solutionId,
-																								 const std::string &platformUrl){
+																								 const std::string &platformUrl,
+																								 const endpoint::core::PKIVerificationOptions& verificationOptions){
 	ResultWithError<std::shared_ptr<NativeConnectionWrapper>> res;
 	std::shared_ptr<NativeConnectionWrapper> x;
 	try{
 		auto conn = NativeConnectionWrapper(std::make_shared<core::Connection>(core::Connection::connectPublic(solutionId,
-																											   platformUrl)));
+																											   platformUrl,
+																											   verificationOptions)));
 		res.result = std::make_shared<NativeConnectionWrapper>(conn);
 	}catch(core::Exception& err){
 		res.error = {
