@@ -174,8 +174,8 @@ static bool compareVectors(const FileVector& lhs, const FileVector& rhs){
 		&& l.info.storeId == r.info.storeId
 		&& l.statusCode == r.statusCode
 		&& l.authorPubKey == r.authorPubKey
-		&& l.privateMeta.stdString() == r.privateMeta.stdString()
-		&& l.publicMeta.stdString() == r.publicMeta.stdString();
+		&& l.privateMeta == r.privateMeta
+		&& l.publicMeta == r.publicMeta;
 	}
 	return res;
 }
