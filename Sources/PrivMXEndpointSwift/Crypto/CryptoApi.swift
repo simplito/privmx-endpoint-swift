@@ -349,6 +349,129 @@ public class CryptoApi{
 		return result
 	}
 	
+	public func convertPGPAsn1KeyToBase58DERKey(
+		pgpKey: std.string
+	) throws -> std.string {
+		let res = api.convertPGPAsn1KeyToBase58DERKey(pgpKey)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedConvertingKeyToBase58DER(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedConvertingKeyToWIF(err)
+		}
+		return result
+	}
 	
 	
+	public func generateBip39(
+		strength: size_t,
+		password: std.string = std.string()
+		privmx.endpointcoreBuffer	) throws -> privmx.endpoint.crypto.BIP39_t {
+		let res = api.generateBip39(strength,
+									password)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedGeneratingBIP39(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedGeneratingBIP39(err)
+		}
+		return result
+	}
+	
+	
+	public func fromMnemonic(
+		mnemonic: std.string,
+		password: std.string = std.string()
+		privmx.endpointcoreBuffer	) throws -> privmx.endpoint.crypto.BIP39_t {
+		let res = api.fromMnemonic(mnemonic,
+								   password)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedGeneratingBIP39(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedGeneratingBIP39(err)
+		}
+		return result
+	}
+	
+	
+	public func fromEntropy(
+		entropy: privmx.endpoint.core.Buffer,
+		password: std.string = std.string()
+		privmx.endpointcoreBuffer	)throws -> privmx.endpoint.crypto.BIP39_t{
+		let res = api.fromEntropy(entropy,
+								  password)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedGeneratingBIP39(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedGeneratingBIP39(err)
+		}
+		return result
+	}
+	
+	
+	public func entropyToMnemonic(
+		entropy: privmx.endpoint.core.Buffer
+	) throws -> std.string {
+		let res = api.entropyToMnemonic(entropy)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedConvertingEntropyToMnemonic(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedConvertingEntropyToMnemonic(err)
+		}
+		return result
+	}
+	
+	
+	public func mnemonicToEntropy(
+		mnemonic: std.string
+	) throws -> privmx.endpoint.core.Buffer {
+		let res = api.mnemonicToEntropy(mnemonic)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedConvertingMnemonicToEntropy(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedConvertingMnemonicToEntropy(err)
+		}
+		return result
+	}
+	
+	
+	public func mnemonicToSeed(
+		mnemonic: std.string,
+		password: std.string = std.string()
+	) throws -> privmx.endpoint.core.Buffer{
+		let res = api.mnemonicToSeed(mnemonic,
+									 password)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedGeneratingSeedFromMnemonic(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedGeneratingSeedFromMnemonic(err)
+		}
+		return result
+	}
 }
