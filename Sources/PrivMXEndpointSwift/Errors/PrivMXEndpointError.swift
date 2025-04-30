@@ -181,11 +181,14 @@ public enum PrivMXEndpointError : Error{
 	/// Failed to generate a BIP39 instance
 	case failedGeneratingBIP39(privmx.InternalError)
 	
-	/// Failed to convert entropy to a mnemonic
+	/// Failed to convert Entropy to a Mnemonic
 	case failedConvertingEntropyToMnemonic(privmx.InternalError)
 	
-	/// Failed to convert a mnemonic to Entropy
+	/// Failed to convert a Mnemonic to Entropy
 	case failedConvertingMnemonicToEntropy(privmx.InternalError)
+	
+	/// Failed to generate a Seed for BIP39 Key from a Mnemonic
+	case failedGeneratingSeedFromMnemonic(privmx.InternalError)
 	
 	
 	
@@ -266,6 +269,7 @@ public enum PrivMXEndpointError : Error{
 					.failedConvertingKeyToBase58DER(let err),
 					.failedConvertingEntropyToMnemonic(let err),
 					.failedConvertingMnemonicToEntropy(let err),
+					.failedGeneratingSeedFromMnemonic(let err),
 					.failedGeneratingBIP39(let err):
 				return String(err.message)
 		}
@@ -348,6 +352,7 @@ public enum PrivMXEndpointError : Error{
 					.failedConvertingKeyToBase58DER(let err),
 					.failedConvertingEntropyToMnemonic(let err),
 					.failedConvertingMnemonicToEntropy(let err),
+					.failedGeneratingSeedFromMnemonic(let err),
 					.failedGeneratingBIP39(let err):
 				return err.code.value
 		}
@@ -430,6 +435,7 @@ public enum PrivMXEndpointError : Error{
 					.failedConvertingKeyToBase58DER(let err),
 					.failedConvertingEntropyToMnemonic(let err),
 					.failedConvertingMnemonicToEntropy(let err),
+					.failedGeneratingSeedFromMnemonic(let err),
 					.failedGeneratingBIP39(let err):
 				return String(err.name)
 		}
@@ -511,6 +517,7 @@ public enum PrivMXEndpointError : Error{
 					.failedConvertingKeyToBase58DER(let err),
 					.failedConvertingEntropyToMnemonic(let err),
 					.failedConvertingMnemonicToEntropy(let err),
+					.failedGeneratingSeedFromMnemonic(let err),
 					.failedGeneratingBIP39(let err):
 				return String(err.description)
 		}
