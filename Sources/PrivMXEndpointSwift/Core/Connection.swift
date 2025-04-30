@@ -51,11 +51,13 @@ public class Connection{
 	public static func connect(
 		userPrivKey: std.string,
 		solutionId: std.string,
-		bridgeUrl: std.string
+		bridgeUrl: std.string,
+		verificationOptions : privmx.endpoint.core.PKIVerificationOptions = privmx.endpoint.core.PKIVerificationOptions()
 	) throws -> Connection{
 		let res = privmx.NativeConnectionWrapper.connect(userPrivKey,
 														 solutionId,
-														 bridgeUrl)
+														 bridgeUrl,
+														 verificationOptions)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedConnecting(res.error.value!)
 		}
@@ -108,16 +110,19 @@ public class Connection{
     ///
     /// - Parameter solutionId: The ID of the Solution that the connection targets.
     /// - Parameter bridgeUrl: The URL of PrivMX platform endpoint.
-    ///
+    /// - Parameter verificationOptions: Options used to verify if Bridge on given url is the one you expect.
+	/// 
     /// - Throws: `PrivMXEndpointError.failedConnecting` if establishing the connection fails.
     ///
     /// - Returns: A public `Connection` instance that can be used for non-authenticated operations.
     public static func connectPublic(
 		solutionId: std.string,
-		bridgeUrl: std.string
+		bridgeUrl: std.string,
+		verificationOptions : privmx.endpoint.core.PKIVerificationOptions = privmx.endpoint.core.PKIVerificationOptions()
 	) throws -> Connection{
 		let res = privmx.NativeConnectionWrapper.connectPublic(solutionId,
-															   bridgeUrl)
+															   bridgeUrl,
+															   verificationOptions)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedConnecting(res.error.value!)
 		}
