@@ -8,6 +8,7 @@ module PrivMXEndpointSwiftNative {
 	header "NativeBackendRequesterWrapper.hpp"
 	header "NativeInboxApiWrapper.hpp"
 	header "NativeEventApiWrapper.hpp"
+	header "NativeExtKeyWrapper.hpp"
 	
     requires cplusplus17
     export *

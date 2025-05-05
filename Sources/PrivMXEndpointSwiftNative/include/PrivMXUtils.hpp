@@ -34,20 +34,24 @@
 #include "privmx/endpoint/crypto/ExtKey.hpp"
 #include "privmx/endpoint/crypto/Types.hpp"
 
+
 #include "privmx/endpoint/inbox/InboxApi.hpp"
 #include "privmx/endpoint/inbox/Types.hpp"
 #include "privmx/endpoint/inbox/Events.hpp"
 #include "privmx/endpoint/inbox/InboxException.hpp"
+#include "privmx/endpoint/inbox/Constants.hpp"
 
 #include "privmx/endpoint/store/StoreApi.hpp"
 #include "privmx/endpoint/store/StoreException.hpp"
 #include "privmx/endpoint/store/Types.hpp"
 #include "privmx/endpoint/store/Events.hpp"
+#include "privmx/endpoint/store/Constants.hpp"
 
 #include "privmx/endpoint/thread/ThreadApi.hpp"
 #include "privmx/endpoint/thread/Types.hpp"
 #include "privmx/endpoint/thread/ThreadException.hpp"
 #include "privmx/endpoint/thread/Events.hpp"
+#include "privmx/endpoint/thread/Constants.hpp"
 
 #include "privmx/endpoint/event/Events.hpp"
 #include "privmx/endpoint/event/EventApi.hpp"
