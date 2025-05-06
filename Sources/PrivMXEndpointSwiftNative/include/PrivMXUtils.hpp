@@ -67,6 +67,12 @@ class NullApiException : std::exception{
 	}
 };
 
+static const endpoint::store::StoreDataSchema::Version CurrentStoreSchema = endpoint::store::CURRENT_STORE_DATA_SCHEMA_VERSION;
+static const endpoint::store::FileDataSchema::Version CurrentFileSchema = endpoint::store::CURRENT_FILE_DATA_SCHEMA_VERSION;
+static const endpoint::thread::ThreadDataSchema::Version CurrentThreadSchema = endpoint::thread::CURRENT_THREAD_DATA_SCHEMA_VERSION;
+static const endpoint::thread::MessageDataSchema::Version CurrentMessageSchema = endpoint::thread::CURRENT_MESSAGE_DATA_SCHEMA_VERSION;
+static const endpoint::inbox::InboxDataSchema::Version CurrentInboxSchema = endpoint::inbox::CURRENT_INBOX_DATA_SCHEMA_VERSION;
+static const endpoint::inbox::EntryDataSchema::Version CurrentEntrySchema = endpoint::inbox::CURRENT_ENTRY_DATA_SCHEMA_VERSION;
 
 using StoreFileHandle = int64_t;
 using InboxHandle [[deprecated("Use EntryHandle instead")]] = int64_t;
