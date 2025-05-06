@@ -368,7 +368,7 @@ public class CryptoApi{
 			var err = privmx.InternalError()
 			err.name = "Value error"
 			err.description = "Unexpectedly recived nil result"
-			throw PrivMXEndpointError.failedConvertingKeyToWIF(err)
+			throw PrivMXEndpointError.failedConvertingKeyToBase58DER(err)
 		}
 		return result
 	}
