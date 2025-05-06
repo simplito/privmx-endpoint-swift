@@ -11,12 +11,17 @@
 
 import PrivMXEndpointSwiftNative
 
+/// Struct containing ECC generated key using BIP-39.
+///
+/// This struct is used for safe handling of potentially throwing methods of ExtKey
 public struct BIP39{
 	
 	internal var wrapped: privmx.endpoint.crypto.BIP39_t
 	
+	/// Ecc Key.
 	public var ext_key:ExtKey
 	
+	/// BIP-39 mnemonic.
 	public var mnemonic:std.string{
 		get{
 			wrapped.mnemonic
@@ -26,6 +31,7 @@ public struct BIP39{
 		}
 	}
 	
+	/// BIP-39 entropy.
 	public var entropy: privmx.endpoint.core.Buffer{
 		get{
 			wrapped.entropy
