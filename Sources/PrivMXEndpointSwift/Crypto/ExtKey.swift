@@ -10,6 +10,9 @@
 //
 import PrivMXEndpointSwiftNative
 
+/// `ExtKey` is a class representing Extended keys and operations on it.
+///
+///  This class allows for safely using the underaying `privmx.endpoint.crypto.ExtKey`
 public class ExtKey{
 	internal var wrapped: privmx.endpoint.crypto.ExtKey
 	
@@ -18,7 +21,10 @@ public class ExtKey{
 	) {
 		self.wrapped = wrapped
 	}
-	
+
+	/// Creates ExtKey from given seed.
+	/// - Parameter seed: the seed used to generate Key
+	/// - Returns: `ExtKey` object
 	public func fromSeed(
 		seed: privmx.endpoint.core.Buffer
 	) throws -> ExtKey {
@@ -35,7 +41,9 @@ public class ExtKey{
 		return ExtKey(wrapped:result)
 	}
 	
-	
+	/// Decodes ExtKey from Base58 format.
+	/// - Parameter base58:the ExtKey in Base58
+	/// - Returns: `ExtKey` object
 	public func fromBase58(
 		base58: std.string
 	) throws -> ExtKey {
@@ -52,6 +60,8 @@ public class ExtKey{
 		return ExtKey(wrapped:result)
 	}
 	
+	/// Generates a new ExtKey.
+	/// - Returns: `ExtKey` object
 	public func generateRandom(
 	) throws -> ExtKey {
 		let res = privmx.endpoint.wrapper._call_ExtKey_generateRandom()
@@ -67,7 +77,9 @@ public class ExtKey{
 		return ExtKey(wrapped:result)
 	}
 	
-	
+	/// Generates child ExtKey from a current ExtKey using BIP32.
+	/// - Parameter index: number from 0 to 2^31-1
+	/// - Returns: `ExtKey` object
 	public func derive(
 		index:UInt32
 	) throws -> ExtKey {
@@ -84,6 +96,9 @@ public class ExtKey{
 		return ExtKey(wrapped:result)
 	}
 
+	/// Generates hardened child ExtKey from a current ExtKey using BIP32.
+	/// - Parameter index: number from 0 to 2^31-1
+	/// - Returns: `ExtKey` object
 	public func deriveHardened(
 		index:UInt32
 	) throws -> ExtKey {
@@ -100,7 +115,8 @@ public class ExtKey{
 		return ExtKey(wrapped:result)
 	}
 	
-	
+	/// Converts ExtKey to Base58 string.
+	/// - Returns: `ExtKey` in Base58 format
 	public func getPrivatePartAsBase58(
 	) throws -> std.string {
 		let res = privmx.endpoint.wrapper._call_ExtKey_getPrivatePartAsBase58(wrapped)
@@ -116,6 +132,8 @@ public class ExtKey{
 		return result
 	}
 	
+	/// Converts the public part of ExtKey to Base58 string.
+	/// - Returns: `ExtKey` in Base58 format
 	public func getPublicPartAsBase58(
 	) throws -> std.string {
 		let res = privmx.endpoint.wrapper._call_ExtKey_getPublicPartAsBase58(wrapped)
@@ -131,7 +149,8 @@ public class ExtKey{
 		return result
 	}
 	
-	
+	/// Extracts ECC PrivateKey.
+	/// - Returns: ECC key in WIF format
 	public func getPrivateKey(
 	) throws -> std.string {
 		let res = privmx.endpoint.wrapper._call_ExtKey_getPrivateKey(wrapped)
@@ -147,6 +166,8 @@ public class ExtKey{
 		return result
 	}
 
+	/// Extracts ECC PublicKey.
+	/// - Returns: ECC key in BASE58DER format
 	public func getPublicKey(
 	) throws -> std.string {
 		let res = privmx.endpoint.wrapper._call_ExtKey_getPublicKey(wrapped)
@@ -162,6 +183,8 @@ public class ExtKey{
 		return result
 	}
 	
+	/// Extracts ECC PublicKey Address.
+	/// - Returns: ECC Address in BASE58 format
 	public func getPublicKeyAsBase58Address(
 	) throws -> std.string {
 		let res = privmx.endpoint.wrapper._call_ExtKey_getPublicKeyAsBase58Address(wrapped)
@@ -177,7 +200,8 @@ public class ExtKey{
 		return result
 	}
 	
-	
+	/// Extracts raw ECC PrivateKey.
+	/// - Returns: ECC PrivateKey
 	public func getPrivateEncKey(
 	) throws -> privmx.endpoint.core.Buffer {
 		let res = privmx.endpoint.wrapper._call_ExtKey_getPrivateEncKey(wrapped)
@@ -193,6 +217,8 @@ public class ExtKey{
 		return result
 	}
 	
+	/// Gets the chain code of Extended Key.
+	/// - Returns: Raw chain code
 	public func getChainCode(
 	) throws -> privmx.endpoint.core.Buffer {
 		let res = privmx.endpoint.wrapper._call_ExtKey_getChainCode(wrapped)
@@ -208,7 +234,10 @@ public class ExtKey{
 		return result
 	}
 	
-	
+	///  Validates a signature of a message.
+	/// - Parameter  message: data used on validation
+	/// - Parameter  signature: signature of data to verify
+	/// - Returns:  message validation result
 	public func verifyCompactSignatureWithHash(
 		message: privmx.endpoint.core.Buffer,
 		signature: privmx.endpoint.core.Buffer
@@ -228,6 +257,8 @@ public class ExtKey{
 		return result
 	}
 	
+	/// Checks if ExtKey is Private.
+	/// - Returns: returns true if ExtKey is private
 	public func isPrivate(
 	) throws -> Bool {
 		let res = privmx.endpoint.wrapper._call_ExtKey_isPrivate(wrapped)
