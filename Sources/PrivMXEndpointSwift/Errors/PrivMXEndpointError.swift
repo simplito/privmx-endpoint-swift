@@ -175,17 +175,46 @@ public enum PrivMXEndpointError : Error{
 	
 	case FailedSettingUserVerifier(privmx.InternalError)
 	
+ 	/// Failed to instantiate ExtKey
 	case failedInstantiatingExtKey(privmx.InternalError)
+	/// Failed to derive ExtKey
 	case failedDerivingExtKey(privmx.InternalError)
+	/// Failed to get private part as Base58
 	case failedGettingPrivatePartAsBase58(privmx.InternalError)
+	/// Failed to get public part as Base58
 	case failedGettingPublicPartAsBase58(privmx.InternalError)
+	/// Failed to get private key
 	case failedGettingPrivateKey(privmx.InternalError)
+	/// Failed to get public key
 	case failedGettingPublicKey(privmx.InternalError)
+	/// Failed to get public key as Base58 Address
 	case failedGettingPublicKeyAsBase58Address(privmx.InternalError)
+	/// Failed to get private Enc key
 	case failedGettingPrivateEncKey(privmx.InternalError)
+	/// Failed to get chain code
 	case failedGettingChainCode(privmx.InternalError)
+	/// Failed to verify compact signature
 	case failedVerifyingCompactSignature(privmx.InternalError)
+	/// Failed to check if ExtKey is private
 	case failedCheckingIfExtKeyIsPrivate(privmx.InternalError)
+
+	/// Failed to convert a PGP Asn1 key to Base58DER
+	case failedConvertingKeyToBase58DER(privmx.InternalError)
+	
+	/// Failed to generate a BIP39 instance
+	case failedGeneratingBIP39(privmx.InternalError)
+	
+	/// Failed to convert Entropy to a Mnemonic
+	case failedConvertingEntropyToMnemonic(privmx.InternalError)
+	
+	/// Failed to convert a Mnemonic to Entropy
+	case failedConvertingMnemonicToEntropy(privmx.InternalError)
+	
+	/// Failed to generate a Seed for BIP39 Key from a Mnemonic
+	case failedGeneratingSeedFromMnemonic(privmx.InternalError)
+	
+	
+
 	
 	/// Gets the Message of the error
 	///
@@ -271,7 +300,12 @@ public enum PrivMXEndpointError : Error{
 					.failedGettingChainCode(let err),
 					.failedVerifyingCompactSignature(let err),
 					.failedCheckingIfExtKeyIsPrivate(let err),
-					.FailedSettingUserVerifier(let err):
+					.FailedSettingUserVerifier(let err),
+					.failedConvertingKeyToBase58DER(let err),
+					.failedConvertingEntropyToMnemonic(let err),
+					.failedConvertingMnemonicToEntropy(let err),
+					.failedGeneratingSeedFromMnemonic(let err),
+					.failedGeneratingBIP39(let err):
 				return String(err.message)
 		}
 	}
@@ -360,7 +394,12 @@ public enum PrivMXEndpointError : Error{
 					.failedGettingChainCode(let err),
 					.failedVerifyingCompactSignature(let err),
 					.failedCheckingIfExtKeyIsPrivate(let err),
-					.FailedSettingUserVerifier(let err):
+					.FailedSettingUserVerifier(let err),
+					.failedConvertingKeyToBase58DER(let err),
+					.failedConvertingEntropyToMnemonic(let err),
+					.failedConvertingMnemonicToEntropy(let err),
+					.failedGeneratingSeedFromMnemonic(let err),
+					.failedGeneratingBIP39(let err):
 				return err.code.value
 		}
 	}
@@ -449,7 +488,12 @@ public enum PrivMXEndpointError : Error{
 					.failedGettingChainCode(let err),
 					.failedVerifyingCompactSignature(let err),
 					.failedCheckingIfExtKeyIsPrivate(let err),
-					.FailedSettingUserVerifier(let err):
+					.FailedSettingUserVerifier(let err),
+					.failedConvertingKeyToBase58DER(let err),
+					.failedConvertingEntropyToMnemonic(let err),
+					.failedConvertingMnemonicToEntropy(let err),
+					.failedGeneratingSeedFromMnemonic(let err),
+					.failedGeneratingBIP39(let err):
 				return String(err.name)
 		}
 	}
@@ -537,7 +581,12 @@ public enum PrivMXEndpointError : Error{
 					.failedGettingChainCode(let err),
 					.failedVerifyingCompactSignature(let err),
 					.failedCheckingIfExtKeyIsPrivate(let err),
-					.FailedSettingUserVerifier(let err):
+					.FailedSettingUserVerifier(let err),
+					.failedConvertingKeyToBase58DER(let err),
+					.failedConvertingEntropyToMnemonic(let err),
+					.failedConvertingMnemonicToEntropy(let err),
+					.failedGeneratingSeedFromMnemonic(let err),
+					.failedGeneratingBIP39(let err):
 				return String(err.description)
 		}
 	}

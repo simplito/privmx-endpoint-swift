@@ -350,5 +350,182 @@ public class CryptoApi{
 	}
 	
 	
+	/// Converts given public key in PGP format to its base58DER format.
+	///
+	/// - Parameter pgpKey: public key to convert
+	///
+	/// - Throws: `PrivMXEndpointError.failedConvertingKeyToBase58DER` if the conversion fails.
+	///
+	/// - Returns: public key in base58DER format
+	public func convertPGPAsn1KeyToBase58DERKey(
+		pgpKey: std.string
+	) throws -> std.string {
+		let res = api.convertPGPAsn1KeyToBase58DERKey(pgpKey)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedConvertingKeyToBase58DER(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedConvertingKeyToBase58DER(err)
+		}
+		return result
+	}
 	
+	
+	/// Generates ECC key and BIP-39 mnemonic from a password using BIP-39.
+	///
+	/// - Parameter strength: size of BIP-39 entropy, must be a multiple of 32
+	/// - Parameter password: the password used to generate the Key
+	///
+	/// - Throws: `PrivMXEndpointError.failedGeneratingBIP39` if the generating fails.
+	///
+	/// - Returns: `BIP39_t` object containing ECC Key and associated with it BIP-39 mnemonic and entropy
+	public func generateBip39(
+		strength: size_t,
+		password: std.string = std.string()
+	) throws -> privmx.endpoint.crypto.BIP39_t {
+		let res = api.generateBip39(strength,
+									password)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedGeneratingBIP39(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedGeneratingBIP39(err)
+		}
+		return result
+	}
+	
+	
+	/// Generates ECC key using BIP-39 mnemonic.
+	///
+	/// - Parameters mnemonic: the BIP-39 entropy used to generate the Key
+	/// - Parameters mnemonic: the password used to generate the Key
+	///
+	/// - Throws: `PrivMXEndpointError.failedGeneratingBIP39` if the generating fails.
+	///
+	/// - Returns: `BIP39_t` object containing ECC Key and associated with it BIP-39 mnemonic and entropy
+	public func fromMnemonic(
+		mnemonic: std.string,
+		password: std.string = std.string()
+	) throws -> privmx.endpoint.crypto.BIP39_t {
+		let res = api.fromMnemonic(mnemonic,
+								   password)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedGeneratingBIP39(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedGeneratingBIP39(err)
+		}
+		return result
+	}
+	
+	
+	/// Generates ECC key using BIP-39 entropy.
+	///
+	/// - Parameters entropy: the BIP-39 entropy used to generate the Key
+	/// - Parameters password: the password used to generate the Key
+	///
+	/// - Throws: `PrivMXEndpointError.failedGeneratingBIP39` if the generating fails.
+	///
+	/// - Returns: `BIP39_t` object containing ECC Key and associated with it BIP-39 mnemonic and entropy
+	public func fromEntropy(
+		entropy: privmx.endpoint.core.Buffer,
+		password: std.string = std.string()
+	)throws -> privmx.endpoint.crypto.BIP39_t{
+		let res = api.fromEntropy(entropy,
+								  password)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedGeneratingBIP39(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedGeneratingBIP39(err)
+		}
+		return result
+	}
+	
+	
+	/// Converts BIP-39 mnemonic to entropy.
+	///
+	/// - Parameter entropy: BIP-39 entropy
+	///
+	/// - Throws: `PrivMXEndpointError.failedConvertingEntropyToMnemonic` if the conversion fails.
+	///
+	/// - Returns: BIP-39 mnemonic
+	public func entropyToMnemonic(
+		entropy: privmx.endpoint.core.Buffer
+	) throws -> std.string {
+		let res = api.entropyToMnemonic(entropy)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedConvertingEntropyToMnemonic(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedConvertingEntropyToMnemonic(err)
+		}
+		return result
+	}
+	
+	
+	/// Converts BIP-39 mnemonic to entropy.
+	///
+	/// - Parameter mnemonic: BIP-39 mnemonic
+	///
+	/// - Throws: `PrivMXEndpointError.failedConvertingMnemonicToEntropy` if the conversion fails.
+	///
+	/// - Returns: BIP-39 entropy
+	public func mnemonicToEntropy(
+		mnemonic: std.string
+	) throws -> privmx.endpoint.core.Buffer {
+		let res = api.mnemonicToEntropy(mnemonic)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedConvertingMnemonicToEntropy(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedConvertingMnemonicToEntropy(err)
+		}
+		return result
+	}
+	
+	
+	/// Generates a seed used to generate a key using BIP-39 mnemonic with PBKDF2.
+	///
+	/// - Parameters mnemonic: BIP-39 mnemonic
+	/// - Parameters password: the password used to generate the seed
+	///
+	/// - Throws: `PrivMXEndpointError.failedGeneratingSeedFromMnemonic` if the generating fails.
+	///
+	/// - Returns: generated seed
+	public func mnemonicToSeed(
+		mnemonic: std.string,
+		password: std.string = std.string()
+	) throws -> privmx.endpoint.core.Buffer {
+		let res = api.mnemonicToSeed(mnemonic,
+									 password)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedGeneratingSeedFromMnemonic(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedGeneratingSeedFromMnemonic(err)
+		}
+		return result
+	}
 }
