@@ -175,6 +175,29 @@ public enum PrivMXEndpointError : Error{
 	
 	case FailedSettingUserVerifier(privmx.InternalError)
 	
+ 	/// Failed to instantiate ExtKey
+	case failedInstantiatingExtKey(privmx.InternalError)
+	/// Failed to derive ExtKey
+	case failedDerivingExtKey(privmx.InternalError)
+	/// Failed to get private part as Base58
+	case failedGettingPrivatePartAsBase58(privmx.InternalError)
+	/// Failed to get public part as Base58
+	case failedGettingPublicPartAsBase58(privmx.InternalError)
+	/// Failed to get private key
+	case failedGettingPrivateKey(privmx.InternalError)
+	/// Failed to get public key
+	case failedGettingPublicKey(privmx.InternalError)
+	/// Failed to get public key as Base58 Address
+	case failedGettingPublicKeyAsBase58Address(privmx.InternalError)
+	/// Failed to get private Enc key
+	case failedGettingPrivateEncKey(privmx.InternalError)
+	/// Failed to get chain code
+	case failedGettingChainCode(privmx.InternalError)
+	/// Failed to verify compact signature
+	case failedVerifyingCompactSignature(privmx.InternalError)
+	/// Failed to check if ExtKey is private
+	case failedCheckingIfExtKeyIsPrivate(privmx.InternalError)
+
 	/// Failed to convert a PGP Asn1 key to Base58DER
 	case failedConvertingKeyToBase58DER(privmx.InternalError)
 	
@@ -191,6 +214,7 @@ public enum PrivMXEndpointError : Error{
 	case failedGeneratingSeedFromMnemonic(privmx.InternalError)
 	
 	
+
 	
 	/// Gets the Message of the error
 	///
@@ -265,6 +289,17 @@ public enum PrivMXEndpointError : Error{
 					.FailedEmittingCustomEvent(let err),
 					.FailedSubscribingForCustomEvents(let err),
 					.FailedUnsubscribingFromCustomEvents(let err),
+					.failedInstantiatingExtKey(let err),
+					.failedDerivingExtKey(let err),
+					.failedGettingPublicPartAsBase58(let err),
+					.failedGettingPrivatePartAsBase58(let err),
+					.failedGettingPrivateKey(let err),
+					.failedGettingPublicKey(let err),
+					.failedGettingPublicKeyAsBase58Address(let err),
+					.failedGettingPrivateEncKey(let err),
+					.failedGettingChainCode(let err),
+					.failedVerifyingCompactSignature(let err),
+					.failedCheckingIfExtKeyIsPrivate(let err),
 					.FailedSettingUserVerifier(let err),
 					.failedConvertingKeyToBase58DER(let err),
 					.failedConvertingEntropyToMnemonic(let err),
@@ -348,6 +383,17 @@ public enum PrivMXEndpointError : Error{
 					.FailedEmittingCustomEvent(let err),
 					.FailedSubscribingForCustomEvents(let err),
 					.FailedUnsubscribingFromCustomEvents(let err),
+					.failedInstantiatingExtKey(let err),
+					.failedDerivingExtKey(let err),
+					.failedGettingPublicPartAsBase58(let err),
+					.failedGettingPrivatePartAsBase58(let err),
+					.failedGettingPrivateKey(let err),
+					.failedGettingPublicKey(let err),
+					.failedGettingPublicKeyAsBase58Address(let err),
+					.failedGettingPrivateEncKey(let err),
+					.failedGettingChainCode(let err),
+					.failedVerifyingCompactSignature(let err),
+					.failedCheckingIfExtKeyIsPrivate(let err),
 					.FailedSettingUserVerifier(let err),
 					.failedConvertingKeyToBase58DER(let err),
 					.failedConvertingEntropyToMnemonic(let err),
@@ -431,6 +477,17 @@ public enum PrivMXEndpointError : Error{
 					.FailedEmittingCustomEvent(let err),
 					.FailedSubscribingForCustomEvents(let err),
 					.FailedUnsubscribingFromCustomEvents(let err),
+					.failedInstantiatingExtKey(let err),
+					.failedDerivingExtKey(let err),
+					.failedGettingPublicPartAsBase58(let err),
+					.failedGettingPrivatePartAsBase58(let err),
+					.failedGettingPrivateKey(let err),
+					.failedGettingPublicKey(let err),
+					.failedGettingPublicKeyAsBase58Address(let err),
+					.failedGettingPrivateEncKey(let err),
+					.failedGettingChainCode(let err),
+					.failedVerifyingCompactSignature(let err),
+					.failedCheckingIfExtKeyIsPrivate(let err),
 					.FailedSettingUserVerifier(let err),
 					.failedConvertingKeyToBase58DER(let err),
 					.failedConvertingEntropyToMnemonic(let err),
@@ -513,6 +570,17 @@ public enum PrivMXEndpointError : Error{
 					.FailedEmittingCustomEvent(let err),
 					.FailedSubscribingForCustomEvents(let err),
 					.FailedUnsubscribingFromCustomEvents(let err),
+					.failedInstantiatingExtKey(let err),
+					.failedDerivingExtKey(let err),
+					.failedGettingPublicPartAsBase58(let err),
+					.failedGettingPrivatePartAsBase58(let err),
+					.failedGettingPrivateKey(let err),
+					.failedGettingPublicKey(let err),
+					.failedGettingPublicKeyAsBase58Address(let err),
+					.failedGettingPrivateEncKey(let err),
+					.failedGettingChainCode(let err),
+					.failedVerifyingCompactSignature(let err),
+					.failedCheckingIfExtKeyIsPrivate(let err),
 					.FailedSettingUserVerifier(let err),
 					.failedConvertingKeyToBase58DER(let err),
 					.failedConvertingEntropyToMnemonic(let err),

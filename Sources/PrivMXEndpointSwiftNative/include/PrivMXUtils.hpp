@@ -34,20 +34,24 @@
 #include "privmx/endpoint/crypto/ExtKey.hpp"
 #include "privmx/endpoint/crypto/Types.hpp"
 
+
 #include "privmx/endpoint/inbox/InboxApi.hpp"
 #include "privmx/endpoint/inbox/Types.hpp"
 #include "privmx/endpoint/inbox/Events.hpp"
 #include "privmx/endpoint/inbox/InboxException.hpp"
+#include "privmx/endpoint/inbox/Constants.hpp"
 
 #include "privmx/endpoint/store/StoreApi.hpp"
 #include "privmx/endpoint/store/StoreException.hpp"
 #include "privmx/endpoint/store/Types.hpp"
 #include "privmx/endpoint/store/Events.hpp"
+#include "privmx/endpoint/store/Constants.hpp"
 
 #include "privmx/endpoint/thread/ThreadApi.hpp"
 #include "privmx/endpoint/thread/Types.hpp"
 #include "privmx/endpoint/thread/ThreadException.hpp"
 #include "privmx/endpoint/thread/Events.hpp"
+#include "privmx/endpoint/thread/Constants.hpp"
 
 #include "privmx/endpoint/event/Events.hpp"
 #include "privmx/endpoint/event/EventApi.hpp"
@@ -63,6 +67,12 @@ class NullApiException : std::exception{
 	}
 };
 
+static const endpoint::store::StoreDataSchema::Version CurrentStoreSchema = endpoint::store::CURRENT_STORE_DATA_SCHEMA_VERSION;
+static const endpoint::store::FileDataSchema::Version CurrentFileSchema = endpoint::store::CURRENT_FILE_DATA_SCHEMA_VERSION;
+static const endpoint::thread::ThreadDataSchema::Version CurrentThreadSchema = endpoint::thread::CURRENT_THREAD_DATA_SCHEMA_VERSION;
+static const endpoint::thread::MessageDataSchema::Version CurrentMessageSchema = endpoint::thread::CURRENT_MESSAGE_DATA_SCHEMA_VERSION;
+static const endpoint::inbox::InboxDataSchema::Version CurrentInboxSchema = endpoint::inbox::CURRENT_INBOX_DATA_SCHEMA_VERSION;
+static const endpoint::inbox::EntryDataSchema::Version CurrentEntrySchema = endpoint::inbox::CURRENT_ENTRY_DATA_SCHEMA_VERSION;
 
 using StoreFileHandle = int64_t;
 using InboxHandle [[deprecated("Use EntryHandle instead")]] = int64_t;
@@ -174,8 +184,8 @@ static bool compareVectors(const FileVector& lhs, const FileVector& rhs){
 		&& l.info.storeId == r.info.storeId
 		&& l.statusCode == r.statusCode
 		&& l.authorPubKey == r.authorPubKey
-		&& l.privateMeta.stdString() == r.privateMeta.stdString()
-		&& l.publicMeta.stdString() == r.publicMeta.stdString();
+		&& l.privateMeta == r.privateMeta
+		&& l.publicMeta == r.publicMeta;
 	}
 	return res;
 }
