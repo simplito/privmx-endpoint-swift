@@ -381,11 +381,11 @@ public class CryptoApi{
 	///
 	/// - Throws: `PrivMXEndpointError.failedGeneratingBIP39` if the generating fails.
 	///
-	/// - Returns: `BIP39_t` object containing ECC Key and associated with it BIP-39 mnemonic and entropy
+	/// - Returns: `BIP39` object containing ECC Key and associated with it BIP-39 mnemonic and entropy
 	public func generateBip39(
 		strength: size_t,
 		password: std.string = std.string()
-	) throws -> privmx.endpoint.crypto.BIP39_t {
+	) throws -> BIP39 {
 		let res = api.generateBip39(strength,
 									password)
 		guard res.error.value == nil else {
@@ -397,7 +397,7 @@ public class CryptoApi{
 			err.description = "Unexpectedly recived nil result"
 			throw PrivMXEndpointError.failedGeneratingBIP39(err)
 		}
-		return result
+		return BIP39(wrapping:result)
 	}
 	
 	
@@ -408,11 +408,11 @@ public class CryptoApi{
 	///
 	/// - Throws: `PrivMXEndpointError.failedGeneratingBIP39` if the generating fails.
 	///
-	/// - Returns: `BIP39_t` object containing ECC Key and associated with it BIP-39 mnemonic and entropy
+	/// - Returns: `BIP39` object containing ECC Key and associated with it BIP-39 mnemonic and entropy
 	public func fromMnemonic(
 		mnemonic: std.string,
 		password: std.string = std.string()
-	) throws -> privmx.endpoint.crypto.BIP39_t {
+	) throws -> BIP39 {
 		let res = api.fromMnemonic(mnemonic,
 								   password)
 		guard res.error.value == nil else {
@@ -424,7 +424,7 @@ public class CryptoApi{
 			err.description = "Unexpectedly recived nil result"
 			throw PrivMXEndpointError.failedGeneratingBIP39(err)
 		}
-		return result
+		return BIP39(wrapping:result)
 	}
 	
 	
@@ -435,11 +435,11 @@ public class CryptoApi{
 	///
 	/// - Throws: `PrivMXEndpointError.failedGeneratingBIP39` if the generating fails.
 	///
-	/// - Returns: `BIP39_t` object containing ECC Key and associated with it BIP-39 mnemonic and entropy
+	/// - Returns: `BIP39` object containing ECC Key and associated with it BIP-39 mnemonic and entropy
 	public func fromEntropy(
 		entropy: privmx.endpoint.core.Buffer,
 		password: std.string = std.string()
-	)throws -> privmx.endpoint.crypto.BIP39_t{
+	)throws -> BIP39 {
 		let res = api.fromEntropy(entropy,
 								  password)
 		guard res.error.value == nil else {
@@ -451,7 +451,7 @@ public class CryptoApi{
 			err.description = "Unexpectedly recived nil result"
 			throw PrivMXEndpointError.failedGeneratingBIP39(err)
 		}
-		return result
+		return BIP39(wrapping:result)
 	}
 	
 	
