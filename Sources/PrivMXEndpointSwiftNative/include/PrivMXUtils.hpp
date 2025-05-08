@@ -240,10 +240,10 @@ static ResultWithError<std::string> _call_Hex_encode(const endpoint::core::Buffe
 	return res;
 }
 
-static ResultWithError<endpoint::core::Buffer> _call_Hex_decode(const std::string& data) noexcept{
+static ResultWithError<endpoint::core::Buffer> _call_Hex_decode(const std::string& hex_data) noexcept{
 	ResultWithError<endpoint::core::Buffer> res;
 	try{
-		res.result = endpoint::core::Hex::decode(data);
+		res.result = endpoint::core::Hex::decode(hex_data);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -315,10 +315,10 @@ static ResultWithError<std::string> _call_Base32_encode(const endpoint::core::Bu
 	return res;
 }
 
-static ResultWithError<endpoint::core::Buffer> _call_Base32_decode(const std::string& data) noexcept{
+static ResultWithError<endpoint::core::Buffer> _call_Base32_decode(const std::string& base32_data) noexcept{
 	ResultWithError<endpoint::core::Buffer> res;
 	try{
-		res.result = endpoint::core::Base32::decode(data);
+		res.result = endpoint::core::Base32::decode(base32_data);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -390,10 +390,10 @@ static ResultWithError<std::string> _call_Base64_encode(const endpoint::core::Bu
 	return res;
 }
 
-static ResultWithError<endpoint::core::Buffer> _call_Base64_decode(const std::string& data) noexcept{
+static ResultWithError<endpoint::core::Buffer> _call_Base64_decode(const std::string& base64_data) noexcept{
 	ResultWithError<endpoint::core::Buffer> res;
 	try{
-		res.result = endpoint::core::Base64::decode(data);
+		res.result = endpoint::core::Base64::decode(base64_data);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
