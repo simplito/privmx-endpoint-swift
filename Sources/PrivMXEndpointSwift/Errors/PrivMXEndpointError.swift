@@ -213,6 +213,17 @@ public enum PrivMXEndpointError : Error{
 	/// Failed to generate a Seed for BIP39 Key from a Mnemonic
 	case failedGeneratingSeedFromMnemonic(privmx.InternalError)
 	
+	case failedEncodingToHex(privmx.InternalError)
+	case failedEncodingToBase64(privmx.InternalError)
+	case failedEncodingToBase32(privmx.InternalError)
+	case failedDecodingFromHex(privmx.InternalError)
+	case failedDecodingFromBase64(privmx.InternalError)
+	case failedDecodingFromBase32(privmx.InternalError)
+	case failedCheckingifStringIsHex(privmx.InternalError)
+	case failedCheckingifStringIsBase64(privmx.InternalError)
+	case failedCheckingifStringIsBase32(privmx.InternalError)
+	case failedTrimmingString(privmx.InternalError)
+	case failedSplittingString(privmx.InternalError)
 	
 
 	
@@ -305,6 +316,17 @@ public enum PrivMXEndpointError : Error{
 					.failedConvertingEntropyToMnemonic(let err),
 					.failedConvertingMnemonicToEntropy(let err),
 					.failedGeneratingSeedFromMnemonic(let err),
+					.failedEncodingToHex(let err),
+					.failedEncodingToBase32(let err),
+					.failedEncodingToBase64(let err),
+					.failedDecodingFromHex(let err),
+					.failedDecodingFromBase32(let err),
+					.failedDecodingFromBase64(let err),
+					.failedCheckingifStringIsHex(let err),
+					.failedCheckingifStringIsBase32(let err),
+					.failedCheckingifStringIsBase64(let err),
+					.failedTrimmingString(let err),
+					.failedSplittingString(let err),
 					.failedGeneratingBIP39(let err):
 				return String(err.message)
 		}
@@ -399,6 +421,17 @@ public enum PrivMXEndpointError : Error{
 					.failedConvertingEntropyToMnemonic(let err),
 					.failedConvertingMnemonicToEntropy(let err),
 					.failedGeneratingSeedFromMnemonic(let err),
+					.failedEncodingToHex(let err),
+					.failedEncodingToBase32(let err),
+					.failedEncodingToBase64(let err),
+					.failedDecodingFromHex(let err),
+					.failedDecodingFromBase32(let err),
+					.failedDecodingFromBase64(let err),
+					.failedCheckingifStringIsHex(let err),
+					.failedCheckingifStringIsBase32(let err),
+					.failedCheckingifStringIsBase64(let err),
+					.failedTrimmingString(let err),
+					.failedSplittingString(let err),
 					.failedGeneratingBIP39(let err):
 				return err.code.value
 		}
@@ -493,6 +526,17 @@ public enum PrivMXEndpointError : Error{
 					.failedConvertingEntropyToMnemonic(let err),
 					.failedConvertingMnemonicToEntropy(let err),
 					.failedGeneratingSeedFromMnemonic(let err),
+					.failedEncodingToHex(let err),
+					.failedEncodingToBase32(let err),
+					.failedEncodingToBase64(let err),
+					.failedDecodingFromHex(let err),
+					.failedDecodingFromBase32(let err),
+					.failedDecodingFromBase64(let err),
+					.failedCheckingifStringIsHex(let err),
+					.failedCheckingifStringIsBase32(let err),
+					.failedCheckingifStringIsBase64(let err),
+					.failedTrimmingString(let err),
+					.failedSplittingString(let err),
 					.failedGeneratingBIP39(let err):
 				return String(err.name)
 		}
@@ -586,6 +630,17 @@ public enum PrivMXEndpointError : Error{
 					.failedConvertingEntropyToMnemonic(let err),
 					.failedConvertingMnemonicToEntropy(let err),
 					.failedGeneratingSeedFromMnemonic(let err),
+					.failedEncodingToHex(let err),
+					.failedEncodingToBase32(let err),
+					.failedEncodingToBase64(let err),
+					.failedDecodingFromHex(let err),
+					.failedDecodingFromBase32(let err),
+					.failedDecodingFromBase64(let err),
+					.failedCheckingifStringIsHex(let err),
+					.failedCheckingifStringIsBase32(let err),
+					.failedCheckingifStringIsBase64(let err),
+					.failedTrimmingString(let err),
+					.failedSplittingString(let err),
 					.failedGeneratingBIP39(let err):
 				return String(err.description)
 		}
