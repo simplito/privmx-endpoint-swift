@@ -37,14 +37,14 @@ public class EventApi{
 		
 		guard nil == res.error.value
 		else {
-			throw PrivMXEndpointError.FailedInstantiatingEventApi(res.error.value!)
+			throw PrivMXEndpointError.failedInstantiatingEventApi(res.error.value!)
 		}
 		guard let result = res.result.value
 		else{
 			var err = privmx.InternalError()
 			err.name = "Value error"
 			err.description = "Unexpectedly received nil result"
-			throw PrivMXEndpointError.FailedInstantiatingEventApi(err)
+			throw PrivMXEndpointError.failedInstantiatingEventApi(err)
 		}
 		return EventApi(api: result)
 	}
@@ -71,7 +71,7 @@ public class EventApi{
 			channelName,
 			eventData)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.FailedEmittingCustomEvent(res.error.value!)
+			throw PrivMXEndpointError.failedEmittingCustomEvent(res.error.value!)
 		}
 	}
 	
@@ -88,7 +88,7 @@ public class EventApi{
 		let res = api.subscribeForCustomEvents(contextId,
 											   channelName)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.FailedSubscribingForCustomEvents(res.error.value!)
+			throw PrivMXEndpointError.failedSubscribingForCustomEvents(res.error.value!)
 		}
 	}
 	
@@ -105,7 +105,7 @@ public class EventApi{
 		let res = api.unsubscribeFromCustomEvents(contextId,
 												  channelName)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.FailedUnsubscribingFromCustomEvents(res.error.value!)
+			throw PrivMXEndpointError.failedUnsubscribingFromCustomEvents(res.error.value!)
 		}
 		
 	}

@@ -26,6 +26,7 @@ ResultWithError<NativeEventApiWrapper> NativeEventApiWrapper::create(NativeConne
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -58,6 +59,7 @@ ResultWithError<std::nullptr_t> NativeEventApiWrapper::emitEvent(const std::stri
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -85,6 +87,7 @@ ResultWithError<std::nullptr_t> NativeEventApiWrapper::subscribeForCustomEvents(
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -112,6 +115,7 @@ ResultWithError<std::nullptr_t> NativeEventApiWrapper::unsubscribeFromCustomEven
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
