@@ -121,6 +121,10 @@ struct InternalError{
 	 * Error Code, if it was provided
 	 */
 	std::optional<unsigned int> code;
+	/**
+	 * Error Scope, if it was provided
+	 */
+	std::optional<std::string> scope;
 };
 
 /**
@@ -223,6 +227,7 @@ static ResultWithError<std::string> _call_Hex_encode(const endpoint::core::Buffe
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -248,6 +253,7 @@ static ResultWithError<endpoint::core::Buffer> _call_Hex_decode(const std::strin
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -273,6 +279,7 @@ static ResultWithError<bool> _call_Hex_is(const std::string& data) noexcept{
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -298,6 +305,7 @@ static ResultWithError<std::string> _call_Base32_encode(const endpoint::core::Bu
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -323,6 +331,7 @@ static ResultWithError<endpoint::core::Buffer> _call_Base32_decode(const std::st
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -348,6 +357,7 @@ static ResultWithError<bool> _call_Base32_is(const std::string& data) noexcept{
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -373,6 +383,7 @@ static ResultWithError<std::string> _call_Base64_encode(const endpoint::core::Bu
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -398,6 +409,7 @@ static ResultWithError<endpoint::core::Buffer> _call_Base64_decode(const std::st
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -423,6 +435,7 @@ static ResultWithError<bool> _call_Base64_is(const std::string& data) noexcept{
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -448,6 +461,7 @@ static ResultWithError<std::string> _call_Utils_trim(const std::string& data) no
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -475,6 +489,7 @@ static ResultWithError<StringVector> _call_Utils_split(std::string data ,
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -500,6 +515,7 @@ static ResultWithError<std::nullptr_t> _call_Utils_ltrim(std::string& data) noex
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -525,6 +541,7 @@ static ResultWithError<std::nullptr_t> _call_Utils_rtrim(std::string& data) noex
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};

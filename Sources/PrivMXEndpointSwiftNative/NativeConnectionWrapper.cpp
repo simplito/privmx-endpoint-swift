@@ -47,6 +47,7 @@ ResultWithError<std::shared_ptr<NativeConnectionWrapper>> NativeConnectionWrappe
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -82,6 +83,7 @@ ResultWithError<std::shared_ptr<NativeConnectionWrapper>> NativeConnectionWrappe
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -107,6 +109,7 @@ ResultWithError<std::nullptr_t> NativeConnectionWrapper::setCertsPath(const std:
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -133,6 +136,7 @@ ResultWithError<std::nullptr_t> NativeConnectionWrapper::disconnect(){
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -159,6 +163,7 @@ ResultWithError<ContextList> NativeConnectionWrapper::listContexts(const core::P
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -184,6 +189,7 @@ ResultWithError<UserInfoVector> NativeConnectionWrapper::getContextUsers(const s
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -209,6 +215,7 @@ ResultWithError<int64_t> NativeConnectionWrapper::getConnectionId(){
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -235,6 +242,7 @@ ResultWithError<std::nullptr_t> NativeConnectionWrapper::setUserVerifier(UserVer
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -259,6 +267,7 @@ ResultWithError<bool> CoreEventHandlerWrapper::isLibPlatformDisconnectedEvent(co
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -284,6 +293,7 @@ ResultWithError<core::LibPlatformDisconnectedEvent> CoreEventHandlerWrapper::ext
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -309,6 +319,7 @@ ResultWithError<bool> CoreEventHandlerWrapper::isLibBreakEvent(const core::Event
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -334,6 +345,7 @@ ResultWithError<core::LibBreakEvent> CoreEventHandlerWrapper::extractLibBreakEve
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -359,6 +371,7 @@ ResultWithError<bool> CoreEventHandlerWrapper::isLibConnectedEvent(const core::E
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -384,6 +397,7 @@ ResultWithError<core::LibConnectedEvent> CoreEventHandlerWrapper::extractLibConn
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -409,6 +423,7 @@ ResultWithError<bool> CoreEventHandlerWrapper::isLibDisconnectedEvent(const core
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -434,6 +449,7 @@ ResultWithError<core::LibDisconnectedEvent> CoreEventHandlerWrapper::extractLibD
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};

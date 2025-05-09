@@ -25,6 +25,7 @@ static ResultWithError<endpoint::crypto::ExtKey> _call_ExtKey_fromSeed(const cor
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -50,6 +51,7 @@ static ResultWithError<endpoint::crypto::ExtKey> _call_ExtKey_fromBase58(const s
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -75,6 +77,7 @@ static ResultWithError<endpoint::crypto::ExtKey> _call_ExtKey_generateRandom() n
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -101,6 +104,7 @@ static ResultWithError<endpoint::crypto::ExtKey> _call_ExtKey_derive(const endpo
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -127,6 +131,7 @@ static ResultWithError<endpoint::crypto::ExtKey> _call_ExtKey_deriveHardened(con
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -152,6 +157,7 @@ static ResultWithError<std::string> _call_ExtKey_getPrivatePartAsBase58(const en
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -177,6 +183,7 @@ static ResultWithError<std::string> _call_ExtKey_getPublicPartAsBase58(const end
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -202,6 +209,7 @@ static ResultWithError<std::string> _call_ExtKey_getPrivateKey(const endpoint::c
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -227,6 +235,7 @@ static ResultWithError<std::string> _call_ExtKey_getPublicKey(const endpoint::cr
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -252,6 +261,7 @@ static ResultWithError<endpoint::core::Buffer> _call_ExtKey_getPrivateEncKey(con
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -277,6 +287,7 @@ static ResultWithError<std::string> _call_ExtKey_getPublicKeyAsBase58Address(con
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -302,6 +313,7 @@ static ResultWithError<endpoint::core::Buffer> _call_ExtKey_getChainCode(const e
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -330,6 +342,7 @@ static ResultWithError<bool> _call_ExtKey_verifyCompactSignatureWithHash(const e
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -355,6 +368,7 @@ static ResultWithError<bool> _call_ExtKey_isPrivate(const endpoint::crypto::ExtK
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
