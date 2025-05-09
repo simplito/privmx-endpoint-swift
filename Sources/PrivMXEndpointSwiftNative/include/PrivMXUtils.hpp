@@ -105,8 +105,8 @@ using VerificationRequestVector = std::vector<endpoint::core::VerificationReques
 typedef BoolVector(*VerificationImplementation)(const std::vector<endpoint::core::VerificationRequest>&);
 
 /**
-* Holds data extracted from the thrown Exception
-**/
+ * Holds data extracted from the thrown Exception
+ **/
 struct InternalError{
 	std::string name; ///< Name of the error
 	/**
@@ -124,9 +124,9 @@ struct InternalError{
 };
 
 /**
-* Holds the optional result of called method.\n
-* Used for bridging error handling from Cpp to Swift
-*/
+ * Holds the optional result of called method.\n
+ * Used for bridging error handling from Cpp to Swift
+ */
 template<typename R = nullptr_t>
 struct ResultWithError{
 	/**
@@ -137,7 +137,7 @@ struct ResultWithError{
 	 * Data extracted from the caught exception, if any
 	 */
 	std::optional<InternalError> error;
-	};
+};
 
 
 
@@ -211,6 +211,339 @@ public:
 private:
 	VerificationImplementation _cb;
 };
+
+namespace endpoint{
+namespace wrapper{
+
+static ResultWithError<std::string> _call_Hex_encode(const endpoint::core::Buffer& data) noexcept{
+	ResultWithError<std::string> res;
+	try{
+		res.result = endpoint::core::Hex::encode(data);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+static ResultWithError<endpoint::core::Buffer> _call_Hex_decode(const std::string& hex_data) noexcept{
+	ResultWithError<endpoint::core::Buffer> res;
+	try{
+		res.result = endpoint::core::Hex::decode(hex_data);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+static ResultWithError<bool> _call_Hex_is(const std::string& data) noexcept{
+	ResultWithError<bool> res;
+	try{
+		res.result = endpoint::core::Hex::is(data);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+static ResultWithError<std::string> _call_Base32_encode(const endpoint::core::Buffer& data) noexcept{
+	ResultWithError<std::string> res;
+	try{
+		res.result = endpoint::core::Base32::encode(data);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+static ResultWithError<endpoint::core::Buffer> _call_Base32_decode(const std::string& base32_data) noexcept{
+	ResultWithError<endpoint::core::Buffer> res;
+	try{
+		res.result = endpoint::core::Base32::decode(base32_data);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+static ResultWithError<bool> _call_Base32_is(const std::string& data) noexcept{
+	ResultWithError<bool> res;
+	try{
+		res.result = endpoint::core::Base32::is(data);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+static ResultWithError<std::string> _call_Base64_encode(const endpoint::core::Buffer& data) noexcept{
+	ResultWithError<std::string> res;
+	try{
+		res.result = endpoint::core::Base64::encode(data);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+static ResultWithError<endpoint::core::Buffer> _call_Base64_decode(const std::string& base64_data) noexcept{
+	ResultWithError<endpoint::core::Buffer> res;
+	try{
+		res.result = endpoint::core::Base64::decode(base64_data);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+static ResultWithError<bool> _call_Base64_is(const std::string& data) noexcept{
+	ResultWithError<bool> res;
+	try{
+		res.result = endpoint::core::Base64::is(data);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+static ResultWithError<std::string> _call_Utils_trim(const std::string& data) noexcept{
+	ResultWithError<std::string> res;
+	try{
+		res.result = endpoint::core::Utils::trim(data);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+static ResultWithError<StringVector> _call_Utils_split(std::string data ,
+													   const std::string &delimiter) noexcept{
+	ResultWithError<StringVector> res;
+	try{
+		res.result = endpoint::core::Utils::split(data,
+												  delimiter);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+static ResultWithError<std::nullptr_t> _call_Utils_ltrim(std::string& data) noexcept{
+	ResultWithError<> res;
+	try{
+		endpoint::core::Utils::ltrim(data);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+static ResultWithError<std::nullptr_t> _call_Utils_rtrim(std::string& data) noexcept{
+	ResultWithError<> res;
+	try{
+		endpoint::core::Utils::rtrim(data);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+}
+}
 
 }
 
