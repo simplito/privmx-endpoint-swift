@@ -29,6 +29,7 @@ ResultWithError<core::Buffer> NativeCryptoApiWrapper::generateKeySymmetric(){
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -55,6 +56,7 @@ ResultWithError<std::string> NativeCryptoApiWrapper::generatePrivateKey(const Op
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -80,6 +82,7 @@ ResultWithError<std::string> NativeCryptoApiWrapper::derivePublicKey(const std::
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -107,6 +110,7 @@ ResultWithError<core::Buffer> NativeCryptoApiWrapper::encryptDataSymmetric(const
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -134,6 +138,7 @@ ResultWithError<core::Buffer> NativeCryptoApiWrapper::decryptDataSymmetric(const
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -161,6 +166,7 @@ ResultWithError<core::Buffer> NativeCryptoApiWrapper::signData(const core::Buffe
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -187,6 +193,7 @@ ResultWithError<std::string> NativeCryptoApiWrapper::convertPEMKeyToWIFKey(const
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -214,6 +221,7 @@ ResultWithError<std::string> NativeCryptoApiWrapper::derivePrivateKey(const std:
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -241,6 +249,7 @@ ResultWithError<std::string> NativeCryptoApiWrapper::derivePrivateKey2(const std
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -272,6 +281,7 @@ ResultWithError<bool> NativeCryptoApiWrapper::verifySignature(
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -297,6 +307,7 @@ ResultWithError<std::string> NativeCryptoApiWrapper::convertPGPAsn1KeyToBase58DE
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -325,6 +336,7 @@ ResultWithError<endpoint::crypto::BIP39_t> NativeCryptoApiWrapper::generateBip39
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -352,6 +364,7 @@ ResultWithError<endpoint::crypto::BIP39_t> NativeCryptoApiWrapper::fromMnemonic(
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -379,6 +392,7 @@ ResultWithError<endpoint::crypto::BIP39_t> NativeCryptoApiWrapper::fromEntropy(c
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -404,6 +418,7 @@ ResultWithError<std::string> NativeCryptoApiWrapper::entropyToMnemonic(const end
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -429,6 +444,7 @@ ResultWithError<endpoint::core::Buffer> NativeCryptoApiWrapper::mnemonicToEntrop
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -457,6 +473,7 @@ ResultWithError<endpoint::core::Buffer> NativeCryptoApiWrapper::mnemonicToSeed(c
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};

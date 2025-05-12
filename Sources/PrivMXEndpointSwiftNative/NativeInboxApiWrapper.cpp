@@ -30,6 +30,7 @@ ResultWithError<NativeInboxApiWrapper> NativeInboxApiWrapper::create(NativeConne
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -67,6 +68,7 @@ ResultWithError<std::string> NativeInboxApiWrapper::createInbox(const std::strin
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -110,6 +112,7 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::updateInbox(const std::string&
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -135,6 +138,7 @@ ResultWithError<inbox::Inbox> NativeInboxApiWrapper::getInbox(const std::string 
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -162,6 +166,7 @@ ResultWithError<InboxList> NativeInboxApiWrapper::listInboxes(const std::string&
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -186,6 +191,7 @@ ResultWithError<inbox::InboxPublicView> NativeInboxApiWrapper::getInboxPublicVie
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -211,6 +217,7 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::deleteInbox(const std::string 
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -242,6 +249,7 @@ ResultWithError<EntryHandle> NativeInboxApiWrapper::prepareEntry(const std::stri
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -268,6 +276,7 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::sendEntry(const EntryHandle en
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -293,6 +302,7 @@ ResultWithError<inbox::InboxEntry> NativeInboxApiWrapper::readEntry(const std::s
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -320,6 +330,7 @@ ResultWithError<InboxEntryList> NativeInboxApiWrapper::listEntries(const std::st
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -345,6 +356,7 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::deleteEntry(const std::string&
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -374,6 +386,7 @@ ResultWithError<InboxFileHandle> NativeInboxApiWrapper::createFileHandle(const e
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -403,6 +416,7 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::writeToFile(const EntryHandle 
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -428,6 +442,7 @@ ResultWithError<InboxFileHandle> NativeInboxApiWrapper::openFile(const std::stri
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -455,6 +470,7 @@ ResultWithError<core::Buffer> NativeInboxApiWrapper::readFromFile(const InboxFil
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -482,6 +498,7 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::seekInFile(const InboxFileHand
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -507,6 +524,7 @@ ResultWithError<std::string> NativeInboxApiWrapper::closeFile(const InboxFileHan
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -532,6 +550,7 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::subscribeForInboxEvents(){
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -557,6 +576,7 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::unsubscribeFromInboxEvents(){
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -582,6 +602,7 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::subscribeForEntryEvents(const 
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -607,6 +628,7 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::unsubscribeFromEntryEvents(con
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -633,6 +655,7 @@ ResultWithError<bool> InboxEventHandler::isInboxCreatedEvent(const endpoint::cor
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -659,6 +682,7 @@ ResultWithError<endpoint::inbox::InboxCreatedEvent> InboxEventHandler::extractIn
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -684,6 +708,7 @@ ResultWithError<bool> InboxEventHandler::isInboxUpdatedEvent(const endpoint::cor
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -709,6 +734,7 @@ ResultWithError<endpoint::inbox::InboxUpdatedEvent> InboxEventHandler::extractIn
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -734,6 +760,7 @@ ResultWithError<bool> InboxEventHandler::isInboxDeletedEvent(const endpoint::cor
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -759,6 +786,7 @@ ResultWithError<endpoint::inbox::InboxDeletedEvent> InboxEventHandler::extractIn
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -784,6 +812,7 @@ ResultWithError<bool> InboxEventHandler::isInboxEntryCreatedEvent(const endpoint
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -809,6 +838,7 @@ ResultWithError<endpoint::inbox::InboxEntryCreatedEvent> InboxEventHandler::extr
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -834,6 +864,7 @@ ResultWithError<bool> InboxEventHandler::isInboxEntryDeletedEvent(const endpoint
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -859,6 +890,7 @@ ResultWithError<endpoint::inbox::InboxEntryDeletedEvent> InboxEventHandler::extr
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
