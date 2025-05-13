@@ -102,6 +102,8 @@ using InboxEntryList = endpoint::core::PagingList<endpoint::inbox::InboxEntry>;
 using BoolVector = std::vector<bool>;
 using VerificationRequestVector = std::vector<endpoint::core::VerificationRequest>;
 
+using OptionalCUnsignedInt = std::optional<uint32_t>;
+
 typedef BoolVector(*VerificationImplementation)(const std::vector<endpoint::core::VerificationRequest>&);
 
 /**
@@ -167,6 +169,11 @@ static OptionalContainerPolicy makeOptional(const endpoint::core::ContainerPolic
 
 /// Creates a C++ `std::optional` containing the provided `ContainerPolicyWithoutItem`
 static OptionalContainerPolicyWithoutItem makeOptional(const endpoint::core::ContainerPolicyWithoutItem& val){
+	return std::make_optional(val);
+}
+
+/// Creates a C++ `std::optional` containing the provided `unsigned int`
+static OptionalCUnsignedInt makeOptional(const unsigned int& val){
 	return std::make_optional(val);
 }
 
