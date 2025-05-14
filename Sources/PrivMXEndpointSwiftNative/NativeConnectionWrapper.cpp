@@ -233,7 +233,7 @@ ResultWithError<int64_t> NativeConnectionWrapper::getConnectionId(){
 	return res;
 }
 
-ResultWithError<std::nullptr_t> NativeConnectionWrapper::setUserVerifier(UserVerifier verifier) {
+ResultWithError<std::nullptr_t> NativeConnectionWrapper::setUserVerifier(const UserVerifier& verifier) {
 	ResultWithError res;
 	try{
 		auto shuv = std::make_shared<UserVerifier>(verifier);
@@ -257,6 +257,7 @@ ResultWithError<std::nullptr_t> NativeConnectionWrapper::setUserVerifier(UserVer
 			.message = "Failed to work"
 		};
 	}
+	return res;
 }
 
 ResultWithError<bool> CoreEventHandlerWrapper::isLibPlatformDisconnectedEvent(const core::EventHolder& eventHolder){

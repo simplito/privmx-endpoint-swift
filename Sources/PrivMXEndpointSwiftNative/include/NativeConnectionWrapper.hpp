@@ -117,7 +117,7 @@ public:
 	
 	ResultWithError<UserInfoVector> getContextUsers(const std::string& contextId);
 	
-	ResultWithError<std::nullptr_t> setUserVerifier(UserVerifier verifier);
+	ResultWithError<std::nullptr_t> setUserVerifier(const UserVerifier& verifier);
 private:
 	
 	std::shared_ptr<endpoint::core::Connection> getApi();
