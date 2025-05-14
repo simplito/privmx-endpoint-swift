@@ -59,6 +59,7 @@
 #include "privmx/endpoint/event/Types.hpp"
 
 
+
 namespace privmx {
 
 class NullApiException : std::exception{
@@ -104,8 +105,14 @@ using VerificationRequestVector = std::vector<endpoint::core::VerificationReques
 
 using OptionalCUnsignedInt = std::optional<uint32_t>;
 
-typedef BoolVector(*VerificationImplementation)(const std::vector<endpoint::core::VerificationRequest>&);
+struct _verif_request{
+	VerificationRequestVector res;
+};
 
+struct _verif_result{
+	BoolVector res;
+};
+typedef _verif_result(*VerificationImplementation)(const _verif_request);
 /**
  * Holds data extracted from the thrown Exception
  **/
@@ -210,14 +217,17 @@ static std::string getChannelFrom(const endpoint::event::ContextCustomEvent& eve
 	return event.channel;
 }
 
-class UserVerifier : public endpoint::core::UserVerifierInterface{
+class UserVerifier : public virtual endpoint::core::UserVerifierInterface{
 public:
 	BoolVector verify(const VerificationRequestVector& request) override {
-		return _cb(request);
+
+		_verif_request arg{.res = request};
+		return _cb(arg).res;
 	}
 	
 	UserVerifier(VerificationImplementation cb){
 		_cb=cb;
+		
 	}
 private:
 	VerificationImplementation _cb;
