@@ -59,6 +59,7 @@
 #include "privmx/endpoint/event/Types.hpp"
 
 
+
 namespace privmx {
 
 class NullApiException : std::exception{
@@ -104,7 +105,26 @@ using VerificationRequestVector = std::vector<endpoint::core::VerificationReques
 
 using OptionalCUnsignedInt = std::optional<uint32_t>;
 
-typedef BoolVector(*VerificationImplementation)(const std::vector<endpoint::core::VerificationRequest>&);
+struct _verif_request{
+	VerificationRequestVector res;
+};
+
+/// Wrapper struct containing the results of the verification
+struct VerificationResult{
+	/// Vector holding results of the verification
+	BoolVector res;
+};
+
+/**
+ * Verifies whether the specified users are valid.
+ *
+ * Checks if each user belonged to the Context and if this is their key in `date` and return `true` or `false` otherwise.
+ * Make sure that the result has as many responses as there were request, otherwise you risk Undefined Behaviour and/or a crash.
+ *
+ * @param request object wrapping a list of user data to verifiy,
+ * @return  object wrapping a list of verification results whose items correspond to the items in the input list.
+ */
+typedef VerificationResult(*VerificationImplementation)(const _verif_request);
 
 /**
  * Holds data extracted from the thrown Exception
@@ -210,14 +230,17 @@ static std::string getChannelFrom(const endpoint::event::ContextCustomEvent& eve
 	return event.channel;
 }
 
-class UserVerifier : public endpoint::core::UserVerifierInterface{
+class UserVerifier : public virtual endpoint::core::UserVerifierInterface{
 public:
 	BoolVector verify(const VerificationRequestVector& request) override {
-		return _cb(request);
+
+		_verif_request arg{.res = request};
+		return _cb(arg).res;
 	}
 	
 	UserVerifier(VerificationImplementation cb){
 		_cb=cb;
+		
 	}
 private:
 	VerificationImplementation _cb;

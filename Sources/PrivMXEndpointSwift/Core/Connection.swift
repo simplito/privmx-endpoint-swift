@@ -260,15 +260,15 @@ public class Connection{
 	/// The feature allows the developer to set up a callback for user verification.
 	/// A developer can implement an interface and pass the implementation to the function.
 	/// Each time data is read from the container, a callback will be triggered, allowing the developer to validate the sender in an external service,
-	/// e.g. Developers Application Server or PKI Server
+	/// e.g. Developer's Application Server or PKI Server
 	///
-	/// - Parameter verifier: an implementation of the `UserVerifierInterface` Cxx abstract class
+	/// - Parameter verifier: an implementation of the verificattion that will be called for each request
 	///
 	/// - throws: When the operation fails.
 	public func setUserVerifier(
-		verifier: privmx.UserVerifier
+		_ verifier: privmx.VerificationImplementation
 	) throws -> Void {
-		let res = api.setUserVerifier(verifier)
+		let res = api.setUserVerifier(privmx.UserVerifier.init(verifier))
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSettingUserVerifier(res.error.value!)
 		}
