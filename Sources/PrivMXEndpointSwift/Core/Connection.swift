@@ -17,7 +17,7 @@ import PrivMXEndpointSwiftNative
 
 /// Swift wrapper for `privmx.NativeConnectionWrapper`, used to establish and manage secure connections with PrivMX platform.
 public class Connection{
-	nonisolated(unsafe) private var verifierImpl:privmx.VerificationImplementation!
+	//nonisolated(unsafe) private var verifierImpl:privmx.VerificationImplementation!
 	/// Sets the path to the .pem file containing the necessary certificates for the connection, which are dependent on your PrivMX Bridge setup.
     ///
     /// This method must be called before attempting to establish a connection to ensure the certificates are properly set.
@@ -260,15 +260,14 @@ public class Connection{
 	/// The feature allows the developer to set up a callback for user verification.
 	/// A developer can implement an interface and pass the implementation to the function.
 	/// Each time data is read from the container, a callback will be triggered, allowing the developer to validate the sender in an external service,
-	/// e.g. Developers Application Server or PKI Server
+	/// e.g. Developer's Application Server or PKI Server
 	///
-	/// - Parameter verifier: an implementation of the `UserVerifierInterface` Cxx abstract class
+	/// - Parameter verifier: an implementation of the verificattion that will be called for each request
 	///
 	/// - throws: When the operation fails.
 	public func setUserVerifier(
 		_ verifier: privmx.VerificationImplementation
 	) throws -> Void {
-		self.verifierImpl = verifier
 		let res = api.setUserVerifier(privmx.UserVerifier.init(verifier))
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSettingUserVerifier(res.error.value!)

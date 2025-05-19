@@ -109,10 +109,23 @@ struct _verif_request{
 	VerificationRequestVector res;
 };
 
-struct _verif_result{
+/// Wrapper struct containing the results of the verification
+struct VerificationResult{
+	/// Vector holding results of the verification
 	BoolVector res;
 };
-typedef _verif_result(*VerificationImplementation)(const _verif_request);
+
+/**
+ * Verifies whether the specified users are valid.
+ *
+ * Checks if each user belonged to the Context and if this is their key in `date` and return `true` or `false` otherwise.
+ * Make sure that the result has as many responses as there were request, otherwise you risk Undefined Behaviour and/or a crash.
+ *
+ * @param request object wrapping a list of user data to verifiy,
+ * @return  object wrapping a list of verification results whose items correspond to the items in the input list.
+ */
+typedef VerificationResult(*VerificationImplementation)(const _verif_request);
+
 /**
  * Holds data extracted from the thrown Exception
  **/
