@@ -17,7 +17,7 @@ import PrivMXEndpointSwiftNative
 
 /// Swift wrapper for `privmx.NativeConnectionWrapper`, used to establish and manage secure connections with PrivMX platform.
 public class Connection{
-	//nonisolated(unsafe) private var verifierImpl:privmx.VerificationImplementation!
+	
 	/// Sets the path to the .pem file containing the necessary certificates for the connection, which are dependent on your PrivMX Bridge setup.
     ///
     /// This method must be called before attempting to establish a connection to ensure the certificates are properly set.
