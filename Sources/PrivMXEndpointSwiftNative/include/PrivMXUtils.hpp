@@ -106,13 +106,13 @@ using VerificationRequestVector = std::vector<endpoint::core::VerificationReques
 using OptionalCUnsignedInt = std::optional<uint32_t>;
 
 struct _verif_request{
-	VerificationRequestVector res;
+	VerificationRequestVector requestVector;
 };
 
 /// Wrapper struct containing the results of the verification
 struct VerificationResult{
 	/// Vector holding results of the verification
-	BoolVector res;
+	BoolVector resultVector;
 };
 
 /**
@@ -234,8 +234,8 @@ class UserVerifier : public virtual endpoint::core::UserVerifierInterface{
 public:
 	BoolVector verify(const VerificationRequestVector& request) override {
 
-		_verif_request arg{.res = request};
-		return _cb(arg).res;
+		_verif_request arg{.requestVector = request};
+		return _cb(arg).resultVector;
 	}
 	
 	UserVerifier(VerificationImplementation cb){
