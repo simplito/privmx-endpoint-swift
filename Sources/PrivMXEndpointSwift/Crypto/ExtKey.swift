@@ -25,7 +25,7 @@ public class ExtKey{
 	/// Creates ExtKey from given seed.
 	/// - Parameter seed: the seed used to generate Key
 	/// - Returns: `ExtKey` object
-	public func fromSeed(
+	public static func fromSeed(
 		seed: privmx.endpoint.core.Buffer
 	) throws -> ExtKey {
 		let res = privmx.endpoint.wrapper._call_ExtKey_fromSeed(seed)
@@ -44,7 +44,7 @@ public class ExtKey{
 	/// Decodes ExtKey from Base58 format.
 	/// - Parameter base58:the ExtKey in Base58
 	/// - Returns: `ExtKey` object
-	public func fromBase58(
+	public static func fromBase58(
 		base58: std.string
 	) throws -> ExtKey {
 		let res = privmx.endpoint.wrapper._call_ExtKey_fromBase58(base58)
@@ -62,7 +62,7 @@ public class ExtKey{
 	
 	/// Generates a new ExtKey.
 	/// - Returns: `ExtKey` object
-	public func generateRandom(
+	public static func generateRandom(
 	) throws -> ExtKey {
 		let res = privmx.endpoint.wrapper._call_ExtKey_generateRandom()
 		guard res.error.value == nil else {
