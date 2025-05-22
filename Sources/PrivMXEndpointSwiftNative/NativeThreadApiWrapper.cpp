@@ -26,6 +26,7 @@ ResultWithError<NativeThreadApiWrapper> NativeThreadApiWrapper::create(NativeCon
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -61,6 +62,7 @@ ResultWithError<std::string> NativeThreadApiWrapper::createThread(const std::str
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -87,6 +89,7 @@ ResultWithError<thread::Thread> NativeThreadApiWrapper::getThread(const std::str
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -115,6 +118,7 @@ ResultWithError<ThreadList> NativeThreadApiWrapper::listThreads(const std::strin
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -141,6 +145,7 @@ ResultWithError<MessageList> NativeThreadApiWrapper::listMessages(const std::str
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -169,6 +174,7 @@ ResultWithError<std::string> NativeThreadApiWrapper::sendMessage(const std::stri
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -194,6 +200,7 @@ ResultWithError<std::nullptr_t> NativeThreadApiWrapper::deleteThread(const std::
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -219,6 +226,7 @@ ResultWithError<std::nullptr_t> NativeThreadApiWrapper::deleteMessage(const std:
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -244,6 +252,7 @@ ResultWithError<thread::Message> NativeThreadApiWrapper::getMessage(const std::s
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -285,6 +294,7 @@ ResultWithError<std::nullptr_t> NativeThreadApiWrapper::updateThread(const std::
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -317,6 +327,7 @@ ResultWithError<nullptr_t> NativeThreadApiWrapper::updateMessage(const std::stri
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -343,6 +354,7 @@ ResultWithError<nullptr_t> NativeThreadApiWrapper::subscribeForThreadEvents(){
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -368,6 +380,7 @@ ResultWithError<nullptr_t> NativeThreadApiWrapper::unsubscribeFromThreadEvents()
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -393,6 +406,7 @@ ResultWithError<nullptr_t> NativeThreadApiWrapper::subscribeForMessageEvents(con
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -418,6 +432,7 @@ ResultWithError<nullptr_t> NativeThreadApiWrapper::unsubscribeFromMessageEvents(
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -443,6 +458,7 @@ ResultWithError<bool> ThreadEventHandler::isThreadCreatedEvent(const core::Event
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -468,6 +484,7 @@ ResultWithError<thread::ThreadCreatedEvent> ThreadEventHandler::extractThreadCre
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -493,6 +510,7 @@ ResultWithError<bool> ThreadEventHandler::isThreadUpdatedEvent(const core::Event
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -518,6 +536,7 @@ ResultWithError<thread::ThreadUpdatedEvent> ThreadEventHandler::extractThreadUpd
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -543,6 +562,7 @@ ResultWithError<bool> ThreadEventHandler::isThreadDeletedEvent(const core::Event
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -568,6 +588,7 @@ ResultWithError<thread::ThreadDeletedEvent> ThreadEventHandler::extractThreadDel
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -593,6 +614,7 @@ ResultWithError<bool> ThreadEventHandler::isThreadNewMessageEvent(const core::Ev
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -618,6 +640,7 @@ ResultWithError<thread::ThreadNewMessageEvent> ThreadEventHandler::extractThread
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -643,6 +666,7 @@ ResultWithError<bool> ThreadEventHandler::isThreadDeletedMessageEvent(const core
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -660,14 +684,16 @@ ResultWithError<bool> ThreadEventHandler::isThreadDeletedMessageEvent(const core
 	return res;
 }
 
+
 ResultWithError<bool> ThreadEventHandler::isThreadMessageDeletedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
 	try{
-		res.result = thread::Events::isThreadDeletedMessageEvent(eventHolder);
+		res.result = thread::Events::isThreadMessageDeletedEvent(eventHolder);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -693,6 +719,7 @@ ResultWithError<bool> ThreadEventHandler::isThreadMessageUpdatedEvent(const core
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -718,6 +745,7 @@ ResultWithError<thread::ThreadMessageDeletedEvent> ThreadEventHandler::extractTh
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -743,6 +771,7 @@ ResultWithError<thread::ThreadMessageDeletedEvent> ThreadEventHandler::extractTh
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -767,6 +796,7 @@ ResultWithError<thread::ThreadMessageUpdatedEvent> ThreadEventHandler::extractTh
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -792,6 +822,7 @@ ResultWithError<bool> ThreadEventHandler::isThreadStatsEvent(const core::EventHo
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -817,6 +848,7 @@ ResultWithError<thread::ThreadStatsChangedEvent> ThreadEventHandler::extractThre
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
