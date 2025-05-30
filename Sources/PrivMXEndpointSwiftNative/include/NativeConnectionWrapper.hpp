@@ -26,6 +26,7 @@ class NativeConnectionWrapper {
 	friend class NativeThreadApiWrapper;
 	friend class NativeStoreApiWrapper;
 	friend class NativeInboxApiWrapper;
+	friend class NativeEventApiWrapper;
 public:
 	/**
 	 * Connects to the PrivMX Bridge server.
@@ -39,7 +40,8 @@ public:
 	 */
 	static ResultWithError<std::shared_ptr<NativeConnectionWrapper>> connect(const std::string& userPrivKey,
 																			 const std::string& solutionId,
-																			 const std::string& bridgeUrl);
+																			 const std::string& bridgeUrl,
+																			 const endpoint::core::PKIVerificationOptions& verificationOptions = endpoint::core::PKIVerificationOptions());
 	/**
 	 * Connects to the PrivMX Bridge server.
 	 *
@@ -65,7 +67,8 @@ public:
 	 *
 	 */
 	static ResultWithError<std::shared_ptr<NativeConnectionWrapper>> connectPublic(const std::string& solutionId,
-																				   const std::string& bridgeUrl);
+																				   const std::string& bridgeUrl,
+																				   const endpoint::core::PKIVerificationOptions& verificationOptions = endpoint::core::PKIVerificationOptions());
 	/**
 	 * Connects to the PrivMX Bridge Server as a guest user.
 	 *
@@ -111,6 +114,10 @@ public:
 	 * @return struct containing a list of Contexts wrapped in a `ResultWithError` object for error handling.
 	 */
 	ResultWithError<ContextList> listContexts(const endpoint::core::PagingQuery& query);
+	
+	ResultWithError<UserInfoVector> getContextUsers(const std::string& contextId);
+	
+	ResultWithError<std::nullptr_t> setUserVerifier(const UserVerifier& verifier);
 private:
 	
 	std::shared_ptr<endpoint::core::Connection> getApi();
