@@ -202,6 +202,11 @@ static bool compareVectors(const StringVector& lhs, const StringVector& rhs){
 	return lhs == rhs;
 }
 
+/// Exposes Buffer comaprison in Swift
+static bool compareBuffers(const endpoint::core::Buffer& lhs, const endpoint::core::Buffer& rhs){
+	return lhs == rhs;
+}
+
 /// Exposes vector comaprison in Swift
 static bool compareVectors(const FileVector& lhs, const FileVector& rhs){
 	auto lim = lhs.size();
