@@ -115,7 +115,7 @@ public:
 	 * @param userPrivKey optional sender's private key which can be used later to encrypt data for that sender
 	 * @return int64_t Inbox handle
 	 */
-	ResultWithError<InboxHandle> prepareEntry(const std::string& inboxId,
+	ResultWithError<EntryHandle> prepareEntry(const std::string& inboxId,
 											  const endpoint::core::Buffer& data,
 											  const InboxFileHandleVector& inboxFileHandles = InboxFileHandleVector(),
 											  const OptionalString& userPrivKey = std::nullopt);
@@ -124,9 +124,9 @@ public:
 	 * Sends data to an Inbox.
 	 * You do not have to be logged in to call this function.
 	 *
-	 * @param inboxHandle ID of the Inbox to which the request applies
+	 * @param entryHandle ID of the Inbox to which the request applies
 	 */
-	ResultWithError<nullptr_t> sendEntry(const InboxHandle inboxHandle);
+	ResultWithError<nullptr_t> sendEntry(const EntryHandle entryHandle);
 	
 	/**
 	 * Gets an entry from an Inbox.
@@ -171,11 +171,11 @@ public:
 	 * :::note To send the entire file - divide it into pieces of the desired size and call the function for each fragment. :::
 	 * You do not have to be logged in to call this function.
 	 *
-	 * @param inboxHandle Handle to the prepared Inbox entry
+	 * @param entryHandle Handle to the prepared Inbox entry
 	 * @param inboxFileHandle handle to the file where the uploaded chunk belongs
 	 * @param Buffer dataChunk - file chunk to send
 	 */
-	ResultWithError<nullptr_t> writeToFile(const InboxHandle inboxHandle,
+	ResultWithError<nullptr_t> writeToFile(const EntryHandle entryHandle,
 										   const InboxFileHandle inboxFileHandle,
 										   const endpoint::core::Buffer& dataChunk);
 

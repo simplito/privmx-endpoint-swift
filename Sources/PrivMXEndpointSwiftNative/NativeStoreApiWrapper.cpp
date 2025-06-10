@@ -23,10 +23,11 @@ ResultWithError<NativeStoreApiWrapper> NativeStoreApiWrapper::create(NativeConne
 	auto res = ResultWithError<NativeStoreApiWrapper>();
 	try {
 		res.result = NativeStoreApiWrapper(connection);
-		}catch(core::Exception& err){
+	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -53,6 +54,7 @@ ResultWithError<StoreList> NativeStoreApiWrapper::listStores(const std::string& 
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -78,6 +80,7 @@ ResultWithError<store::Store> NativeStoreApiWrapper::getStore(const std::string 
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -113,6 +116,7 @@ ResultWithError<std::string> NativeStoreApiWrapper::createStore(const std::strin
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -154,6 +158,7 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::updateStore(const std::st
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -179,6 +184,7 @@ ResultWithError<store::File> NativeStoreApiWrapper::getFile(const std::string &f
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -205,6 +211,7 @@ ResultWithError<FileList> NativeStoreApiWrapper::listFiles(const std::string& st
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -233,6 +240,7 @@ ResultWithError<StoreFileHandle> NativeStoreApiWrapper::createFile(const std::st
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -261,6 +269,7 @@ ResultWithError<StoreFileHandle> NativeStoreApiWrapper::updateFile(const std::st
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -288,6 +297,7 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::updateFileMeta(const std:
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -313,6 +323,7 @@ ResultWithError<StoreFileHandle> NativeStoreApiWrapper::openFile(const std::stri
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -339,6 +350,7 @@ ResultWithError<core::Buffer> NativeStoreApiWrapper::readFromFile(StoreFileHandl
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -365,6 +377,7 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::writeToFile(StoreFileHand
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -390,6 +403,7 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::deleteFile(const std::str
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -416,6 +430,7 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::seekInFile(StoreFileHandl
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -441,6 +456,7 @@ ResultWithError<std::string> NativeStoreApiWrapper::closeFile(StoreFileHandle ha
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -466,6 +482,7 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::deleteStore(const std::st
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -491,6 +508,7 @@ ResultWithError<nullptr_t> NativeStoreApiWrapper::subscribeForStoreEvents(){
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -515,6 +533,7 @@ ResultWithError<nullptr_t> NativeStoreApiWrapper::unsubscribeFromStoreEvents(){
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -539,6 +558,7 @@ ResultWithError<nullptr_t> NativeStoreApiWrapper::subscribeForFileEvents(const s
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -563,6 +583,7 @@ ResultWithError<nullptr_t> NativeStoreApiWrapper::unsubscribeFromFileEvents(cons
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -588,6 +609,7 @@ ResultWithError<bool> StoreEventHandler::isStoreCreatedEvent(const core::EventHo
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -613,6 +635,7 @@ ResultWithError<store::StoreCreatedEvent> StoreEventHandler::extractStoreCreated
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -638,6 +661,7 @@ ResultWithError<bool> StoreEventHandler::isStoreUpdatedEvent(const core::EventHo
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -663,6 +687,7 @@ ResultWithError<store::StoreUpdatedEvent> StoreEventHandler::extractStoreUpdated
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -688,6 +713,7 @@ ResultWithError<bool> StoreEventHandler::isStoreDeletedEvent(const core::EventHo
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -713,6 +739,7 @@ ResultWithError<store::StoreDeletedEvent> StoreEventHandler::extractStoreDeleted
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -738,6 +765,7 @@ ResultWithError<bool> StoreEventHandler::isStoreStatsChangedEvent(const core::Ev
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -763,6 +791,7 @@ ResultWithError<store::StoreStatsChangedEvent> StoreEventHandler::extractStoreSt
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -788,6 +817,7 @@ ResultWithError<bool> StoreEventHandler::isStoreFileCreatedEvent(const core::Eve
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -813,6 +843,7 @@ ResultWithError<store::StoreFileCreatedEvent> StoreEventHandler::extractStoreFil
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -838,6 +869,7 @@ ResultWithError<bool> StoreEventHandler::isStoreFileUpdatedEvent(const core::Eve
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -863,6 +895,7 @@ ResultWithError<store::StoreFileUpdatedEvent> StoreEventHandler::extractStoreFil
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -888,6 +921,7 @@ ResultWithError<bool> StoreEventHandler::isStoreFileDeletedEvent(const core::Eve
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -913,6 +947,7 @@ ResultWithError<store::StoreFileDeletedEvent> StoreEventHandler::extractStoreFil
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};

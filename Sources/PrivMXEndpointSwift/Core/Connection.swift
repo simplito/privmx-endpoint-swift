@@ -51,11 +51,13 @@ public class Connection{
 	public static func connect(
 		userPrivKey: std.string,
 		solutionId: std.string,
-		bridgeUrl: std.string
+		bridgeUrl: std.string,
+		verificationOptions : privmx.endpoint.core.PKIVerificationOptions = privmx.endpoint.core.PKIVerificationOptions()
 	) throws -> Connection{
 		let res = privmx.NativeConnectionWrapper.connect(userPrivKey,
 														 solutionId,
-														 bridgeUrl)
+														 bridgeUrl,
+														 verificationOptions)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedConnecting(res.error.value!)
 		}
@@ -108,16 +110,19 @@ public class Connection{
     ///
     /// - Parameter solutionId: The ID of the Solution that the connection targets.
     /// - Parameter bridgeUrl: The URL of PrivMX platform endpoint.
-    ///
+    /// - Parameter verificationOptions: Options used to verify if Bridge on given url is the one you expect.
+	/// 
     /// - Throws: `PrivMXEndpointError.failedConnecting` if establishing the connection fails.
     ///
     /// - Returns: A public `Connection` instance that can be used for non-authenticated operations.
     public static func connectPublic(
 		solutionId: std.string,
-		bridgeUrl: std.string
+		bridgeUrl: std.string,
+		verificationOptions : privmx.endpoint.core.PKIVerificationOptions = privmx.endpoint.core.PKIVerificationOptions()
 	) throws -> Connection{
 		let res = privmx.NativeConnectionWrapper.connectPublic(solutionId,
-															   bridgeUrl)
+															   bridgeUrl,
+															   verificationOptions)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedConnecting(res.error.value!)
 		}
@@ -227,5 +232,45 @@ public class Connection{
 		return result
 	}
 	
+	/// Retrieves a list of Users from a particular Context.
+	///
+	/// - parameter contextId: Id of the Context.
+	///
+	/// - throws: When the operation fails.
+	///
+	/// - returns: a list of UserInfo objects.
+	public func getContextUsers(
+		contextId: std.string
+	) throws -> privmx.UserInfoVector {
+		let res = api.getContextUsers(contextId)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedGettingContextUsers(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedGettingContextUsers(err)
+		}
+		return result
+	}
 	
+	/// Sets user's custom verification callback.
+	///
+	/// The feature allows the developer to set up a callback for user verification.
+	/// A developer can implement an interface and pass the implementation to the function.
+	/// Each time data is read from the container, a callback will be triggered, allowing the developer to validate the sender in an external service,
+	/// e.g. Developer's Application Server or PKI Server
+	///
+	/// - Parameter verifier: an implementation of the verificattion that will be called for each request
+	///
+	/// - throws: When the operation fails.
+	public func setUserVerifier(
+		_ verifier: privmx.VerificationImplementation
+	) throws -> Void {
+		let res = api.setUserVerifier(privmx.UserVerifier.init(verifier))
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedSettingUserVerifier(res.error.value!)
+		}
+	}
 }
