@@ -106,9 +106,10 @@ using FileList = endpoint::core::PagingList<endpoint::store::File>;
 using InboxList = endpoint::core::PagingList<endpoint::inbox::Inbox>;
 using InboxEntryList = endpoint::core::PagingList<endpoint::inbox::InboxEntry>;
 
-using ItemList = endpoint::core::PagingList<endpoint::kvdb::KvdbEntry>;
 using StringList = endpoint::core::PagingList<std::string>;
+
 using KvdbList = endpoint::core::PagingList<endpoint::kvdb::Kvdb>;
+using KvdbEntryList = endpoint::core::PagingList<endpoint::kvdb::KvdbEntry>;
 
 using BoolVector = std::vector<bool>;
 using VerificationRequestVector = std::vector<endpoint::core::VerificationRequest>;

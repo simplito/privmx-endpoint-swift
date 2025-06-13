@@ -197,11 +197,11 @@ ResultWithError<KvdbList> NativeKvdbApiWrapper::listKvdbs(const std::string &con
 	return res;
 }
 
-ResultWithError<kvdb::Item> NativeKvdbApiWrapper::getItem(const std::string &kvdbId,
+ResultWithError<kvdb::KvdbEntry> NativeKvdbApiWrapper::getEntry(const std::string &kvdbId,
 														  const std::string &key){
-	auto res = ResultWithError<kvdb::Item>();
+	auto res = ResultWithError<kvdb::KvdbEntry>();
 	try{
-		res.result = getapi()->getItem(kvdbId,
+		res.result = getapi()->getEntry(kvdbId,
 									   key);
 	}catch(core::Exception& err){
 		res.error = {
@@ -224,11 +224,11 @@ ResultWithError<kvdb::Item> NativeKvdbApiWrapper::getItem(const std::string &kvd
 	return res;
 }
 
-ResultWithError<StringList> NativeKvdbApiWrapper::listItemKeys(const std::string &kvdbId,
-															   const endpoint::kvdb::KeysPagingQuery &pagingQuery){
+ResultWithError<StringList> NativeKvdbApiWrapper::listEntriesKeys(const std::string &kvdbId,
+																const endpoint::kvdb::KvdbKeysPagingQuery &pagingQuery){
 	auto res = ResultWithError<StringList>();
 	try{
-		res.result = getapi()->listItemKeys(kvdbId,
+		res.result = getapi()->listEntriesKeys(kvdbId,
 											pagingQuery);
 	}catch(core::Exception& err){
 		res.error = {
@@ -251,11 +251,11 @@ ResultWithError<StringList> NativeKvdbApiWrapper::listItemKeys(const std::string
 	return res;
 }
 
-ResultWithError<ItemList> NativeKvdbApiWrapper::listItems(const std::string &kvdbId,
-														  const endpoint::kvdb::ItemsPagingQuery &pagingQuery){
-	auto res = ResultWithError<ItemList>();
+ResultWithError<KvdbEntryList> NativeKvdbApiWrapper::listEntries(const std::string &kvdbId,
+														  const endpoint::kvdb::KvdbEntryPagingQuery &pagingQuery){
+	auto res = ResultWithError<KvdbEntryList>();
 	try{
-		res.result = getapi()->listItem(kvdbId,
+		res.result = getapi()->listEntries(kvdbId,
 										pagingQuery);
 	}catch(core::Exception& err){
 		res.error = {
@@ -278,7 +278,7 @@ ResultWithError<ItemList> NativeKvdbApiWrapper::listItems(const std::string &kvd
 	return res;
 }
 
-ResultWithError<nullptr_t> NativeKvdbApiWrapper::setItem(const std::string &kvdbId,
+ResultWithError<nullptr_t> NativeKvdbApiWrapper::setEntry(const std::string &kvdbId,
 														 const std::string &key,
 														 const endpoint::core::Buffer &publicMeta,
 														 const endpoint::core::Buffer &privateMeta,
@@ -286,7 +286,7 @@ ResultWithError<nullptr_t> NativeKvdbApiWrapper::setItem(const std::string &kvdb
 														 const int64_t version){
 	auto res = ResultWithError();
 	try{
-		getapi()->setItem(kvdbId,
+		getapi()->setEntry(kvdbId,
 						  key,
 						  publicMeta,
 						  privateMeta,
@@ -313,11 +313,11 @@ ResultWithError<nullptr_t> NativeKvdbApiWrapper::setItem(const std::string &kvdb
 	return res;
 }
 
-ResultWithError<nullptr_t> NativeKvdbApiWrapper::deleteItem(const std::string &kvdbId,
+ResultWithError<nullptr_t> NativeKvdbApiWrapper::deleteEntry(const std::string &kvdbId,
 															const std::string &key){
 	auto res = ResultWithError();
 	try{
-		getapi()->deleteItem(kvdbId,
+		getapi()->deleteEntry(kvdbId,
 							 key);
 	}catch(core::Exception& err){
 		res.error = {
@@ -340,11 +340,11 @@ ResultWithError<nullptr_t> NativeKvdbApiWrapper::deleteItem(const std::string &k
 	return res;
 }
 
-ResultWithError<nullptr_t> NativeKvdbApiWrapper::deleteItems(const std::string &kvdbId,
+ResultWithError<nullptr_t> NativeKvdbApiWrapper::deleteEntries(const std::string &kvdbId,
 															 const StringVector &keys){
 	ResultWithError res;
 	try{
-		getapi()->deleteItems(kvdbId,
+		getapi()->deleteEntries(kvdbId,
 							  keys);
 	}catch(core::Exception& err){
 		res.error = {
@@ -417,10 +417,10 @@ ResultWithError<nullptr_t> NativeKvdbApiWrapper::unsubscribeFromKvdbEvents(){
 	return res;
 }
 
-ResultWithError<nullptr_t> NativeKvdbApiWrapper::subscribeForItemEvents(std::string kvdbId){
+ResultWithError<nullptr_t> NativeKvdbApiWrapper::subscribeForEntryEvents(std::string kvdbId){
 	auto res = ResultWithError();
 	try{
-		getapi()->subscribeForItemEvents(kvdbId);
+		getapi()->subscribeForEntryEvents(kvdbId);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -442,10 +442,10 @@ ResultWithError<nullptr_t> NativeKvdbApiWrapper::subscribeForItemEvents(std::str
 	return res;
 }
 
-ResultWithError<nullptr_t> NativeKvdbApiWrapper::unsubscribeFromItemEvents(std::string kvdbId){
+ResultWithError<nullptr_t> NativeKvdbApiWrapper::unsubscribeFromEntryEvents(std::string kvdbId){
 	ResultWithError res;
 	try{
-		getapi()->unsubscribeFromItemEvents(kvdbId);
+		getapi()->unsubscribeFromEntryEvents(kvdbId);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -667,10 +667,10 @@ ResultWithError<kvdb::KvdbStatsChangedEvent> KvdbEventHandler::extractKvdbStatsC
 	return res;
 }
 
-ResultWithError<bool> KvdbEventHandler::isKvdbNewItemEvent(const endpoint::core::EventHolder &eventHolder){
+ResultWithError<bool> KvdbEventHandler::isKvdbNewEntryEvent(const endpoint::core::EventHolder &eventHolder){
 	ResultWithError<bool> res;
 	try{
-		res.result = kvdb::Events::isKvdbNewItemEvent(eventHolder);
+		res.result = kvdb::Events::isKvdbNewEntryEvent(eventHolder);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -692,10 +692,10 @@ ResultWithError<bool> KvdbEventHandler::isKvdbNewItemEvent(const endpoint::core:
 	return res;
 }
 
-ResultWithError<kvdb::KvdbNewItemEvent> KvdbEventHandler::extractKvdbNewItemEvent(const endpoint::core::EventHolder &eventHolder){
-	ResultWithError<kvdb::KvdbNewItemEvent> res;
+ResultWithError<kvdb::KvdbNewEntryEvent> KvdbEventHandler::extractKvdbNewEntryEvent(const endpoint::core::EventHolder &eventHolder){
+	ResultWithError<kvdb::KvdbNewEntryEvent> res;
 	try{
-		res.result = kvdb::Events::extractKvdbNewItemEvent(eventHolder);
+		res.result = kvdb::Events::extractKvdbNewEntryEvent(eventHolder);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -717,10 +717,10 @@ ResultWithError<kvdb::KvdbNewItemEvent> KvdbEventHandler::extractKvdbNewItemEven
 	return res;
 }
 
-ResultWithError<bool> KvdbEventHandler::isKvdbItemUpdatedEvent(const endpoint::core::EventHolder &eventHolder){
+ResultWithError<bool> KvdbEventHandler::isKvdbEntryUpdatedEvent(const endpoint::core::EventHolder &eventHolder){
 	ResultWithError<bool> res;
 	try{
-		res.result = kvdb::Events::isKvdbItemUpdatedEvent(eventHolder);
+		res.result = kvdb::Events::isKvdbEntryUpdatedEvent(eventHolder);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -742,10 +742,10 @@ ResultWithError<bool> KvdbEventHandler::isKvdbItemUpdatedEvent(const endpoint::c
 	return res;
 }
 
-ResultWithError<kvdb::KvdbItemUpdatedEvent> KvdbEventHandler::extractKvdbItemUpdatedEvent(const endpoint::core::EventHolder &eventHolder){
-	ResultWithError<kvdb::KvdbItemUpdatedEvent> res;
+ResultWithError<kvdb::KvdbEntryUpdatedEvent> KvdbEventHandler::extractKvdbEntryUpdatedEvent(const endpoint::core::EventHolder &eventHolder){
+	ResultWithError<kvdb::KvdbEntryUpdatedEvent> res;
 	try{
-		res.result = kvdb::Events::extractKvdbItemUpdatedEvent(eventHolder);
+		res.result = kvdb::Events::extractKvdbEntryUpdatedEvent(eventHolder);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -767,10 +767,10 @@ ResultWithError<kvdb::KvdbItemUpdatedEvent> KvdbEventHandler::extractKvdbItemUpd
 	return res;
 }
 
-ResultWithError<bool> KvdbEventHandler::isKvdbItemDeletedEvent(const endpoint::core::EventHolder &eventHolder){
+ResultWithError<bool> KvdbEventHandler::isKvdbEntryDeletedEvent(const endpoint::core::EventHolder &eventHolder){
 	ResultWithError<bool> res;
 	try{
-		res.result = kvdb::Events::isKvdbItemDeletedEvent(eventHolder);
+		res.result = kvdb::Events::isKvdbEntryDeletedEvent(eventHolder);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -792,10 +792,10 @@ ResultWithError<bool> KvdbEventHandler::isKvdbItemDeletedEvent(const endpoint::c
 	return res;
 }
 
-ResultWithError<kvdb::KvdbItemDeletedEvent> KvdbEventHandler::extractKvdbItemDeletedEvent(const endpoint::core::EventHolder &eventHolder){
-	ResultWithError<kvdb::KvdbItemDeletedEvent> res;
+ResultWithError<kvdb::KvdbEntryDeletedEvent> KvdbEventHandler::extractKvdbEntryDeletedEvent(const endpoint::core::EventHolder &eventHolder){
+	ResultWithError<kvdb::KvdbEntryDeletedEvent> res;
 	try{
-		res.result = kvdb::Events::extractKvdbItemDeletedEvent(eventHolder);
+		res.result = kvdb::Events::extractKvdbEntryDeletedEvent(eventHolder);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),

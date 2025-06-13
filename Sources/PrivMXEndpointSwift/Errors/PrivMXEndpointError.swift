@@ -241,17 +241,17 @@ public enum PrivMXEndpointError : Error{
 	case failedListingKvdbs(privmx.InternalError)
 	
 	/// Falied to get an Item
-	case failedGettingItem(privmx.InternalError)
+	case failedGettingKvdbEntry(privmx.InternalError)
 	/// Falied to list Items
-	case failedListingItems(privmx.InternalError)
+	case failedListingKvdbEntries(privmx.InternalError)
 	/// Falied to list Item Keys
-	case failedListingItemKeys(privmx.InternalError)
+	case failedListingKvdbEntriesKeys(privmx.InternalError)
 	/// Falied to set an Item
-	case failedSettingItem(privmx.InternalError)
+	case failedSettingKvdbEntry(privmx.InternalError)
 	/// Falied to delete an Item
-	case failedDeletingItem(privmx.InternalError)
+	case failedDeletingKvdbEntry(privmx.InternalError)
 	/// Falied to delete Items
-	case failedDeletingItems(privmx.InternalError)
+	case failedDeletingKvdbEntries(privmx.InternalError)
 	
 	/// Gets the Message of the error
 	///
@@ -328,12 +328,12 @@ public enum PrivMXEndpointError : Error{
 					.failedDeletingKvdb(let err),
 					.failedGettingKvdb(let err),
 					.failedListingKvdbs(let err),
-					.failedSettingItem(let err),
-					.failedGettingItem(let err),
-					.failedListingItems(let err),
-					.failedListingItemKeys(let err),
-					.failedDeletingItem(let err),
-					.failedDeletingItems(let err),
+					.failedSettingKvdbEntry(let err),
+					.failedGettingKvdbEntry(let err),
+					.failedListingKvdbEntries(let err),
+					.failedListingKvdbEntriesKeys(let err),
+					.failedDeletingKvdbEntry(let err),
+					.failedDeletingKvdbEntries(let err),
 					.failedInstantiatingEventApi(let err),
 					.failedEmittingCustomEvent(let err),
 					.failedSubscribingForCustomEvents(let err),
@@ -445,12 +445,12 @@ public enum PrivMXEndpointError : Error{
 					.failedDeletingKvdb(let err),
 					.failedGettingKvdb(let err),
 					.failedListingKvdbs(let err),
-					.failedSettingItem(let err),
-					.failedGettingItem(let err),
-					.failedListingItems(let err),
-					.failedListingItemKeys(let err),
-					.failedDeletingItem(let err),
-					.failedDeletingItems(let err),
+					.failedSettingKvdbEntry(let err),
+					.failedGettingKvdbEntry(let err),
+					.failedListingKvdbEntries(let err),
+					.failedListingKvdbEntriesKeys(let err),
+					.failedDeletingKvdbEntry(let err),
+					.failedDeletingKvdbEntries(let err),
 					.failedInstantiatingEventApi(let err),
 					.failedEmittingCustomEvent(let err),
 					.failedSubscribingForCustomEvents(let err),
@@ -562,12 +562,12 @@ public enum PrivMXEndpointError : Error{
 					.failedDeletingKvdb(let err),
 					.failedGettingKvdb(let err),
 					.failedListingKvdbs(let err),
-					.failedSettingItem(let err),
-					.failedGettingItem(let err),
-					.failedListingItems(let err),
-					.failedListingItemKeys(let err),
-					.failedDeletingItem(let err),
-					.failedDeletingItems(let err),
+					.failedSettingKvdbEntry(let err),
+					.failedGettingKvdbEntry(let err),
+					.failedListingKvdbEntries(let err),
+					.failedListingKvdbEntriesKeys(let err),
+					.failedDeletingKvdbEntry(let err),
+					.failedDeletingKvdbEntries(let err),
 					.failedInstantiatingEventApi(let err),
 					.failedEmittingCustomEvent(let err),
 					.failedSubscribingForCustomEvents(let err),
@@ -678,12 +678,12 @@ public enum PrivMXEndpointError : Error{
 					.failedDeletingKvdb(let err),
 					.failedGettingKvdb(let err),
 					.failedListingKvdbs(let err),
-					.failedSettingItem(let err),
-					.failedGettingItem(let err),
-					.failedListingItems(let err),
-					.failedListingItemKeys(let err),
-					.failedDeletingItem(let err),
-					.failedDeletingItems(let err),
+					.failedSettingKvdbEntry(let err),
+					.failedGettingKvdbEntry(let err),
+					.failedListingKvdbEntries(let err),
+					.failedListingKvdbEntriesKeys(let err),
+					.failedDeletingKvdbEntry(let err),
+					.failedDeletingKvdbEntries(let err),
 					.failedInstantiatingEventApi(let err),
 					.failedEmittingCustomEvent(let err),
 					.failedSubscribingForCustomEvents(let err),
@@ -792,12 +792,12 @@ public enum PrivMXEndpointError : Error{
 					.failedDeletingKvdb(let err),
 					.failedGettingKvdb(let err),
 					.failedListingKvdbs(let err),
-					.failedSettingItem(let err),
-					.failedGettingItem(let err),
-					.failedListingItems(let err),
-					.failedListingItemKeys(let err),
-					.failedDeletingItem(let err),
-					.failedDeletingItems(let err),
+					.failedSettingKvdbEntry(let err),
+					.failedGettingKvdbEntry(let err),
+					.failedListingKvdbEntries(let err),
+					.failedListingKvdbEntriesKeys(let err),
+					.failedDeletingKvdbEntry(let err),
+					.failedDeletingKvdbEntries(let err),
 					.failedGeneratingSymmetricKey(let err),
 					.failedVerifyingSignature(let err),
 					.failedCreatingFileHandle(let err),

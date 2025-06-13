@@ -45,27 +45,27 @@ public:
 	ResultWithError<KvdbList> listKvdbs(const std::string& contextId,
 										const endpoint::core::PagingQuery pagingQuery);
 	
-	ResultWithError<endpoint::kvdb::Item> getItem(const std::string& kvdbId,
+	ResultWithError<endpoint::kvdb::KvdbEntry> getEntry(const std::string& kvdbId,
 												  const std::string& key);
-	ResultWithError<StringList> listItemKeys(const std::string& kvdbId,
-											 const endpoint::kvdb::KeysPagingQuery& pagingQuery);
-	ResultWithError<ItemList> listItems(const std::string& kvdbId,
-										const endpoint::kvdb::ItemsPagingQuery& pagingQuery);
-	ResultWithError<std::nullptr_t> setItem(const std::string& kvdbId,
+	ResultWithError<StringList> listEntriesKeys(const std::string& kvdbId,
+											 const endpoint::kvdb::KvdbKeysPagingQuery& pagingQuery);
+	ResultWithError<KvdbEntryList> listEntries(const std::string& kvdbId,
+										const endpoint::kvdb::KvdbEntryPagingQuery& pagingQuery);
+	ResultWithError<std::nullptr_t> setEntry(const std::string& kvdbId,
 											const std::string& key,
 											const endpoint::core::Buffer& publicMeta,
 											const endpoint::core::Buffer& privateMeta,
 											const endpoint::core::Buffer& data,
 											const int64_t version);
-	ResultWithError<std::nullptr_t> deleteItem(const std::string& kvdbId,
+	ResultWithError<std::nullptr_t> deleteEntry(const std::string& kvdbId,
 											   const std::string& key);
-	ResultWithError<std::nullptr_t> deleteItems(const std::string& kvdbId,
+	ResultWithError<std::nullptr_t> deleteEntries(const std::string& kvdbId,
 												const StringVector& keys);
 	
 	ResultWithError<std::nullptr_t> subscribeForKvdbEvents();
 	ResultWithError<std::nullptr_t> unsubscribeFromKvdbEvents();
-	ResultWithError<std::nullptr_t> subscribeForItemEvents(std::string kvdbId);
-	ResultWithError<std::nullptr_t> unsubscribeFromItemEvents(std::string kvdbId);
+	ResultWithError<std::nullptr_t> subscribeForEntryEvents(std::string kvdbId);
+	ResultWithError<std::nullptr_t> unsubscribeFromEntryEvents(std::string kvdbId);
 	
 private:
 	NativeKvdbApiWrapper(NativeConnectionWrapper& connection);
@@ -94,14 +94,14 @@ public:
 	static ResultWithError<bool> isKvdbStatsChangedEvent(const endpoint::core::EventHolder& eventHolder);
 	static ResultWithError<endpoint::kvdb::KvdbStatsChangedEvent> extractKvdbStatsChangedEvent(const endpoint::core::EventHolder& eventHolder);
 
-	static ResultWithError<bool> isKvdbNewItemEvent(const endpoint::core::EventHolder& eventHolder);
-	static ResultWithError<endpoint::kvdb::KvdbNewItemEvent> extractKvdbNewItemEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<bool> isKvdbNewEntryEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<endpoint::kvdb::KvdbNewEntryEvent> extractKvdbNewEntryEvent(const endpoint::core::EventHolder& eventHolder);
 
-	static ResultWithError<bool> isKvdbItemUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
-	static ResultWithError<endpoint::kvdb::KvdbItemUpdatedEvent> extractKvdbItemUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<bool> isKvdbEntryUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<endpoint::kvdb::KvdbEntryUpdatedEvent> extractKvdbEntryUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
 
-	static ResultWithError<bool> isKvdbItemDeletedEvent(const endpoint::core::EventHolder& eventHolder);
-	static ResultWithError<endpoint::kvdb::KvdbItemDeletedEvent> extractKvdbItemDeletedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<bool> isKvdbEntryDeletedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<endpoint::kvdb::KvdbEntryDeletedEvent> extractKvdbEntryDeletedEvent(const endpoint::core::EventHolder& eventHolder);
 
 };
 }

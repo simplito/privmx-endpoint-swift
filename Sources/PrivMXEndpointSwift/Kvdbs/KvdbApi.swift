@@ -27,14 +27,14 @@ public class KvdbApi: @unchecked Sendable{
 		let res = privmx.NativeKvdbApiWrapper.create(&connection.api)
 		guard nil == res.error.value
 		else{
-			throw PrivMXEndpointError.FailedInstantiatingKvdbApi(res.error.value!)
+			throw PrivMXEndpointError.failedInstantiatingKvdbApi(res.error.value!)
 		}
 		guard let result = res.result.value
 		else{
 			var err = privmx.InternalError()
 			err.name = "Value error"
 			err.description = "Unexpectedly received nil value"
-			throw PrivMXEndpointError.FailedInstantiatingKvdbApi(err)
+			throw PrivMXEndpointError.failedInstantiatingKvdbApi(err)
 		}
 		return KvdbApi(api: result)
 	}
@@ -56,13 +56,13 @@ public class KvdbApi: @unchecked Sendable{
 			privateMeta,
 			policies)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.FailedCreatingKvdb(res.error.value!)
+			throw PrivMXEndpointError.failedCreatingKvdb(res.error.value!)
 		}
 		guard let result = res.result.value else {
 			var err = privmx.InternalError()
 			err.name = "Value error"
 			err.description = "Unexpectedly recived nil result"
-			throw PrivMXEndpointError.FailedGettingKvdb(err)
+			throw PrivMXEndpointError.failedGettingKvdb(err)
 		}
 		return result
 	}
@@ -90,7 +90,7 @@ public class KvdbApi: @unchecked Sendable{
 			forceGenerateNewKey,
 			policies)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.FailedUpdatingKvdb(res.error.value!)
+			throw PrivMXEndpointError.failedUpdatingKvdb(res.error.value!)
 		}
 	}
 	
@@ -100,7 +100,7 @@ public class KvdbApi: @unchecked Sendable{
 	) throws -> Void {
 		let res = api.deleteKvdb(kvdbId)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.FailedDeletingKvdb(res.error.value!)
+			throw PrivMXEndpointError.failedDeletingKvdb(res.error.value!)
 		}
 	}
 	
@@ -110,13 +110,13 @@ public class KvdbApi: @unchecked Sendable{
 	) throws -> privmx.endpoint.kvdb.Kvdb {
 		let res = api.getKvdb(kvdbId)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.FailedGettingKvdb(res.error.value!)
+			throw PrivMXEndpointError.failedGettingKvdb(res.error.value!)
 		}
 		guard let result = res.result.value else {
 			var err = privmx.InternalError()
 			err.name = "Value error"
 			err.description = "Unexpectedly recived nil result"
-			throw PrivMXEndpointError.FailedGettingKvdb(err)
+			throw PrivMXEndpointError.failedGettingKvdb(err)
 		}
 		return result
 	}
@@ -129,76 +129,76 @@ public class KvdbApi: @unchecked Sendable{
 		let res = api.listKvdbs(contextId,
 								pagingQuery)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.FailedListingKvdbs(res.error.value!)
+			throw PrivMXEndpointError.failedListingKvdbs(res.error.value!)
 		}
 		guard let result = res.result.value else {
 			var err = privmx.InternalError()
 			err.name = "Value error"
 			err.description = "Unexpectedly recived nil result"
-			throw PrivMXEndpointError.FailedListingKvdbs(err)
+			throw PrivMXEndpointError.failedListingKvdbs(err)
 		}
 		return result
 	}
 	
 	
-	public func getItem(
+	public func getEntry(
 		kvdbId: std.string,
 		key: std.string
-	) throws -> privmx.endpoint.kvdb.Item {
-		let res = api.getItem(kvdbId,
+	) throws -> privmx.endpoint.kvdb.KvdbEntry {
+		let res = api.getEntry(kvdbId,
 							  key)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.FailedGettingItem(res.error.value!)
+			throw PrivMXEndpointError.failedGettingKvdbEntry(res.error.value!)
 		}
 		guard let result = res.result.value else {
 			var err = privmx.InternalError()
 			err.name = "Value error"
 			err.description = "Unexpectedly recived nil result"
-			throw PrivMXEndpointError.FailedGettingItem(err)
+			throw PrivMXEndpointError.failedGettingKvdbEntry(err)
 		}
 		return result
 	}
 	
 	
-	public func listItemKeys(
+	public func listEntriesKeys(
 		kvdbId: std.string,
-		pagingQuery: privmx.endpoint.kvdb.KeysPagingQuery
+		pagingQuery: privmx.endpoint.kvdb.KvdbKeysPagingQuery
 	) throws -> privmx.StringList {
-		let res = api.listItemKeys(kvdbId,
+		let res = api.listEntriesKeys(kvdbId,
 								   pagingQuery)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.FailedListingItemKeys(res.error.value!)
+			throw PrivMXEndpointError.failedListingKvdbEntriesKeys(res.error.value!)
 		}
 		guard let result = res.result.value else {
 			var err = privmx.InternalError()
 			err.name = "Value error"
 			err.description = "Unexpectedly recived nil result"
-			throw PrivMXEndpointError.FailedListingItemKeys(err)
+			throw PrivMXEndpointError.failedListingKvdbEntriesKeys(err)
 		}
 		return result
 	}
 	
 	
-	public func listItems(
-		kvdbId: std.__1.string,
-		pagingQuery: privmx.endpoint.kvdb.ItemsPagingQuery
-	) throws -> privmx.ItemList {
-		let res = api.listItems(kvdbId,
+	public func listEntries(
+		kvdbId: std.string,
+		pagingQuery: privmx.endpoint.kvdb.KvdbEntryPagingQuery
+	) throws -> privmx.KvdbEntryList {
+		let res = api.listEntries(kvdbId,
 								pagingQuery)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.FailedListingItems(res.error.value!)
+			throw PrivMXEndpointError.failedListingKvdbEntries(res.error.value!)
 		}
 		guard let result = res.result.value else {
 			var err = privmx.InternalError()
 			err.name = "Value error"
 			err.description = "Unexpectedly recived nil result"
-			throw PrivMXEndpointError.FailedListingItems(err)
+			throw PrivMXEndpointError.failedListingKvdbEntries(err)
 		}
 		return result
 	}
 	
 	
-	public func setItem(
+	public func setEntry(
 		kvdbId: std.string,
 		key: std.string,
 		publicMeta: privmx.endpoint.core.Buffer,
@@ -206,37 +206,37 @@ public class KvdbApi: @unchecked Sendable{
 		data: privmx.endpoint.core.Buffer,
 		version: Int64
 	) throws -> Void {
-		let res = api.setItem(kvdbId,
+		let res = api.setEntry(kvdbId,
 							  key,
 							  publicMeta,
 							  privateMeta,
 							  data,
 							  version)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.FailedSettingItem(res.error.value!)
+			throw PrivMXEndpointError.failedSettingKvdbEntry(res.error.value!)
 		}
 	}
 	
 	
-	public func deleteItem(
+	public func deleteEntry(
 		kvdbId: std.string,
 		key: std.string
 	) throws -> Void {
-		let res = api.deleteItem(kvdbId,
+		let res = api.deleteEntry(kvdbId,
 								 key)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.FailedDeletingItem(res.error.value!)
+			throw PrivMXEndpointError.failedDeletingKvdbEntry(res.error.value!)
 		}
 	}
 	
-	public func deleteItems(
+	public func deleteEntries(
 		kvdbId: std.string,
 		keys: privmx.StringVector
 	) throws -> Void {
-		let res = api.deleteItems(kvdbId,
+		let res = api.deleteEntries(kvdbId,
 								  keys)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.FailedDeletingItems(res.error.value!)
+			throw PrivMXEndpointError.failedDeletingKvdbEntries(res.error.value!)
 		}
 	}
 	
@@ -260,7 +260,7 @@ public class KvdbApi: @unchecked Sendable{
 	public func subscribeForItemEvents(
 		channel: std.string
 	) throws -> Void {
-		let res = api.subscribeForItemEvents(channel)
+		let res = api.subscribeForEntryEvents(channel)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
 		}
@@ -269,7 +269,7 @@ public class KvdbApi: @unchecked Sendable{
 	public func unsubscribeFromItemEvents(
 		channel: std.string
 	) throws -> Void {
-		let res = api.unsubscribeFromItemEvents(channel)
+		let res = api.unsubscribeFromEntryEvents(channel)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
 		}
