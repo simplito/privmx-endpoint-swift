@@ -26,6 +26,7 @@ ResultWithError<NativeEventApiWrapper> NativeEventApiWrapper::create(NativeConne
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -44,19 +45,21 @@ ResultWithError<NativeEventApiWrapper> NativeEventApiWrapper::create(NativeConne
 }
 
 ResultWithError<std::nullptr_t> NativeEventApiWrapper::emitEvent(const std::string &contextId,
+																 const UserWithPubKeyVector &users,
 																 const std::string &channelName,
-																 const endpoint::core::Buffer &eventData,
-																 const UserWithPubKeyVector &users) {
+																 const endpoint::core::Buffer &eventData
+																 ) {
 	auto res = ResultWithError<>();
 	try {
 		getapi()->emitEvent(contextId,
+							users,
 							channelName,
-							eventData,
-							users);
+							eventData);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -84,6 +87,7 @@ ResultWithError<std::nullptr_t> NativeEventApiWrapper::subscribeForCustomEvents(
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -111,6 +115,7 @@ ResultWithError<std::nullptr_t> NativeEventApiWrapper::unsubscribeFromCustomEven
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};

@@ -162,39 +162,96 @@ public enum PrivMXEndpointError : Error{
 	case failedRequestingBackend(privmx.InternalError)
 	
 	/// Failed to instantiate `EventApi`
-	case FailedInstantiatingEventApi(privmx.InternalError)
+	case failedInstantiatingEventApi(privmx.InternalError)
+	
 	/// Failed to emit a `CustomEvent`
-	case FailedEmittingCustomEvent(privmx.InternalError)
+	case failedEmittingCustomEvent(privmx.InternalError)
+
 	/// Failed to subscribe for Custom Events
-	case FailedSubscribingForCustomEvents(privmx.InternalError)
+	case failedSubscribingForCustomEvents(privmx.InternalError)
+	
 	/// Failed to subscribe for Custom Events
-	case FailedUnsubscribingFromCustomEvents(privmx.InternalError)
+	case failedUnsubscribingFromCustomEvents(privmx.InternalError)
+	
+	case failedSettingUserVerifier(privmx.InternalError)
+	
+ 	/// Failed to instantiate ExtKey
+	case failedInstantiatingExtKey(privmx.InternalError)
+	/// Failed to derive ExtKey
+	case failedDerivingExtKey(privmx.InternalError)
+	/// Failed to get private part as Base58
+	case failedGettingPrivatePartAsBase58(privmx.InternalError)
+	/// Failed to get public part as Base58
+	case failedGettingPublicPartAsBase58(privmx.InternalError)
+	/// Failed to get private key
+	case failedGettingPrivateKey(privmx.InternalError)
+	/// Failed to get public key
+	case failedGettingPublicKey(privmx.InternalError)
+	/// Failed to get public key as Base58 Address
+	case failedGettingPublicKeyAsBase58Address(privmx.InternalError)
+	/// Failed to get private Enc key
+	case failedGettingPrivateEncKey(privmx.InternalError)
+	/// Failed to get chain code
+	case failedGettingChainCode(privmx.InternalError)
+	/// Failed to verify compact signature
+	case failedVerifyingCompactSignature(privmx.InternalError)
+	/// Failed to check if ExtKey is private
+	case failedCheckingIfExtKeyIsPrivate(privmx.InternalError)
+
+	/// Failed to convert a PGP Asn1 key to Base58DER
+	case failedConvertingKeyToBase58DER(privmx.InternalError)
+	
+	/// Failed to generate a BIP39 instance
+	case failedGeneratingBIP39(privmx.InternalError)
+	
+	/// Failed to convert Entropy to a Mnemonic
+	case failedConvertingEntropyToMnemonic(privmx.InternalError)
+	
+	/// Failed to convert a Mnemonic to Entropy
+	case failedConvertingMnemonicToEntropy(privmx.InternalError)
+	
+	/// Failed to generate a Seed for BIP39 Key from a Mnemonic
+	case failedGeneratingSeedFromMnemonic(privmx.InternalError)
+	
+	case failedEncodingToHex(privmx.InternalError)
+	case failedEncodingToBase64(privmx.InternalError)
+	case failedEncodingToBase32(privmx.InternalError)
+	case failedDecodingFromHex(privmx.InternalError)
+	case failedDecodingFromBase64(privmx.InternalError)
+	case failedDecodingFromBase32(privmx.InternalError)
+	case failedCheckingifStringIsHex(privmx.InternalError)
+	case failedCheckingifStringIsBase64(privmx.InternalError)
+	case failedCheckingifStringIsBase32(privmx.InternalError)
+	case failedTrimmingString(privmx.InternalError)
+	case failedSplittingString(privmx.InternalError)
+	
+
 	
 	/// Failed to instantiate `EventApi`
-	case FailedInstantiatingKvdbApi(privmx.InternalError)
+	case failedInstantiatingKvdbApi(privmx.InternalError)
 	/// Failed to create a Kvdb
-	case FailedCreatingKvdb(privmx.InternalError)
+	case failedCreatingKvdb(privmx.InternalError)
 	/// Failed to update a Kvdb
-	case FailedUpdatingKvdb(privmx.InternalError)
+	case failedUpdatingKvdb(privmx.InternalError)
 	/// Failed to delete a Kvdb
-	case FailedDeletingKvdb(privmx.InternalError)
+	case failedDeletingKvdb(privmx.InternalError)
 	/// Falied to get a Kvdb
-	case FailedGettingKvdb(privmx.InternalError)
+	case failedGettingKvdb(privmx.InternalError)
 	/// Falied to list Kvdbs
-	case FailedListingKvdbs(privmx.InternalError)
+	case failedListingKvdbs(privmx.InternalError)
 	
 	/// Falied to get an Item
-	case FailedGettingItem(privmx.InternalError)
+	case failedGettingItem(privmx.InternalError)
 	/// Falied to list Items
-	case FailedListingItems(privmx.InternalError)
+	case failedListingItems(privmx.InternalError)
 	/// Falied to list Item Keys
-	case FailedListingItemKeys(privmx.InternalError)
+	case failedListingItemKeys(privmx.InternalError)
 	/// Falied to set an Item
-	case FailedSettingItem(privmx.InternalError)
+	case failedSettingItem(privmx.InternalError)
 	/// Falied to delete an Item
-	case FailedDeletingItem(privmx.InternalError)
+	case failedDeletingItem(privmx.InternalError)
 	/// Falied to delete Items
-	case FailedDeletingItems(privmx.InternalError)
+	case failedDeletingItems(privmx.InternalError)
 	
 	/// Gets the Message of the error
 	///
@@ -265,22 +322,50 @@ public enum PrivMXEndpointError : Error{
 					.failedGeneratingSymmetricKey(let err),
 					.failedVerifyingSignature(let err),
 					.failedCreatingFileHandle(let err),
-					.FailedInstantiatingEventApi(let err),
-					.FailedEmittingCustomEvent(let err),
-					.FailedSubscribingForCustomEvents(let err),
-					.FailedUnsubscribingFromCustomEvents(let err),
-					.FailedInstantiatingKvdbApi(let err),
-					.FailedCreatingKvdb(let err),
-					.FailedUpdatingKvdb(let err),
-					.FailedDeletingKvdb(let err),
-					.FailedGettingKvdb(let err),
-					.FailedListingKvdbs(let err),
-					.FailedSettingItem(let err),
-					.FailedGettingItem(let err),
-					.FailedListingItems(let err),
-					.FailedListingItemKeys(let err),
-					.FailedDeletingItem(let err),
-					.FailedDeletingItems(let err):
+					.failedInstantiatingKvdbApi(let err),
+					.failedCreatingKvdb(let err),
+					.failedUpdatingKvdb(let err),
+					.failedDeletingKvdb(let err),
+					.failedGettingKvdb(let err),
+					.failedListingKvdbs(let err),
+					.failedSettingItem(let err),
+					.failedGettingItem(let err),
+					.failedListingItems(let err),
+					.failedListingItemKeys(let err),
+					.failedDeletingItem(let err),
+					.failedDeletingItems(let err),
+					.failedInstantiatingEventApi(let err),
+					.failedEmittingCustomEvent(let err),
+					.failedSubscribingForCustomEvents(let err),
+					.failedUnsubscribingFromCustomEvents(let err),
+					.failedInstantiatingExtKey(let err),
+					.failedDerivingExtKey(let err),
+					.failedGettingPublicPartAsBase58(let err),
+					.failedGettingPrivatePartAsBase58(let err),
+					.failedGettingPrivateKey(let err),
+					.failedGettingPublicKey(let err),
+					.failedGettingPublicKeyAsBase58Address(let err),
+					.failedGettingPrivateEncKey(let err),
+					.failedGettingChainCode(let err),
+					.failedVerifyingCompactSignature(let err),
+					.failedCheckingIfExtKeyIsPrivate(let err),
+					.failedSettingUserVerifier(let err),
+					.failedConvertingKeyToBase58DER(let err),
+					.failedConvertingEntropyToMnemonic(let err),
+					.failedConvertingMnemonicToEntropy(let err),
+					.failedGeneratingSeedFromMnemonic(let err),
+					.failedEncodingToHex(let err),
+					.failedEncodingToBase32(let err),
+					.failedEncodingToBase64(let err),
+					.failedDecodingFromHex(let err),
+					.failedDecodingFromBase32(let err),
+					.failedDecodingFromBase64(let err),
+					.failedCheckingifStringIsHex(let err),
+					.failedCheckingifStringIsBase32(let err),
+					.failedCheckingifStringIsBase64(let err),
+					.failedTrimmingString(let err),
+					.failedSplittingString(let err),
+					.failedGeneratingBIP39(let err):
 				return String(err.message)
 		}
 	}
@@ -354,22 +439,50 @@ public enum PrivMXEndpointError : Error{
 					.failedGeneratingSymmetricKey(let err),
 					.failedVerifyingSignature(let err),
 					.failedCreatingFileHandle(let err),
-					.FailedInstantiatingEventApi(let err),
-					.FailedEmittingCustomEvent(let err),
-					.FailedSubscribingForCustomEvents(let err),
-					.FailedUnsubscribingFromCustomEvents(let err),
-					.FailedInstantiatingKvdbApi(let err),
-					.FailedCreatingKvdb(let err),
-					.FailedUpdatingKvdb(let err),
-					.FailedDeletingKvdb(let err),
-					.FailedGettingKvdb(let err),
-					.FailedListingKvdbs(let err),
-					.FailedSettingItem(let err),
-					.FailedGettingItem(let err),
-					.FailedListingItems(let err),
-					.FailedListingItemKeys(let err),
-					.FailedDeletingItem(let err),
-					.FailedDeletingItems(let err):
+					.failedInstantiatingKvdbApi(let err),
+					.failedCreatingKvdb(let err),
+					.failedUpdatingKvdb(let err),
+					.failedDeletingKvdb(let err),
+					.failedGettingKvdb(let err),
+					.failedListingKvdbs(let err),
+					.failedSettingItem(let err),
+					.failedGettingItem(let err),
+					.failedListingItems(let err),
+					.failedListingItemKeys(let err),
+					.failedDeletingItem(let err),
+					.failedDeletingItems(let err),
+					.failedInstantiatingEventApi(let err),
+					.failedEmittingCustomEvent(let err),
+					.failedSubscribingForCustomEvents(let err),
+					.failedUnsubscribingFromCustomEvents(let err),
+					.failedInstantiatingExtKey(let err),
+					.failedDerivingExtKey(let err),
+					.failedGettingPublicPartAsBase58(let err),
+					.failedGettingPrivatePartAsBase58(let err),
+					.failedGettingPrivateKey(let err),
+					.failedGettingPublicKey(let err),
+					.failedGettingPublicKeyAsBase58Address(let err),
+					.failedGettingPrivateEncKey(let err),
+					.failedGettingChainCode(let err),
+					.failedVerifyingCompactSignature(let err),
+					.failedCheckingIfExtKeyIsPrivate(let err),
+					.failedSettingUserVerifier(let err),
+					.failedConvertingKeyToBase58DER(let err),
+					.failedConvertingEntropyToMnemonic(let err),
+					.failedConvertingMnemonicToEntropy(let err),
+					.failedGeneratingSeedFromMnemonic(let err),
+					.failedEncodingToHex(let err),
+					.failedEncodingToBase32(let err),
+					.failedEncodingToBase64(let err),
+					.failedDecodingFromHex(let err),
+					.failedDecodingFromBase32(let err),
+					.failedDecodingFromBase64(let err),
+					.failedCheckingifStringIsHex(let err),
+					.failedCheckingifStringIsBase32(let err),
+					.failedCheckingifStringIsBase64(let err),
+					.failedTrimmingString(let err),
+					.failedSplittingString(let err),
+					.failedGeneratingBIP39(let err):
 				return err.code.value
 		}
 	}
@@ -443,22 +556,50 @@ public enum PrivMXEndpointError : Error{
 					.failedGeneratingSymmetricKey(let err),
 					.failedVerifyingSignature(let err),
 					.failedCreatingFileHandle(let err),
-					.FailedInstantiatingEventApi(let err),
-					.FailedEmittingCustomEvent(let err),
-					.FailedSubscribingForCustomEvents(let err),
-					.FailedUnsubscribingFromCustomEvents(let err),
-					.FailedInstantiatingKvdbApi(let err),
-					.FailedCreatingKvdb(let err),
-					.FailedUpdatingKvdb(let err),
-					.FailedDeletingKvdb(let err),
-					.FailedGettingKvdb(let err),
-					.FailedListingKvdbs(let err),
-					.FailedSettingItem(let err),
-					.FailedGettingItem(let err),
-					.FailedListingItems(let err),
-					.FailedListingItemKeys(let err),
-					.FailedDeletingItem(let err),
-					.FailedDeletingItems(let err):
+					.failedInstantiatingKvdbApi(let err),
+					.failedCreatingKvdb(let err),
+					.failedUpdatingKvdb(let err),
+					.failedDeletingKvdb(let err),
+					.failedGettingKvdb(let err),
+					.failedListingKvdbs(let err),
+					.failedSettingItem(let err),
+					.failedGettingItem(let err),
+					.failedListingItems(let err),
+					.failedListingItemKeys(let err),
+					.failedDeletingItem(let err),
+					.failedDeletingItems(let err),
+					.failedInstantiatingEventApi(let err),
+					.failedEmittingCustomEvent(let err),
+					.failedSubscribingForCustomEvents(let err),
+					.failedUnsubscribingFromCustomEvents(let err),
+					.failedInstantiatingExtKey(let err),
+					.failedDerivingExtKey(let err),
+					.failedGettingPublicPartAsBase58(let err),
+					.failedGettingPrivatePartAsBase58(let err),
+					.failedGettingPrivateKey(let err),
+					.failedGettingPublicKey(let err),
+					.failedGettingPublicKeyAsBase58Address(let err),
+					.failedGettingPrivateEncKey(let err),
+					.failedGettingChainCode(let err),
+					.failedVerifyingCompactSignature(let err),
+					.failedCheckingIfExtKeyIsPrivate(let err),
+					.failedSettingUserVerifier(let err),
+					.failedConvertingKeyToBase58DER(let err),
+					.failedConvertingEntropyToMnemonic(let err),
+					.failedConvertingMnemonicToEntropy(let err),
+					.failedGeneratingSeedFromMnemonic(let err),
+					.failedEncodingToHex(let err),
+					.failedEncodingToBase32(let err),
+					.failedEncodingToBase64(let err),
+					.failedDecodingFromHex(let err),
+					.failedDecodingFromBase32(let err),
+					.failedDecodingFromBase64(let err),
+					.failedCheckingifStringIsHex(let err),
+					.failedCheckingifStringIsBase32(let err),
+					.failedCheckingifStringIsBase64(let err),
+					.failedTrimmingString(let err),
+					.failedSplittingString(let err),
+					.failedGeneratingBIP39(let err):
 				return String(err.name)
 		}
 	}
@@ -531,23 +672,173 @@ public enum PrivMXEndpointError : Error{
 					.failedGeneratingSymmetricKey(let err),
 					.failedVerifyingSignature(let err),
 					.failedCreatingFileHandle(let err),
-					.FailedInstantiatingEventApi(let err),
-					.FailedEmittingCustomEvent(let err),
-					.FailedSubscribingForCustomEvents(let err),
-					.FailedUnsubscribingFromCustomEvents(let err),
-					.FailedInstantiatingKvdbApi(let err),
-					.FailedCreatingKvdb(let err),
-					.FailedUpdatingKvdb(let err),
-					.FailedDeletingKvdb(let err),
-					.FailedGettingKvdb(let err),
-					.FailedListingKvdbs(let err),
-					.FailedSettingItem(let err),
-					.FailedGettingItem(let err),
-					.FailedListingItems(let err),
-					.FailedListingItemKeys(let err),
-					.FailedDeletingItem(let err),
-					.FailedDeletingItems(let err):
+					.failedInstantiatingKvdbApi(let err),
+					.failedCreatingKvdb(let err),
+					.failedUpdatingKvdb(let err),
+					.failedDeletingKvdb(let err),
+					.failedGettingKvdb(let err),
+					.failedListingKvdbs(let err),
+					.failedSettingItem(let err),
+					.failedGettingItem(let err),
+					.failedListingItems(let err),
+					.failedListingItemKeys(let err),
+					.failedDeletingItem(let err),
+					.failedDeletingItems(let err),
+					.failedInstantiatingEventApi(let err),
+					.failedEmittingCustomEvent(let err),
+					.failedSubscribingForCustomEvents(let err),
+					.failedUnsubscribingFromCustomEvents(let err),
+					.failedInstantiatingExtKey(let err),
+					.failedDerivingExtKey(let err),
+					.failedGettingPublicPartAsBase58(let err),
+					.failedGettingPrivatePartAsBase58(let err),
+					.failedGettingPrivateKey(let err),
+					.failedGettingPublicKey(let err),
+					.failedGettingPublicKeyAsBase58Address(let err),
+					.failedGettingPrivateEncKey(let err),
+					.failedGettingChainCode(let err),
+					.failedVerifyingCompactSignature(let err),
+					.failedCheckingIfExtKeyIsPrivate(let err),
+					.failedSettingUserVerifier(let err),
+					.failedConvertingKeyToBase58DER(let err),
+					.failedConvertingEntropyToMnemonic(let err),
+					.failedConvertingMnemonicToEntropy(let err),
+					.failedGeneratingSeedFromMnemonic(let err),
+					.failedEncodingToHex(let err),
+					.failedEncodingToBase32(let err),
+					.failedEncodingToBase64(let err),
+					.failedDecodingFromHex(let err),
+					.failedDecodingFromBase32(let err),
+					.failedDecodingFromBase64(let err),
+					.failedCheckingifStringIsHex(let err),
+					.failedCheckingifStringIsBase32(let err),
+					.failedCheckingifStringIsBase64(let err),
+					.failedTrimmingString(let err),
+					.failedSplittingString(let err),
+					.failedGeneratingBIP39(let err):
 				return String(err.description)
+		}
+	}
+	
+	/// Gets the Scope of the error as a String
+	///
+	///  - Returns: Scope of the error
+	public func getScope() -> String?{
+		switch self{
+			case .failedUpdatingMessage(let err),
+					.failedGettingConnectionId(let err),
+					.failedRequestingBackend(let err),
+					.failedEmittingBreakEvent(let err),
+					.failedClosingFile(let err),
+					.otherFailure(let err),
+					.failedEncrypting(let err),
+					.failedDecrypting(let err),
+					.failedSigning(let err),
+					.failedGeneratingPubKey(let err),
+					.failedGeneratingPrivKey(let err),
+					.failedConvertingKeyToWIF(let err),
+					.failedConnecting(let err),
+					.failedDisconnecting(let err),
+					.failedListingContexts(let err),
+					.failedGettingContextUsers(let err),
+					.failedCreatingThread(let err),
+					.failedGettingThread(let err),
+					.failedListingThreads(let err),
+					.failedListingMessages(let err),
+					.failedCreatingMessage(let err),
+					.failedGettingMessage(let err),
+					.failedUpdatingThread(let err),
+					.failedListingStores(let err),
+					.failedGettingStore(let err),
+					.failedCreatingStore(let err),
+					.failedGettingFile(let err),
+					.failedListingFiles(let err),
+					.failedCreatingFile(let err),
+					.failedUpdatingFile(let err),
+					.failedOpeningFile(let err),
+					.failedReadingFromFile(let err),
+					.failedSeekingInFile(let err),
+					.failedWritingToFile(let err),
+					.failedDeletingFile(let err),
+					.failedWaitingForEvent(let err),
+					.failedGettingEvent(let err),
+					.failedSubscribingForEvents(let err),
+					.failedUnsubscribingFromEvents(let err),
+					.failedDeletingThread(let err),
+					.failedDeletingMessage(let err),
+					.failedDeletingStore(let err),
+					.failedSettingCerts(let err),
+					.failedUpdatingStore(let err),
+					.failedQueryingEventHolder(let err),
+					.failedExtractingEventFromHolder(let err),
+					.failedInstantiatingEventQueue(let err),
+					.failedInstantiatingThreadApi(let err),
+					.failedInstantiatingStoreApi(let err),
+					.failedInstantiatingInboxApi(let err),
+					.failedCreatingInbox(let err),
+					.failedUpdatingInbox(let err),
+					.failedDeletingInbox(let err),
+					.failedGettingInbox(let err),
+					.failedGettingInboxPublicView(let err),
+					.failedListingInboxes(let err),
+					.failedPreparingEntry(let err),
+					.failedSendingEntry(let err),
+					.failedReadingEntry(let err),
+					.failedDeletingEntry(let err),
+					.failedListingEntries(let err),
+					.failedInstantiatingKvdbApi(let err),
+					.failedCreatingKvdb(let err),
+					.failedUpdatingKvdb(let err),
+					.failedDeletingKvdb(let err),
+					.failedGettingKvdb(let err),
+					.failedListingKvdbs(let err),
+					.failedSettingItem(let err),
+					.failedGettingItem(let err),
+					.failedListingItems(let err),
+					.failedListingItemKeys(let err),
+					.failedDeletingItem(let err),
+					.failedDeletingItems(let err),
+					.failedGeneratingSymmetricKey(let err),
+					.failedVerifyingSignature(let err),
+					.failedCreatingFileHandle(let err),
+					.failedInstantiatingEventApi(let err),
+					.failedEmittingCustomEvent(let err),
+					.failedSubscribingForCustomEvents(let err),
+					.failedUnsubscribingFromCustomEvents(let err),
+					.failedInstantiatingExtKey(let err),
+					.failedDerivingExtKey(let err),
+					.failedGettingPublicPartAsBase58(let err),
+					.failedGettingPrivatePartAsBase58(let err),
+					.failedGettingPrivateKey(let err),
+					.failedGettingPublicKey(let err),
+					.failedGettingPublicKeyAsBase58Address(let err),
+					.failedGettingPrivateEncKey(let err),
+					.failedGettingChainCode(let err),
+					.failedVerifyingCompactSignature(let err),
+					.failedCheckingIfExtKeyIsPrivate(let err),
+					.failedSettingUserVerifier(let err),
+					.failedConvertingKeyToBase58DER(let err),
+					.failedConvertingEntropyToMnemonic(let err),
+					.failedConvertingMnemonicToEntropy(let err),
+					.failedGeneratingSeedFromMnemonic(let err),
+					.failedEncodingToHex(let err),
+					.failedEncodingToBase32(let err),
+					.failedEncodingToBase64(let err),
+					.failedDecodingFromHex(let err),
+					.failedDecodingFromBase32(let err),
+					.failedDecodingFromBase64(let err),
+					.failedCheckingifStringIsHex(let err),
+					.failedCheckingifStringIsBase32(let err),
+					.failedCheckingifStringIsBase64(let err),
+					.failedTrimmingString(let err),
+					.failedSplittingString(let err),
+					.failedGeneratingBIP39(let err):
+				if let scope = err.scope.value{
+					return String(scope)
+				} else {
+					return nil
+				}
+				
 		}
 	}
 }

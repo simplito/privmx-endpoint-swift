@@ -21,9 +21,9 @@ public:
 	static ResultWithError<NativeEventApiWrapper> create(NativeConnectionWrapper& connection);
 	
 	ResultWithError<std::nullptr_t> emitEvent(const std::string& contextId,
+											  const UserWithPubKeyVector& users,
 											  const std::string& channelName,
-											  const endpoint::core::Buffer& eventData,
-											  const UserWithPubKeyVector& users);
+											  const endpoint::core::Buffer& eventData);
 	ResultWithError<nullptr_t> subscribeForCustomEvents(const std::string& contextId,
 														const std::string& channelName);
 	ResultWithError<nullptr_t> unsubscribeFromCustomEvents(const std::string& contextId,

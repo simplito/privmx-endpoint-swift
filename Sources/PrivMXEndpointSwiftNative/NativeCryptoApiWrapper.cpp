@@ -29,6 +29,7 @@ ResultWithError<core::Buffer> NativeCryptoApiWrapper::generateKeySymmetric(){
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -55,6 +56,7 @@ ResultWithError<std::string> NativeCryptoApiWrapper::generatePrivateKey(const Op
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -80,6 +82,7 @@ ResultWithError<std::string> NativeCryptoApiWrapper::derivePublicKey(const std::
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -107,6 +110,7 @@ ResultWithError<core::Buffer> NativeCryptoApiWrapper::encryptDataSymmetric(const
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -134,6 +138,7 @@ ResultWithError<core::Buffer> NativeCryptoApiWrapper::decryptDataSymmetric(const
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -161,6 +166,7 @@ ResultWithError<core::Buffer> NativeCryptoApiWrapper::signData(const core::Buffe
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -187,6 +193,7 @@ ResultWithError<std::string> NativeCryptoApiWrapper::convertPEMKeyToWIFKey(const
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -214,6 +221,7 @@ ResultWithError<std::string> NativeCryptoApiWrapper::derivePrivateKey(const std:
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -241,6 +249,7 @@ ResultWithError<std::string> NativeCryptoApiWrapper::derivePrivateKey2(const std
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -272,6 +281,199 @@ ResultWithError<bool> NativeCryptoApiWrapper::verifySignature(
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<std::string> NativeCryptoApiWrapper::convertPGPAsn1KeyToBase58DERKey(const std::string& pgpKey){
+	ResultWithError<std::string> res;
+	try {
+		res.result = getapi()->convertPGPAsn1KeyToBase58DERKey(pgpKey);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+
+ResultWithError<endpoint::crypto::BIP39_t> NativeCryptoApiWrapper::generateBip39(std::size_t strength,
+																				 const std::string& password){
+	ResultWithError<endpoint::crypto::BIP39_t> res;
+	try {
+		res.result = getapi()->generateBip39(strength,
+											 password);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<endpoint::crypto::BIP39_t> NativeCryptoApiWrapper::fromMnemonic(const std::string& mnemonic,
+																				const std::string& password){
+	ResultWithError<endpoint::crypto::BIP39_t> res;
+	try {
+		res.result = getapi()->fromMnemonic(mnemonic,
+											password);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<endpoint::crypto::BIP39_t> NativeCryptoApiWrapper::fromEntropy(const endpoint::core::Buffer& entropy,
+																			   const std::string& password){
+	ResultWithError<endpoint::crypto::BIP39_t> res;
+	try {
+		res.result = getapi()->fromEntropy(entropy,
+										   password);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<std::string> NativeCryptoApiWrapper::entropyToMnemonic(const endpoint::core::Buffer& entropy){
+	ResultWithError<std::string> res;
+	try {
+		res.result = getapi()->entropyToMnemonic(entropy);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<endpoint::core::Buffer> NativeCryptoApiWrapper::mnemonicToEntropy(const std::string& mnemonic){
+	ResultWithError<endpoint::core::Buffer> res;
+	try {
+		res.result = getapi()->mnemonicToEntropy(mnemonic);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+
+ResultWithError<endpoint::core::Buffer> NativeCryptoApiWrapper::mnemonicToSeed(const std::string& mnemonic,
+																			   const std::string& password){
+	ResultWithError<endpoint::core::Buffer> res;
+	try {
+		res.result = getapi()->mnemonicToSeed(mnemonic,
+											  password);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};

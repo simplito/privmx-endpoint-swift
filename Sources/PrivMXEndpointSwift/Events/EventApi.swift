@@ -37,49 +37,50 @@ public class EventApi{
 		
 		guard nil == res.error.value
 		else {
-			throw PrivMXEndpointError.FailedInstantiatingEventApi(res.error.value!)
+			throw PrivMXEndpointError.failedInstantiatingEventApi(res.error.value!)
 		}
 		guard let result = res.result.value
 		else{
 			var err = privmx.InternalError()
 			err.name = "Value error"
 			err.description = "Unexpectedly received nil result"
-			throw PrivMXEndpointError.FailedInstantiatingEventApi(err)
+			throw PrivMXEndpointError.failedInstantiatingEventApi(err)
 		}
 		return EventApi(api: result)
 	}
 	
 	
-	/// Emits a custom Event on an arbitrary Channel
+	/// Emits the custom event on the given Context and channel.
 	///
-	/// - Parameter contextId: id of the Context in which the event will be sent
-	/// - Parameter channelName: the name of the channel  on which the event will be sent
-	/// - Parameter eventData: arbitrary data delivered with the Event
-	/// - Parameter users: list of users to whom the event will be sent
+	/// - Parameter contextId: ID of the Context
+	/// - Parameter channelName: list of UserWithPubKey objects which defines the recipeints of the event
+	/// - Parameter eventData: name of the Channel
+	/// - Parameter users: event's data
 	///
 	/// - Throws: `PrivMXEndpointError.failedEmittingCustomEvent` if listing the messages fails.
 	///
 	public func emitEvent(
 		contextId: std.string,
+		users: privmx.UserWithPubKeyVector,
 		channelName: std.string,
 		eventData: privmx.endpoint.core.Buffer,
-		users: privmx.UserWithPubKeyVector
 	) throws -> Void {
 		let res = api.emitEvent(
 			contextId,
+			users,
 			channelName,
-			eventData,
-			users)
+			eventData)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.FailedEmittingCustomEvent(res.error.value!)
+			throw PrivMXEndpointError.failedEmittingCustomEvent(res.error.value!)
 		}
 	}
 	
-	/// Subscribes to message-related events within a specific Thread, allowing notifications when messages are updated or received.
+	/// Subscribe for the custom events on the given channel.
 	///
-	/// - Parameter threadId: The unique identifier of the Thread for which to subscribe to message events.
+	/// - Parameter contextId: ID of the Context
+	/// - Parameter channelName: name of the Channel
 	///
-	/// - Throws: `PrivMXEndpointError.failedSubscribingForEvents` if subscribing to message events fails.
+	/// - Throws: `PrivMXEndpointError.failedSubscribingForEvents` if subscribing to custom events fails.
 	public func subscribeForCustomEvents(
 		contextId: std.string,
 		channelName:std.string
@@ -87,11 +88,16 @@ public class EventApi{
 		let res = api.subscribeForCustomEvents(contextId,
 											   channelName)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.FailedSubscribingForCustomEvents(res.error.value!)
+			throw PrivMXEndpointError.failedSubscribingForCustomEvents(res.error.value!)
 		}
 	}
 	
-	
+	/// Unsubscribe from the custom events on the given channel.
+	///
+	/// - Parameter contextId: ID of the Context
+	/// - Parameter channelName: name of the Channel
+	///
+	/// - Throws: `PrivMXEndpointError.failedSubscribingForEvents` if subscribing to message events fails.
 	public func unsubscribeFromCustomEvents(
 		contextId: std.string,
 		channelName: std.string
@@ -99,7 +105,7 @@ public class EventApi{
 		let res = api.unsubscribeFromCustomEvents(contextId,
 												  channelName)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.FailedUnsubscribingFromCustomEvents(res.error.value!)
+			throw PrivMXEndpointError.failedUnsubscribingFromCustomEvents(res.error.value!)
 		}
 		
 	}

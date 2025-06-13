@@ -1133,7 +1133,7 @@ public enum EventHandler{
 	
 	/// Extracts the custom event from the provided event holder.
 	///
-	/// This method retrieves an `ContextCustomEvent` object from the event contained in the given `EventHolder`.
+	/// This method retrieves a `ContextCustomEvent` object from the event contained in the given `EventHolder`.
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
 	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
