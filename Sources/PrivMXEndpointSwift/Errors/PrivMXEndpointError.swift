@@ -227,6 +227,32 @@ public enum PrivMXEndpointError : Error{
 	
 
 	
+	/// Failed to instantiate `EventApi`
+	case failedInstantiatingKvdbApi(privmx.InternalError)
+	/// Failed to create a Kvdb
+	case failedCreatingKvdb(privmx.InternalError)
+	/// Failed to update a Kvdb
+	case failedUpdatingKvdb(privmx.InternalError)
+	/// Failed to delete a Kvdb
+	case failedDeletingKvdb(privmx.InternalError)
+	/// Falied to get a Kvdb
+	case failedGettingKvdb(privmx.InternalError)
+	/// Falied to list Kvdbs
+	case failedListingKvdbs(privmx.InternalError)
+	
+	/// Falied to get an Item
+	case failedGettingKvdbEntry(privmx.InternalError)
+	/// Falied to list Items
+	case failedListingKvdbEntries(privmx.InternalError)
+	/// Falied to list Item Keys
+	case failedListingKvdbEntriesKeys(privmx.InternalError)
+	/// Falied to set an Item
+	case failedSettingKvdbEntry(privmx.InternalError)
+	/// Falied to delete an Item
+	case failedDeletingKvdbEntry(privmx.InternalError)
+	/// Falied to delete Items
+	case failedDeletingKvdbEntries(privmx.InternalError)
+	
 	/// Gets the Message of the error
 	///
 	///  - Returns: Message of the error
@@ -296,6 +322,18 @@ public enum PrivMXEndpointError : Error{
 					.failedGeneratingSymmetricKey(let err),
 					.failedVerifyingSignature(let err),
 					.failedCreatingFileHandle(let err),
+					.failedInstantiatingKvdbApi(let err),
+					.failedCreatingKvdb(let err),
+					.failedUpdatingKvdb(let err),
+					.failedDeletingKvdb(let err),
+					.failedGettingKvdb(let err),
+					.failedListingKvdbs(let err),
+					.failedSettingKvdbEntry(let err),
+					.failedGettingKvdbEntry(let err),
+					.failedListingKvdbEntries(let err),
+					.failedListingKvdbEntriesKeys(let err),
+					.failedDeletingKvdbEntry(let err),
+					.failedDeletingKvdbEntries(let err),
 					.failedInstantiatingEventApi(let err),
 					.failedEmittingCustomEvent(let err),
 					.failedSubscribingForCustomEvents(let err),
@@ -401,6 +439,18 @@ public enum PrivMXEndpointError : Error{
 					.failedGeneratingSymmetricKey(let err),
 					.failedVerifyingSignature(let err),
 					.failedCreatingFileHandle(let err),
+					.failedInstantiatingKvdbApi(let err),
+					.failedCreatingKvdb(let err),
+					.failedUpdatingKvdb(let err),
+					.failedDeletingKvdb(let err),
+					.failedGettingKvdb(let err),
+					.failedListingKvdbs(let err),
+					.failedSettingKvdbEntry(let err),
+					.failedGettingKvdbEntry(let err),
+					.failedListingKvdbEntries(let err),
+					.failedListingKvdbEntriesKeys(let err),
+					.failedDeletingKvdbEntry(let err),
+					.failedDeletingKvdbEntries(let err),
 					.failedInstantiatingEventApi(let err),
 					.failedEmittingCustomEvent(let err),
 					.failedSubscribingForCustomEvents(let err),
@@ -506,6 +556,18 @@ public enum PrivMXEndpointError : Error{
 					.failedGeneratingSymmetricKey(let err),
 					.failedVerifyingSignature(let err),
 					.failedCreatingFileHandle(let err),
+					.failedInstantiatingKvdbApi(let err),
+					.failedCreatingKvdb(let err),
+					.failedUpdatingKvdb(let err),
+					.failedDeletingKvdb(let err),
+					.failedGettingKvdb(let err),
+					.failedListingKvdbs(let err),
+					.failedSettingKvdbEntry(let err),
+					.failedGettingKvdbEntry(let err),
+					.failedListingKvdbEntries(let err),
+					.failedListingKvdbEntriesKeys(let err),
+					.failedDeletingKvdbEntry(let err),
+					.failedDeletingKvdbEntries(let err),
 					.failedInstantiatingEventApi(let err),
 					.failedEmittingCustomEvent(let err),
 					.failedSubscribingForCustomEvents(let err),
@@ -610,6 +672,18 @@ public enum PrivMXEndpointError : Error{
 					.failedGeneratingSymmetricKey(let err),
 					.failedVerifyingSignature(let err),
 					.failedCreatingFileHandle(let err),
+					.failedInstantiatingKvdbApi(let err),
+					.failedCreatingKvdb(let err),
+					.failedUpdatingKvdb(let err),
+					.failedDeletingKvdb(let err),
+					.failedGettingKvdb(let err),
+					.failedListingKvdbs(let err),
+					.failedSettingKvdbEntry(let err),
+					.failedGettingKvdbEntry(let err),
+					.failedListingKvdbEntries(let err),
+					.failedListingKvdbEntriesKeys(let err),
+					.failedDeletingKvdbEntry(let err),
+					.failedDeletingKvdbEntries(let err),
 					.failedInstantiatingEventApi(let err),
 					.failedEmittingCustomEvent(let err),
 					.failedSubscribingForCustomEvents(let err),
@@ -712,6 +786,18 @@ public enum PrivMXEndpointError : Error{
 					.failedReadingEntry(let err),
 					.failedDeletingEntry(let err),
 					.failedListingEntries(let err),
+					.failedInstantiatingKvdbApi(let err),
+					.failedCreatingKvdb(let err),
+					.failedUpdatingKvdb(let err),
+					.failedDeletingKvdb(let err),
+					.failedGettingKvdb(let err),
+					.failedListingKvdbs(let err),
+					.failedSettingKvdbEntry(let err),
+					.failedGettingKvdbEntry(let err),
+					.failedListingKvdbEntries(let err),
+					.failedListingKvdbEntriesKeys(let err),
+					.failedDeletingKvdbEntry(let err),
+					.failedDeletingKvdbEntries(let err),
 					.failedGeneratingSymmetricKey(let err),
 					.failedVerifyingSignature(let err),
 					.failedCreatingFileHandle(let err),

@@ -830,7 +830,7 @@ public enum EventHandler{
 		}
 		return result
 	}
-
+	
 	/// Extracts a `ThreadMessageDeletedEvent` from the provided `EventHolder`.
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the `ThreadMessageDeletedEvent`.
@@ -1107,7 +1107,7 @@ public enum EventHandler{
 		}
 		return result
 	}
-
+	
 	/// Determines if the event contained in the event holder is a Custom Event.
 	///
 	/// This method checks if the event within the provided `EventHolder` instance is a Custom Event.
@@ -1153,4 +1153,329 @@ public enum EventHandler{
 		}
 		return result
 	}
+	
+	/// Determines if the event contained in the event holder is a `KvdbCreatedEvent`.
+	///
+	/// This method checks if the event within the provided `EventHolder` instance is a `KvdbCreatedEvent`.
+	///
+	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be checked.
+	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if there is an error during the check.
+	/// - Returns: A `Bool` indicating whether the event is a Custom Event (`true`) or not (`false`).
+	public static func isKvdbCreatedEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.KvdbEventHandler.isKvdbCreatedEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	
+	/// Extracts the custom event from the provided event holder.
+	///
+	/// This method retrieves an `KvdbCreatedEvent` object from the event contained in the given `EventHolder`.
+	///
+	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
+	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Returns: An `KvdbCreatedEvent` that wa emitted by one of the users of the Context.
+	public static func extractKvdbCreatedEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.kvdb.KvdbCreatedEvent {
+		let res = privmx.KvdbEventHandler.extractKvdbCreatedEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
+	
+	/// Determines if the event contained in the event holder is a `KvdbUpdatedEvent`.
+	///
+	/// This method checks if the event within the provided `EventHolder` instance is a `KvdbUpdatedEvent`.
+	///
+	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be checked.
+	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if there is an error during the check.
+	/// - Returns: A `Bool` indicating whether the event is a Custom Event (`true`) or not (`false`).
+	public static func isKvdbUpdatedEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.KvdbEventHandler.isKvdbUpdatedEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	
+	/// Extracts the custom event from the provided event holder.
+	///
+	/// This method retrieves an `KvdbUpdatedEvent` object from the event contained in the given `EventHolder`.
+	///
+	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
+	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Returns: An `KvdbUpdatedEvent` that wa emitted by one of the users of the Context.
+	public static func extractKvdbUpdatedEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.kvdb.KvdbUpdatedEvent {
+		let res = privmx.KvdbEventHandler.extractKvdbUpdatedEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
+
+	/// Determines if the event contained in the event holder is a `KvdbStatsChangedEvent`.
+	///
+	/// This method checks if the event within the provided `EventHolder` instance is a `KvdbStatsChangedEvent`.
+	///
+	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be checked.
+	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if there is an error during the check.
+	/// - Returns: A `Bool` indicating whether the event is a Custom Event (`true`) or not (`false`).
+	public static func isKvdbStatsChangedEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.KvdbEventHandler.isKvdbStatsChangedEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	
+	/// Extracts the custom event from the provided event holder.
+	///
+	/// This method retrieves an `KvdbStatsChangedEvent` object from the event contained in the given `EventHolder`.
+	///
+	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
+	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Returns: An `KvdbStatsChangedEvent` that wa emitted by one of the users of the Context.
+	public static func extractKvdbStatsChangedEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.kvdb.KvdbStatsChangedEvent {
+		let res = privmx.KvdbEventHandler.extractKvdbStatsChangedEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
+
+	/// Determines if the event contained in the event holder is a `KvdbDeletedEvent`.
+	///
+	/// This method checks if the event within the provided `EventHolder` instance is a `KvdbDeletedEvent`.
+	///
+	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be checked.
+	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if there is an error during the check.
+	/// - Returns: A `Bool` indicating whether the event is a Custom Event (`true`) or not (`false`).
+	public static func isKvdbDeletedEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.KvdbEventHandler.isKvdbDeletedEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	
+	/// Extracts the custom event from the provided event holder.
+	///
+	/// This method retrieves an `KvdbDeletedEvent` object from the event contained in the given `EventHolder`.
+	///
+	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
+	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Returns: An `KvdbDeletedEvent` that wa emitted by one of the users of the Context.
+	public static func extractKvdbDeletedEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.kvdb.KvdbDeletedEvent {
+		let res = privmx.KvdbEventHandler.extractKvdbDeletedEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
+
+	
+	/// Determines if the event contained in the event holder is a `KvdbNewEntryEvent`.
+	///
+	/// This method checks if the event within the provided `EventHolder` instance is a `KvdbNewEntryEvent`.
+	///
+	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be checked.
+	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if there is an error during the check.
+	/// - Returns: A `Bool` indicating whether the event is a Custom Event (`true`) or not (`false`).
+	public static func isKvdbNewEntryEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.KvdbEventHandler.isKvdbNewEntryEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	
+	/// Extracts the custom event from the provided event holder.
+	///
+	/// This method retrieves an `KvdbNewEntryEvent` object from the event contained in the given `EventHolder`.
+	///
+	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
+	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Returns: An `KvdbNewEntryEvent` that wa emitted by one of the users of the Context.
+	public static func extractKvdbNewEntryEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.kvdb.KvdbNewEntryEvent {
+		let res = privmx.KvdbEventHandler.extractKvdbNewEntryEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
+
+	
+	/// Determines if the event contained in the event holder is a `KvdbEntryUpdatedEvent`.
+	///
+	/// This method checks if the event within the provided `EventHolder` instance is a `KvdbEntryUpdatedEvent`.
+	///
+	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be checked.
+	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if there is an error during the check.
+	/// - Returns: A `Bool` indicating whether the event is a Custom Event (`true`) or not (`false`).
+	public static func isKvdbEntryUpdatedEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.KvdbEventHandler.isKvdbEntryUpdatedEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	
+	/// Extracts the custom event from the provided event holder.
+	///
+	/// This method retrieves an `KvdbEntryUpdatedEvent` object from the event contained in the given `EventHolder`.
+	///
+	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
+	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Returns: An `KvdbEntryUpdatedEvent` that wa emitted by one of the users of the Context.
+	public static func extractKvdbEntryUpdatedEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.kvdb.KvdbEntryUpdatedEvent {
+		let res = privmx.KvdbEventHandler.extractKvdbEntryUpdatedEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
+
+	/// Determines if the event contained in the event holder is a `KvdbEntryDeletedEvent`.
+	///
+	/// This method checks if the event within the provided `EventHolder` instance is a `KvdbEntryDeletedEvent`.
+	///
+	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be checked.
+	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if there is an error during the check.
+	/// - Returns: A `Bool` indicating whether the event is a Custom Event (`true`) or not (`false`).
+	public static func isKvdbEntryDeletedEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.KvdbEventHandler.isKvdbEntryDeletedEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	
+	/// Extracts the custom event from the provided event holder.
+	///
+	/// This method retrieves an `KvdbEntryDeletedEvent` object from the event contained in the given `EventHolder`.
+	///
+	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
+	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Returns: An `KvdbEntryDeletedEvent` that wa emitted by one of the users of the Context.
+	public static func extractKvdbEntryDeletedEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.kvdb.KvdbEntryDeletedEvent {
+		let res = privmx.KvdbEventHandler.extractKvdbEntryDeletedEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
+
 }
