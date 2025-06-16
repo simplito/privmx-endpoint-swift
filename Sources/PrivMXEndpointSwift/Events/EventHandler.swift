@@ -365,7 +365,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` containing a `StoreCreatedEvent`.
 	/// - Returns: The extracted `StoreCreatedEvent`.
-	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if extraction fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	public static func extractStoreCreatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.store.StoreCreatedEvent {
@@ -386,7 +386,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` containing a `StoreCreatedEvent`.
 	/// - Returns: The extracted `StoreCreatedEvent`.
-	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if extraction fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	public static func extractStoreUpdatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.store.StoreUpdatedEvent {
@@ -407,7 +407,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` containing a `StoreDeletedEvent`.
 	/// - Returns: The extracted `StoreDeletedEvent`.
-	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if extraction fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	public static func extractStoreDeletedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.store.StoreDeletedEvent {
@@ -428,7 +428,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` containing a `StoreStatsChangedEvent`.
 	/// - Returns: The extracted `StoreStatsChangedEvent`.
-	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if extraction fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	public static func extractStoreStatsChangedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.store.StoreStatsChangedEvent {
@@ -449,7 +449,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` containing a `StoreFileCreatedEvent`.
 	/// - Returns: The extracted `StoreFileCreatedEvent`.
-	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if extraction fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	public static func extractStoreFileCreatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.store.StoreFileCreatedEvent {
@@ -470,7 +470,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` containing a `StoreFileUpdatedEvent`.
 	/// - Returns: The extracted `StoreFileUpdatedEvent`.
-	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if extraction fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	public static func extractStoreFileUpdatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.store.StoreFileUpdatedEvent {
@@ -491,7 +491,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` containing a `StoreFileDeletedEvent`.
 	/// - Returns: The extracted `StoreFileDeletedEvent`.
-	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if extraction fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	public static func extractStoreFileDeletedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.store.StoreFileDeletedEvent {
@@ -707,7 +707,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the `ThreadCreatedEvent`.
 	/// - Returns: The extracted `ThreadCreatedEvent`.
-	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if extraction fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	public static func extractThreadCreatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.thread.ThreadCreatedEvent {
@@ -728,7 +728,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the `ThreadUpdatedEvent`.
 	/// - Returns: The extracted `ThreadUpdatedEvent`.
-	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if extraction fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	public static func extractThreadUpdatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.thread.ThreadUpdatedEvent {
@@ -749,7 +749,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the `ThreadDeletedEvent`.
 	/// - Returns: The extracted `ThreadDeletedEvent`.
-	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if extraction fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	public static func extractThreadDeletedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.thread.ThreadDeletedEvent {
@@ -770,7 +770,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the `ThreadStatsEvent`.
 	/// - Returns: The extracted `ThreadStatsEvent`.
-	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if extraction fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	public static func extractThreadStatsEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.thread.ThreadStatsChangedEvent {
@@ -791,7 +791,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the `ThreadNewMessageEvent`.
 	/// - Returns: The extracted `ThreadNewMessageEvent`.
-	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if extraction fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	public static func extractThreadNewMessageEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.thread.ThreadNewMessageEvent {
@@ -813,7 +813,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the `ThreadDeletedMessageEvent`.
 	/// - Returns: The extracted `ThreadDeletedMessageEvent`.
-	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if extraction fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	@available(*, deprecated, renamed: "extractThreadMessageDeletedEvent(eventHolder:)")
 	public static func extractThreadDeletedMessageEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
@@ -835,7 +835,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the `ThreadMessageDeletedEvent`.
 	/// - Returns: The extracted `ThreadMessageDeletedEvent`.
-	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if extraction fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	public static func extractThreadMessageDeletedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.thread.ThreadMessageDeletedEvent {
@@ -856,7 +856,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the `ThreadMessageUpdatedEvent`.
 	/// - Returns: The extracted `ThreadMessageUpdatedEvent`.
-	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if extraction fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	public static func extractThreadMessageUpdatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.thread.ThreadMessageUpdatedEvent {
@@ -902,20 +902,20 @@ public enum EventHandler{
 	/// This method retrieves an `InboxCreatedEvent` object from the event contained in the given `EventHolder`.
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
-	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	/// - Returns: An `InboxCreatedEvent` containing the details of the created inbox event.
 	public static func extractInboxCreatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.inbox.InboxCreatedEvent {
 		let res = privmx.InboxEventHandler.extractInboxCreatedEvent(eventHolder)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
 		}
 		guard let result = res.result.value else {
 			var err = privmx.InternalError()
 			err.name = "Value error"
 			err.description = "Unexpectedly received nil result"
-			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
 		}
 		return result
 	}
@@ -949,20 +949,20 @@ public enum EventHandler{
 	/// This method retrieves an `InboxUpdatedEvent` object from the event contained in the given `EventHolder`.
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
-	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	/// - Returns: An `InboxUpdatedEvent` containing the details of the updated inbox event.
 	public static func extractInboxUpdatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.inbox.InboxUpdatedEvent {
 		let res = privmx.InboxEventHandler.extractInboxUpdatedEvent(eventHolder)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
 		}
 		guard let result = res.result.value else {
 			var err = privmx.InternalError()
 			err.name = "Value error"
 			err.description = "Unexpectedly received nil result"
-			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
 		}
 		return result
 	}
@@ -996,20 +996,20 @@ public enum EventHandler{
 	/// This method retrieves an `InboxDeletedEvent` object from the event contained in the given `EventHolder`.
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
-	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	/// - Returns: An `InboxDeletedEvent` containing the details of the deleted inbox event.
 	public static func extractInboxDeletedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.inbox.InboxDeletedEvent {
 		let res = privmx.InboxEventHandler.extractInboxDeletedEvent(eventHolder)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
 		}
 		guard let result = res.result.value else {
 			var err = privmx.InternalError()
 			err.name = "Value error"
 			err.description = "Unexpectedly received nil result"
-			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
 		}
 		return result
 	}
@@ -1043,20 +1043,20 @@ public enum EventHandler{
 	/// This method retrieves an `InboxEntryCreatedEvent` object from the event contained in the given `EventHolder`.
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
-	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	/// - Returns: An `InboxEntryCreatedEvent` containing the details of the created inbox entry event.
 	public static func extractInboxEntryCreatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.inbox.InboxEntryCreatedEvent {
 		let res = privmx.InboxEventHandler.extractInboxEntryCreatedEvent(eventHolder)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
 		}
 		guard let result = res.result.value else {
 			var err = privmx.InternalError()
 			err.name = "Value error"
 			err.description = "Unexpectedly received nil result"
-			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
 		}
 		return result
 	}
@@ -1090,20 +1090,20 @@ public enum EventHandler{
 	/// This method retrieves an `InboxEntryDeletedEvent` object from the event contained in the given `EventHolder`.
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
-	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	/// - Returns: An `InboxEntryDeletedEvent` containing the details of the deleted inbox entry event.
 	public static func extractInboxEntryDeletedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.inbox.InboxEntryDeletedEvent {
 		let res = privmx.InboxEventHandler.extractInboxEntryDeletedEvent(eventHolder)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
 		}
 		guard let result = res.result.value else {
 			var err = privmx.InternalError()
 			err.name = "Value error"
 			err.description = "Unexpectedly received nil result"
-			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
 		}
 		return result
 	}
@@ -1136,7 +1136,7 @@ public enum EventHandler{
 	/// This method retrieves a `ContextCustomEvent` object from the event contained in the given `EventHolder`.
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
-	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	/// - Returns: An `ContextCustomEvent` that was emitted by one of the users of the Context.
 	public static func extractContextCustomEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
@@ -1182,7 +1182,7 @@ public enum EventHandler{
 	/// This method retrieves an `KvdbCreatedEvent` object from the event contained in the given `EventHolder`.
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
-	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	/// - Returns: A `KvdbCreatedEvent` instance.
 	public static func extractKvdbCreatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
@@ -1228,7 +1228,7 @@ public enum EventHandler{
 	/// This method retrieves an `KvdbUpdatedEvent` object from the event contained in the given `EventHolder`.
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
-	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	/// - Returns: A `KvdbUpdatedEvent` instance.
 	public static func extractKvdbUpdatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
@@ -1274,7 +1274,7 @@ public enum EventHandler{
 	/// This method retrieves an `KvdbStatsChangedEvent` object from the event contained in the given `EventHolder`.
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
-	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	/// - Returns: A `KvdbStatsChangedEvent` instance.
 	public static func extractKvdbStatsChangedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
@@ -1320,7 +1320,7 @@ public enum EventHandler{
 	/// This method retrieves an `KvdbDeletedEvent` object from the event contained in the given `EventHolder`.
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
-	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	/// - Returns: A `KvdbDeletedEvent` instance.
 	public static func extractKvdbDeletedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
@@ -1367,7 +1367,7 @@ public enum EventHandler{
 	/// This method retrieves an `KvdbNewEntryEvent` object from the event contained in the given `EventHolder`.
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
-	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	/// - Returns: A `KvdbNewEntryEvent` instance.
 	public static func extractKvdbNewEntryEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
@@ -1414,7 +1414,7 @@ public enum EventHandler{
 	/// This method retrieves an `KvdbEntryUpdatedEvent` object from the event contained in the given `EventHolder`.
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
-	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	/// - Returns: A `KvdbEntryUpdatedEvent` instance.
 	public static func extractKvdbEntryUpdatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
@@ -1460,7 +1460,7 @@ public enum EventHandler{
 	/// This method retrieves an `KvdbEntryDeletedEvent` object from the event contained in the given `EventHolder`.
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
-	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if the extraction process fails.
 	/// - Returns: A `KvdbEntryDeletedEvent` instance.
 	public static func extractKvdbEntryDeletedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
