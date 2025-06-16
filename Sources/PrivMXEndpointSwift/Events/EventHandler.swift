@@ -1137,7 +1137,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
 	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
-	/// - Returns: An `ContextCustomEvent` that wa emitted by one of the users of the Context.
+	/// - Returns: An `ContextCustomEvent` that was emitted by one of the users of the Context.
 	public static func extractContextCustomEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.event.ContextCustomEvent {
@@ -1160,7 +1160,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be checked.
 	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if there is an error during the check.
-	/// - Returns: A `Bool` indicating whether the event is a Custom Event (`true`) or not (`false`).
+	/// - Returns: A `Bool` indicating whether the event is a `KvdbCreatedEvent` (`true`) or not (`false`).
 	public static func isKvdbCreatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> Bool {
@@ -1183,7 +1183,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
 	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
-	/// - Returns: An `KvdbCreatedEvent` that wa emitted by one of the users of the Context.
+	/// - Returns: A `KvdbCreatedEvent` instance.
 	public static func extractKvdbCreatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.kvdb.KvdbCreatedEvent {
@@ -1206,7 +1206,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be checked.
 	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if there is an error during the check.
-	/// - Returns: A `Bool` indicating whether the event is a Custom Event (`true`) or not (`false`).
+	/// - Returns: A `Bool` indicating whether the event is a `KvdbUpdatedEvent` (`true`) or not (`false`).
 	public static func isKvdbUpdatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> Bool {
@@ -1229,7 +1229,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
 	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
-	/// - Returns: An `KvdbUpdatedEvent` that wa emitted by one of the users of the Context.
+	/// - Returns: A `KvdbUpdatedEvent` instance.
 	public static func extractKvdbUpdatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.kvdb.KvdbUpdatedEvent {
@@ -1252,7 +1252,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be checked.
 	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if there is an error during the check.
-	/// - Returns: A `Bool` indicating whether the event is a Custom Event (`true`) or not (`false`).
+	/// - Returns: A `Bool` indicating whether the event is a `KvdbStatsChangedEvent` (`true`) or not (`false`).
 	public static func isKvdbStatsChangedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> Bool {
@@ -1275,7 +1275,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
 	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
-	/// - Returns: An `KvdbStatsChangedEvent` that wa emitted by one of the users of the Context.
+	/// - Returns: A `KvdbStatsChangedEvent` instance.
 	public static func extractKvdbStatsChangedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.kvdb.KvdbStatsChangedEvent {
@@ -1298,7 +1298,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be checked.
 	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if there is an error during the check.
-	/// - Returns: A `Bool` indicating whether the event is a Custom Event (`true`) or not (`false`).
+	/// - Returns: A `Bool` indicating whether the event is a `KvdbDeletedEvent` (`true`) or not (`false`).
 	public static func isKvdbDeletedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> Bool {
@@ -1321,7 +1321,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
 	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
-	/// - Returns: An `KvdbDeletedEvent` that wa emitted by one of the users of the Context.
+	/// - Returns: A `KvdbDeletedEvent` instance.
 	public static func extractKvdbDeletedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.kvdb.KvdbDeletedEvent {
@@ -1368,7 +1368,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
 	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
-	/// - Returns: An `KvdbNewEntryEvent` that wa emitted by one of the users of the Context.
+	/// - Returns: A `KvdbNewEntryEvent` instance.
 	public static func extractKvdbNewEntryEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.kvdb.KvdbNewEntryEvent {
@@ -1392,7 +1392,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be checked.
 	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if there is an error during the check.
-	/// - Returns: A `Bool` indicating whether the event is a Custom Event (`true`) or not (`false`).
+	/// - Returns: A `Bool` indicating whether the event is a `KvdbEntryUpdatedEvent` (`true`) or not (`false`).
 	public static func isKvdbEntryUpdatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> Bool {
@@ -1415,7 +1415,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
 	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
-	/// - Returns: An `KvdbEntryUpdatedEvent` that wa emitted by one of the users of the Context.
+	/// - Returns: A `KvdbEntryUpdatedEvent` instance.
 	public static func extractKvdbEntryUpdatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.kvdb.KvdbEntryUpdatedEvent {
@@ -1438,7 +1438,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be checked.
 	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if there is an error during the check.
-	/// - Returns: A `Bool` indicating whether the event is a Custom Event (`true`) or not (`false`).
+	/// - Returns: A `Bool` indicating whether the event is a `KvdbEntryDEletedEvent` (`true`) or not (`false`).
 	public static func isKvdbEntryDeletedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> Bool {
@@ -1461,7 +1461,7 @@ public enum EventHandler{
 	///
 	/// - Parameter eventHolder: An `EventHolder` instance containing the event to be extracted.
 	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if the extraction process fails.
-	/// - Returns: An `KvdbEntryDeletedEvent` that wa emitted by one of the users of the Context.
+	/// - Returns: A `KvdbEntryDeletedEvent` instance.
 	public static func extractKvdbEntryDeletedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.kvdb.KvdbEntryDeletedEvent {
