@@ -62,7 +62,7 @@ public class KvdbApi: @unchecked Sendable{
 			var err = privmx.InternalError()
 			err.name = "Value error"
 			err.description = "Unexpectedly recived nil result"
-			throw PrivMXEndpointError.failedGettingKvdb(err)
+			throw PrivMXEndpointError.failedCreatingKvdb(err)
 		}
 		return result
 	}
