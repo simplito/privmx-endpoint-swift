@@ -13,7 +13,7 @@ import PrivMXEndpointSwiftNative
 
 /// Errors thrown by PrivMX Endpoint Swift.
 ///
-/// Cases correspond to methods in which rthe error happened.
+/// Cases correspond to methods in which the error happened.
 /// Each case has `privmx.InternalError` as associated value, which holds data about the error.
 public enum PrivMXEndpointError : Error{
 	/// Represents failure unrelated to methods in PrivmxEndpointSwift package
@@ -45,7 +45,7 @@ public enum PrivMXEndpointError : Error{
 	case failedDisconnecting(privmx.InternalError)
 	/// Failed to list Contexts
 	case failedListingContexts(privmx.InternalError)
-	/// Falied to get a list of Users from a Context
+	/// Failed to get a list of Users from a Context
 	case failedGettingContextUsers(privmx.InternalError)
 	
 	/// Failed to instantiate `ThreadApi`
@@ -64,7 +64,7 @@ public enum PrivMXEndpointError : Error{
 	case failedCreatingMessage(privmx.InternalError)
 	/// Failed to update a Thread
 	case failedUpdatingThread(privmx.InternalError)
-	/// Failed to update a Mesage
+	/// Failed to update a Message
 	case failedUpdatingMessage(privmx.InternalError)
 	
 	/// Failed to instantiate `StoreApi`
@@ -133,7 +133,7 @@ public enum PrivMXEndpointError : Error{
 	/// Failed to get an Event
 	case failedGettingEvent(privmx.InternalError)
 	
-	/// Failed to subscirbe for Events
+	/// Failed to subscribe for Events
 	case failedSubscribingForEvents(privmx.InternalError)
 	/// Failed to unsubscribe from Events
 	case failedUnsubscribingFromEvents(privmx.InternalError)
@@ -224,8 +224,6 @@ public enum PrivMXEndpointError : Error{
 	case failedCheckingifStringIsBase32(privmx.InternalError)
 	case failedTrimmingString(privmx.InternalError)
 	case failedSplittingString(privmx.InternalError)
-	
-
 	
 	/// Gets the Message of the error
 	///

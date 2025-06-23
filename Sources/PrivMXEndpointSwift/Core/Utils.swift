@@ -15,7 +15,7 @@ public enum Hex{
 	
 	/// Encodes buffer to a string in Hex format.
 	/// - Parameter data: buffer to encode
-	/// - Returns: string in Hex fromat
+	/// - Returns: string in Hex format
 	public static func encode(
 		data: privmx.endpoint.core.Buffer
 	) throws -> std.string {
@@ -77,7 +77,7 @@ public enum Base32{
 	
 	/// Encodes buffer to a string in Base32 format.
 	/// - Parameter data: buffer to encode
-	/// - Returns: string in Hex fromat
+	/// - Returns: string in Hex format
 	public static func encode(
 		data: privmx.endpoint.core.Buffer
 	) throws -> std.string {
@@ -139,7 +139,7 @@ public enum Base64{
 	
 	/// Encodes buffer to a string in Base64 format.
 	/// - Parameter data: buffer to encode
-	/// - Returns: string in Hex fromat
+	/// - Returns: string in Hex format
 	public static func encode(
 		data: privmx.endpoint.core.Buffer
 	) throws -> std.string {

@@ -53,7 +53,7 @@ public class EventApi{
 	/// Emits the custom event on the given Context and channel.
 	///
 	/// - Parameter contextId: ID of the Context
-	/// - Parameter channelName: list of UserWithPubKey objects which defines the recipeints of the event
+	/// - Parameter channelName: list of UserWithPubKey objects which defines the recipients of the event
 	/// - Parameter eventData: name of the Channel
 	/// - Parameter users: event's data
 	///
