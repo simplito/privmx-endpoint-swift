@@ -162,7 +162,7 @@ public class KvdbApi: @unchecked Sendable{
 	
 	public func listEntriesKeys(
 		kvdbId: std.string,
-		pagingQuery: privmx.endpoint.kvdb.KvdbKeysPagingQuery
+		pagingQuery: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.StringList {
 		let res = api.listEntriesKeys(kvdbId,
 								   pagingQuery)
@@ -181,7 +181,7 @@ public class KvdbApi: @unchecked Sendable{
 	
 	public func listEntries(
 		kvdbId: std.string,
-		pagingQuery: privmx.endpoint.kvdb.KvdbEntryPagingQuery
+		pagingQuery: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.KvdbEntryList {
 		let res = api.listEntries(kvdbId,
 								pagingQuery)

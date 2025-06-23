@@ -225,7 +225,7 @@ ResultWithError<kvdb::KvdbEntry> NativeKvdbApiWrapper::getEntry(const std::strin
 }
 
 ResultWithError<StringList> NativeKvdbApiWrapper::listEntriesKeys(const std::string &kvdbId,
-																const endpoint::kvdb::KvdbKeysPagingQuery &pagingQuery){
+																const endpoint::core::PagingQuery &pagingQuery){
 	auto res = ResultWithError<StringList>();
 	try{
 		res.result = getapi()->listEntriesKeys(kvdbId,
@@ -252,7 +252,7 @@ ResultWithError<StringList> NativeKvdbApiWrapper::listEntriesKeys(const std::str
 }
 
 ResultWithError<KvdbEntryList> NativeKvdbApiWrapper::listEntries(const std::string &kvdbId,
-														  const endpoint::kvdb::KvdbEntryPagingQuery &pagingQuery){
+														  const endpoint::core::PagingQuery &pagingQuery){
 	auto res = ResultWithError<KvdbEntryList>();
 	try{
 		res.result = getapi()->listEntries(kvdbId,

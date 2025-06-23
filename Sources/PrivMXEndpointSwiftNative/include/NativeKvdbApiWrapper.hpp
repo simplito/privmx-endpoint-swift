@@ -48,9 +48,9 @@ public:
 	ResultWithError<endpoint::kvdb::KvdbEntry> getEntry(const std::string& kvdbId,
 												  const std::string& key);
 	ResultWithError<StringList> listEntriesKeys(const std::string& kvdbId,
-											 const endpoint::kvdb::KvdbKeysPagingQuery& pagingQuery);
+											 const endpoint::core::PagingQuery& pagingQuery);
 	ResultWithError<KvdbEntryList> listEntries(const std::string& kvdbId,
-										const endpoint::kvdb::KvdbEntryPagingQuery& pagingQuery);
+										const endpoint::core::PagingQuery& pagingQuery);
 	ResultWithError<std::nullptr_t> setEntry(const std::string& kvdbId,
 											const std::string& key,
 											const endpoint::core::Buffer& publicMeta,
