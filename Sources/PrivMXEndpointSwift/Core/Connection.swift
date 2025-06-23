@@ -262,7 +262,7 @@ public class Connection{
 	/// Each time data is read from the container, a callback will be triggered, allowing the developer to validate the sender in an external service,
 	/// e.g. Developer's Application Server or PKI Server
 	///
-	/// - Parameter verifier: an implementation of the verificattion that will be called for each request
+	/// - Parameter verifier: an implementation of the verification that will be called for each request
 	///
 	/// - throws: When the operation fails.
 	public func setUserVerifier(
