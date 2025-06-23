@@ -64,7 +64,7 @@ public enum PrivMXEndpointError : Error{
 	case failedCreatingMessage(privmx.InternalError)
 	/// Failed to update a Thread
 	case failedUpdatingThread(privmx.InternalError)
-	/// Failed to update a Mesage
+	/// Failed to update a Message
 	case failedUpdatingMessage(privmx.InternalError)
 	
 	/// Failed to instantiate `StoreApi`
