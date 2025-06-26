@@ -349,7 +349,7 @@ public class KvdbApi: @unchecked Sendable{
 	
 	/// Unsubscribes from the KVDB module main events.
 	///
-	/// - Throws: `PrivMXEndpointError.failedUnsubscribingFromEvents`
+	/// - Throws: `PrivMXEndpointError.failedUnsubscribingFromEvents` if the operation fails.
 	public func unsubscribeFromKvdbEvents(
 	) throws -> Void {
 		let res = api.unsubscribeFromKvdbEvents()
@@ -375,7 +375,7 @@ public class KvdbApi: @unchecked Sendable{
 	///
 	/// - Parameter kvdbId: ID of the KVDB to unsubscribe
 	///
-	/// - Throws: `PrivMXEndpointError.failedUnsubscribingFromEvents`
+	/// - Throws: `PrivMXEndpointError.failedUnsubscribingFromEvents` if the operation fails.
 	public func unsubscribeFromEntryEvents(
 		kvdbId: std.string
 	) throws -> Void {
