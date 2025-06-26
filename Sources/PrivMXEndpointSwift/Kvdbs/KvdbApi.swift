@@ -21,6 +21,11 @@ public class KvdbApi: @unchecked Sendable{
 		self.api = api
 	}
 	
+	/// Creates an instance of 'KvdbApi'.
+	///
+	/// - Parameter connection: instance of 'Connection'
+	///
+	/// - Returns: `KvdbApi` object.
 	public static func create(
 		connection: inout Connection
 	) throws -> KvdbApi {
@@ -39,9 +44,21 @@ public class KvdbApi: @unchecked Sendable{
 		return KvdbApi(api: result)
 	}
 	
-	
+	/// Creates a new KVDB in given Context.
+	///
+	/// - Parameter contextId: ID of the Context to create the KVDB in
+	/// - Parameter users: array of UserWithPubKey structs which indicates who will have access to the created KVDB
+	/// - Parameter managers: array of UserWithPubKey structs which indicates who will have access (and management rights) to the created KVDB
+	/// - Parameter publicMeta: public (unencrypted) metadata
+	/// - Parameter privateMeta: private (encrypted) metadata
+	/// - Parameter policies: KVDB's policies
+	/// - Parameter contextId: ID of the Context to create the KVDB in
+	///
+	/// - Returns: Id of the created KVDB
+	///
+	/// - Throws: `PrivMXEndpointError.failedCreatingKvdb` if creating a Kvdb fails.
 	public func createKvdb(
-		contextId: std.__1.string,
+		contextId: std.string,
 		users: privmx.UserWithPubKeyVector,
 		managers: privmx.UserWithPubKeyVector,
 		publicMeta: privmx.endpoint.core.Buffer,
@@ -67,7 +84,20 @@ public class KvdbApi: @unchecked Sendable{
 		return result
 	}
 	
-	
+	/// Updates an existing KVDB.
+	///
+	/// - Parameter kvdbId: ID of the KVDB to update
+	/// - Parameter users: array of UserWithPubKey structs which indicates who will have access to the created KVDB
+	/// - Parameter managers: array of UserWithPubKey structs which indicates who will have access (and management rights) to the created KVDB
+	/// - Parameter publicMeta: public (unencrypted) metadata
+	/// - Parameter privateMeta: private (encrypted) metadata
+	/// - Parameter version: current version of the updated KVDB
+	/// - Parameter force: force update (without checking version)
+	/// - Parameter forceGenerateNewKey: force to regenerate a key for the KVDB
+	/// - Parameter policies: KVDB's policies
+	/// - Parameter kvdbId: ID of the KVDB to update
+	///
+	/// - Throws: `PrivMXEndpointError.failedUpdatingKvdb` when the operation fails.
 	public func updateKvdb(
 		kvdbId: std.string,
 		users:privmx.UserWithPubKeyVector,
@@ -94,9 +124,13 @@ public class KvdbApi: @unchecked Sendable{
 		}
 	}
 	
-	
+	/// Deletes a KVDB by given KVDB ID.
+	///
+	/// - Parameter kvdbId: ID of the KVDB to delete
+	///
+	/// - Throws: `PrivMXEndpointError.failedDeletingKvdb` if deleting the KVDB fails.
 	public func deleteKvdb(
-		kvdbId: std.__1.string
+		kvdbId: std.string
 	) throws -> Void {
 		let res = api.deleteKvdb(kvdbId)
 		guard res.error.value == nil else {
@@ -104,7 +138,13 @@ public class KvdbApi: @unchecked Sendable{
 		}
 	}
 	
-	
+	///Gets a KVDB by given KVDB ID.
+	///
+	/// - Parameter kvdbId:ID of KVDB to get
+	///
+	/// - Returns: struct containing info about the KVDB
+	///
+	/// - Throws: `PrivMXEndpointError.failedGettingKvdb` if the operation fails.
 	public func getKvdb(
 		kvdbId:std.string
 	) throws -> privmx.endpoint.kvdb.Kvdb {
@@ -121,7 +161,14 @@ public class KvdbApi: @unchecked Sendable{
 		return result
 	}
 	
-	
+	/// Gets a list of Kvdbs in given Context.
+	///
+	/// - Parameter contextId: ID of the Context to get the Kvdbs from
+	/// - Parameter pagingQuery: with list query parameters
+	///
+	/// - Returns: struct containing a list of Kvdbs
+	///
+	/// - Throws: `PrivMXEndpointError.failedListingKvdbs` if the operation fails.
 	public func listKvdbs(
 		contextId:std.string,
 		pagingQuery: privmx.endpoint.core.PagingQuery
@@ -140,7 +187,14 @@ public class KvdbApi: @unchecked Sendable{
 		return result
 	}
 	
-	
+	/// Gets a KVDB entry by given KVDB entry key and KVDB ID.
+	///
+	/// - Parameter kvdbId: KVDB ID of the KVDB entry to get
+	/// - Parameter key: key of the KVDB entry to get
+	///
+	/// - Returns: struct containing the KVDB entry
+	///
+	/// - Throws: `PrivMXEndpointError.failedGettingKvdbEntry` if the operation fails.
 	public func getEntry(
 		kvdbId: std.string,
 		key: std.string
@@ -159,7 +213,14 @@ public class KvdbApi: @unchecked Sendable{
 		return result
 	}
 	
-	
+	/// Gets a list of KVDB entries keys from a KVDB.
+	///
+	/// - Parameter kvdbId: ID of the KVDB to list KVDB entries from
+	/// - Parameter pagingQuery: with list query parameters
+	///
+	/// - Returns: struct containing a list of KVDB entries
+	///
+	/// - Throws: `PrivMXEndpointError.failedListingKvdbEntriesKeys` if the operation fails.
 	public func listEntriesKeys(
 		kvdbId: std.string,
 		pagingQuery: privmx.endpoint.core.PagingQuery
@@ -178,7 +239,14 @@ public class KvdbApi: @unchecked Sendable{
 		return result
 	}
 	
-	
+	/// Gets a list of KVDB entries from a KVDB.
+	///
+	/// - Parameter kvdbId: ID of the KVDB to list KVDB entries from
+	/// - Parameter pagingQuery:  with list query parameters
+	///
+	/// - Returns: struct containing a list of KVDB entries
+	///
+	/// - Throws: `PrivMXEndpointError.failedListingKvdbEntries` if the operation fails.
 	public func listEntries(
 		kvdbId: std.string,
 		pagingQuery: privmx.endpoint.core.PagingQuery
@@ -197,7 +265,17 @@ public class KvdbApi: @unchecked Sendable{
 		return result
 	}
 	
-	
+	/// Sets a KVDB entry in the given KVDB.
+	///
+	/// - Parameter kvdbId: ID of the KVDB to set the entry to
+	/// - Parameter key: KVDB entry key
+	/// - Parameter publicMeta: public KVDB entry metadata
+	/// - Parameter privateMeta: private KVDB entry metadata
+	/// - Parameter data: content of the KVDB entry
+	///
+	/// - Returns: ID of the new KVDB entry
+	///
+	/// - Throws: PrivMXEndpointError.failedSettingKvdbEntry.
 	public func setEntry(
 		kvdbId: std.string,
 		key: std.string,
@@ -217,7 +295,12 @@ public class KvdbApi: @unchecked Sendable{
 		}
 	}
 	
-	
+	/// Deletes a KVDB entry by given KVDB entry ID.
+	///
+	/// - Parameter kvdbId: KVDB ID of the KVDB entry to delete
+	/// - Parameter key: key of the KVDB entry to delete
+	///
+	/// - Throws: `PrivMXEndpointError.failedDeletingKvdbEntry` if the operation fails.
 	public func deleteEntry(
 		kvdbId: std.string,
 		key: std.string
@@ -229,18 +312,33 @@ public class KvdbApi: @unchecked Sendable{
 		}
 	}
 	
+	/// Deletes KVDB entries by given KVDB IDs and the list of entry keys.
+	///
+	/// - param kvdbId ID of the KVDB database to delete from
+	/// - param keys vector of the keys of the KVDB entries to delete
+	///
+	/// - Returns: map with the statuses of deletion for every key
 	public func deleteEntries(
 		kvdbId: std.string,
 		keys: privmx.StringVector
-	) throws -> Void {
+	) throws -> privmx.StringBoolMap {
 		let res = api.deleteEntries(kvdbId,
 								  keys)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedDeletingKvdbEntries(res.error.value!)
 		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedDeletingKvdbEntries(err)
+		}
+		return result
 	}
 	
-	
+	/// Subscribes for the KVDB module main events.
+	///
+	/// - Throws: `PrivMXEndpointError.failedSubscribingForEvents` if the operation fails.
 	public func subscribeForKvdbEvents(
 	) throws -> Void {
 		let res = api.subscribeForKvdbEvents()
@@ -249,6 +347,9 @@ public class KvdbApi: @unchecked Sendable{
 		}
 	}
 	
+	/// Unsubscribes from the KVDB module main events.
+	///
+	/// - Throws: `PrivMXEndpointError.failedUnsubscribingFromEvents`
 	public func unsubscribeFromKvdbEvents(
 	) throws -> Void {
 		let res = api.unsubscribeFromKvdbEvents()
@@ -257,19 +358,28 @@ public class KvdbApi: @unchecked Sendable{
 		}
 	}
 	
-	public func subscribeForItemEvents(
-		channel: std.string
+	/// Subscribes for events in given KVDB.
+	///
+	/// - Parameter kvdbId: ID of the KVDB to subscribe
+	/// - Throws: `PrivMXEndpointError.failedSubscribingForEvents` if the operation fails.
+	public func subscribeForEntryEvents(
+		kvdbId: std.string
 	) throws -> Void {
-		let res = api.subscribeForEntryEvents(channel)
+		let res = api.subscribeForEntryEvents(kvdbId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
 		}
 	}
 	
-	public func unsubscribeFromItemEvents(
-		channel: std.string
+	/// Unsubscribes from events in given KVDB.
+	///
+	/// - Parameter kvdbId: ID of the KVDB to unsubscribe
+	///
+	/// - Throws: `PrivMXEndpointError.failedUnsubscribingFromEvents`
+	public func unsubscribeFromEntryEvents(
+		kvdbId: std.string
 	) throws -> Void {
-		let res = api.unsubscribeFromEntryEvents(channel)
+		let res = api.unsubscribeFromEntryEvents(kvdbId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
 		}

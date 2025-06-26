@@ -15,6 +15,7 @@
 #include <optional>
 #include <string>
 #include <vector>
+#include <map>
 #include <memory>
 #include <utility>
 
@@ -112,6 +113,7 @@ using KvdbList = endpoint::core::PagingList<endpoint::kvdb::Kvdb>;
 using KvdbEntryList = endpoint::core::PagingList<endpoint::kvdb::KvdbEntry>;
 
 using BoolVector = std::vector<bool>;
+using StringBoolMap = std::map<std::string,bool>;
 using VerificationRequestVector = std::vector<endpoint::core::VerificationRequest>;
 
 using OptionalCUnsignedInt = std::optional<uint32_t>;

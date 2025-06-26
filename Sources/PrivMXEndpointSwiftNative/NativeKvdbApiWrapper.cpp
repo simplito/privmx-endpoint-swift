@@ -340,11 +340,11 @@ ResultWithError<nullptr_t> NativeKvdbApiWrapper::deleteEntry(const std::string &
 	return res;
 }
 
-ResultWithError<nullptr_t> NativeKvdbApiWrapper::deleteEntries(const std::string &kvdbId,
+ResultWithError<StringBoolMap> NativeKvdbApiWrapper::deleteEntries(const std::string &kvdbId,
 															 const StringVector &keys){
-	ResultWithError res;
+	ResultWithError<StringBoolMap> res;
 	try{
-		getapi()->deleteEntries(kvdbId,
+		res.result = getapi()->deleteEntries(kvdbId,
 							  keys);
 	}catch(core::Exception& err){
 		res.error = {

@@ -59,7 +59,7 @@ public:
 											const int64_t version);
 	ResultWithError<std::nullptr_t> deleteEntry(const std::string& kvdbId,
 											   const std::string& key);
-	ResultWithError<std::nullptr_t> deleteEntries(const std::string& kvdbId,
+	ResultWithError<StringBoolMap> deleteEntries(const std::string& kvdbId,
 												const StringVector& keys);
 	
 	ResultWithError<std::nullptr_t> subscribeForKvdbEvents();
