@@ -227,7 +227,7 @@ public enum PrivMXEndpointError : Error{
 	
 
 	
-	/// Failed to instantiate `EventApi`
+	/// Failed to instantiate `KvdbApi`
 	case failedInstantiatingKvdbApi(privmx.InternalError)
 	/// Failed to create a Kvdb
 	case failedCreatingKvdb(privmx.InternalError)
