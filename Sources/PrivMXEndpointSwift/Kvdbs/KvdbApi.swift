@@ -314,8 +314,8 @@ public class KvdbApi: @unchecked Sendable{
 	
 	/// Deletes KVDB entries by given KVDB IDs and the list of entry keys.
 	///
-	/// - param kvdbId ID of the KVDB database to delete from
-	/// - param keys vector of the keys of the KVDB entries to delete
+	/// - Parameter kvdbId: ID of the KVDB database to delete from
+	/// - Parameter keys: vector of the keys of the KVDB entries to delete
 	///
 	/// - Returns: map with the statuses of deletion for every key
 	public func deleteEntries(
