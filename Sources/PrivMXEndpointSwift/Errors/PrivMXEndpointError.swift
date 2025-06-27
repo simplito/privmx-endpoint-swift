@@ -229,28 +229,28 @@ public enum PrivMXEndpointError : Error{
 	
 	/// Failed to instantiate `KvdbApi`
 	case failedInstantiatingKvdbApi(privmx.InternalError)
-	/// Failed to create a Kvdb
+	/// Failed to create a KVDB
 	case failedCreatingKvdb(privmx.InternalError)
-	/// Failed to update a Kvdb
+	/// Failed to update a KVDB
 	case failedUpdatingKvdb(privmx.InternalError)
-	/// Failed to delete a Kvdb
+	/// Failed to delete a KVDB
 	case failedDeletingKvdb(privmx.InternalError)
-	/// Falied to get a Kvdb
+	/// Falied to get a KVDB
 	case failedGettingKvdb(privmx.InternalError)
-	/// Falied to list Kvdbs
+	/// Falied to list KVDBs
 	case failedListingKvdbs(privmx.InternalError)
 	
-	/// Falied to get an Item
+	/// Falied to get an KVDB Entry
 	case failedGettingKvdbEntry(privmx.InternalError)
-	/// Falied to list Items
+	/// Falied to list KVDB Entries
 	case failedListingKvdbEntries(privmx.InternalError)
-	/// Falied to list Item Keys
+	/// Falied to list KVDB Entries Keys
 	case failedListingKvdbEntriesKeys(privmx.InternalError)
-	/// Falied to set an Item
+	/// Falied to set an KVDB Entry
 	case failedSettingKvdbEntry(privmx.InternalError)
-	/// Falied to delete an Item
+	/// Falied to delete an KVDB Entry
 	case failedDeletingKvdbEntry(privmx.InternalError)
-	/// Falied to delete Items
+	/// Falied to delete KVDB Entries
 	case failedDeletingKvdbEntries(privmx.InternalError)
 	
 	/// Gets the Message of the error
