@@ -240,6 +240,8 @@ public enum PrivMXEndpointError : Error{
 	/// Falied to list KVDBs
 	case failedListingKvdbs(privmx.InternalError)
 	
+	/// Failed to check if a KVDB Entry exists
+	case failedCheckingIfEntryExists(privmx.InternalError)
 	/// Falied to get an KVDB Entry
 	case failedGettingKvdbEntry(privmx.InternalError)
 	/// Falied to list KVDB Entries
@@ -330,6 +332,7 @@ public enum PrivMXEndpointError : Error{
 					.failedListingKvdbs(let err),
 					.failedSettingKvdbEntry(let err),
 					.failedGettingKvdbEntry(let err),
+					.failedCheckingIfEntryExists(let err),
 					.failedListingKvdbEntries(let err),
 					.failedListingKvdbEntriesKeys(let err),
 					.failedDeletingKvdbEntry(let err),
@@ -447,6 +450,7 @@ public enum PrivMXEndpointError : Error{
 					.failedListingKvdbs(let err),
 					.failedSettingKvdbEntry(let err),
 					.failedGettingKvdbEntry(let err),
+					.failedCheckingIfEntryExists(let err),
 					.failedListingKvdbEntries(let err),
 					.failedListingKvdbEntriesKeys(let err),
 					.failedDeletingKvdbEntry(let err),
@@ -564,6 +568,7 @@ public enum PrivMXEndpointError : Error{
 					.failedListingKvdbs(let err),
 					.failedSettingKvdbEntry(let err),
 					.failedGettingKvdbEntry(let err),
+					.failedCheckingIfEntryExists(let err),
 					.failedListingKvdbEntries(let err),
 					.failedListingKvdbEntriesKeys(let err),
 					.failedDeletingKvdbEntry(let err),
@@ -680,6 +685,7 @@ public enum PrivMXEndpointError : Error{
 					.failedListingKvdbs(let err),
 					.failedSettingKvdbEntry(let err),
 					.failedGettingKvdbEntry(let err),
+					.failedCheckingIfEntryExists(let err),
 					.failedListingKvdbEntries(let err),
 					.failedListingKvdbEntriesKeys(let err),
 					.failedDeletingKvdbEntry(let err),
@@ -794,6 +800,7 @@ public enum PrivMXEndpointError : Error{
 					.failedListingKvdbs(let err),
 					.failedSettingKvdbEntry(let err),
 					.failedGettingKvdbEntry(let err),
+					.failedCheckingIfEntryExists(let err),
 					.failedListingKvdbEntries(let err),
 					.failedListingKvdbEntriesKeys(let err),
 					.failedDeletingKvdbEntry(let err),

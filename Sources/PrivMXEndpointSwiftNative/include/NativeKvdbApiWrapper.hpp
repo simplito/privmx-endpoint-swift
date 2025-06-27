@@ -44,6 +44,8 @@ public:
 	ResultWithError<endpoint::kvdb::Kvdb> getKvdb(const std::string& kvdbId);
 	ResultWithError<KvdbList> listKvdbs(const std::string& contextId,
 										const endpoint::core::PagingQuery pagingQuery);
+	ResultWithError<bool> hasEntry(const std::string& kvdbId,
+								   const std::string& key);
 	
 	ResultWithError<endpoint::kvdb::KvdbEntry> getEntry(const std::string& kvdbId,
 												  const std::string& key);

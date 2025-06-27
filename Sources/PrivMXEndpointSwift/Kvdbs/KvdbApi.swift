@@ -138,6 +138,30 @@ public class KvdbApi: @unchecked Sendable{
 		}
 	}
 	
+	
+	///Check whether the KVDB entry exists.
+	///
+	/// - Parameter kvdbId: KVDB ID of the KVDB entry to check
+	/// - Parameter key: key of the KVDB entry to check
+	///
+	/// - Returns: 'true' if the KVDB has an entry with given key, 'false' otherwise
+	public func hasEntry(
+		kvdbId: std.string,
+		key: std.string
+	) throws -> Bool {
+		let res = api.hasEntry(kvdbId, key)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedCheckingIfEntryExists(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedCheckingIfEntryExists(err)
+		}
+		return result
+	}
+	
 	///Gets a KVDB by given KVDB ID.
 	///
 	/// - Parameter kvdbId:ID of KVDB to get

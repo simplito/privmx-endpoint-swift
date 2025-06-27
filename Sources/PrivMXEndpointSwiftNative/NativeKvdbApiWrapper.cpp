@@ -197,6 +197,32 @@ ResultWithError<KvdbList> NativeKvdbApiWrapper::listKvdbs(const std::string &con
 	return res;
 }
 
+ResultWithError<bool> NativeKvdbApiWrapper::hasEntry(const std::string& kvdbId,
+													 const std::string& key){
+	ResultWithError<bool> res;
+	try{
+		res.result = getapi()->hasEntry(kvdbId, key);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
 ResultWithError<kvdb::KvdbEntry> NativeKvdbApiWrapper::getEntry(const std::string &kvdbId,
 														  const std::string &key){
 	auto res = ResultWithError<kvdb::KvdbEntry>();
