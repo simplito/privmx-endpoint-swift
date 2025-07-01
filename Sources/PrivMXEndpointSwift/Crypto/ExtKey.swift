@@ -12,7 +12,7 @@ import PrivMXEndpointSwiftNative
 
 /// `ExtKey` is a class representing Extended keys and operations on it.
 ///
-///  This class allows for safely using the underaying `privmx.endpoint.crypto.ExtKey`
+///  This class allows for safely using the underlying `privmx.endpoint.crypto.ExtKey`
 public class ExtKey{
 	internal var wrapped: privmx.endpoint.crypto.ExtKey
 	
