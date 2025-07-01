@@ -30,6 +30,7 @@ ResultWithError<std::string> NativeBackendRequesterWrapper::backendRequest(
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -61,6 +62,7 @@ ResultWithError<std::string> NativeBackendRequesterWrapper::backendRequest(
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -98,6 +100,7 @@ ResultWithError<std::string> NativeBackendRequesterWrapper::backendRequest(
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};

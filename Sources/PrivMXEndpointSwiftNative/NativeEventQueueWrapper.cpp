@@ -25,6 +25,7 @@ ResultWithError<NativeEventQueueWrapper> NativeEventQueueWrapper::getInstance(){
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -50,6 +51,7 @@ ResultWithError<core::EventHolder> NativeEventQueueWrapper::waitEvent(){
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -75,6 +77,7 @@ ResultWithError<std::optional<core::EventHolder>> NativeEventQueueWrapper::getEv
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -100,6 +103,7 @@ ResultWithError<nullptr_t> NativeEventQueueWrapper::emitBreakEvent(){
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};

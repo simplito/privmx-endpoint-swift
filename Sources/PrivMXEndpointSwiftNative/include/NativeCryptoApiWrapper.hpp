@@ -136,6 +136,18 @@ public:
 	/// Generates a key for symmetric encryption
 	ResultWithError<endpoint::core::Buffer> generateKeySymmetric();
 	
+	ResultWithError<std::string> convertPGPAsn1KeyToBase58DERKey(const std::string& pgpKey);
+	ResultWithError<endpoint::crypto::BIP39_t> generateBip39(std::size_t strength,
+															 const std::string& password = std::string());
+	ResultWithError<endpoint::crypto::BIP39_t> fromMnemonic(const std::string& mnemonic,
+															const std::string& password = std::string());
+	ResultWithError<endpoint::crypto::BIP39_t> fromEntropy(const endpoint::core::Buffer& entropy,
+														   const std::string& password = std::string());
+	ResultWithError<std::string> entropyToMnemonic(const endpoint::core::Buffer& entropy);
+	ResultWithError<endpoint::core::Buffer> mnemonicToEntropy(const std::string& mnemonic);
+	ResultWithError<endpoint::core::Buffer> mnemonicToSeed(const std::string& mnemonic,
+														   const std::string& password = std::string());
+	
 private:
 	std::shared_ptr<endpoint::crypto::CryptoApi> api;
 	
