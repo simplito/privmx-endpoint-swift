@@ -64,7 +64,7 @@ public class KvdbApi: @unchecked Sendable{
 		managers: privmx.UserWithPubKeyVector,
 		publicMeta: privmx.endpoint.core.Buffer,
 		privateMeta: privmx.endpoint.core.Buffer,
-		policies: privmx.OptionalContainerPolicy
+		policies: privmx.OptionalContainerPolicy = nil
 	) throws -> std.string {
 		let res = api.createKvdb(
 			contextId,
@@ -108,7 +108,7 @@ public class KvdbApi: @unchecked Sendable{
 		version: Int64,
 		force:Bool,
 		forceGenerateNewKey:Bool,
-		policies:privmx.OptionalContainerPolicy
+		policies:privmx.OptionalContainerPolicy = nil
 	) throws -> Void {
 		let res = api.updateKvdb(
 			kvdbId,
@@ -307,7 +307,7 @@ public class KvdbApi: @unchecked Sendable{
 		publicMeta: privmx.endpoint.core.Buffer,
 		privateMeta: privmx.endpoint.core.Buffer,
 		data: privmx.endpoint.core.Buffer,
-		version: Int64
+		version: Int64 = 0
 	) throws -> Void {
 		let res = api.setEntry(kvdbId,
 							  key,
