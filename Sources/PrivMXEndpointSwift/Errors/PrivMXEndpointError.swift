@@ -45,6 +45,7 @@ public enum PrivMXEndpointError : Error{
 	case failedDisconnecting(privmx.InternalError)
 	/// Failed to list Contexts.
 	case failedListingContexts(privmx.InternalError)
+
 	/// Failed to get a list of Users from a Context.
 	case failedGettingContextUsers(privmx.InternalError)
 	
