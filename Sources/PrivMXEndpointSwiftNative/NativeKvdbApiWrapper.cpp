@@ -43,7 +43,7 @@ ResultWithError<NativeKvdbApiWrapper> NativeKvdbApiWrapper::create(NativeConnect
 	return res;
 }
 
-ResultWithError<std::string> NativeKvdbApiWrapper::createKvdb(const std::string& kvdbId,
+ResultWithError<std::string> NativeKvdbApiWrapper::createKvdb(const std::string& contextId,
 															  const UserWithPubKeyVector& users,
 															  const UserWithPubKeyVector& managers,
 															  const endpoint::core::Buffer& publicMeta,
@@ -51,7 +51,7 @@ ResultWithError<std::string> NativeKvdbApiWrapper::createKvdb(const std::string&
 															  const OptionalContainerPolicy& policies){
 	auto res = ResultWithError<std::string>();
 	try{
-		res.result = getapi()->createKvdb(kvdbId,
+		res.result = getapi()->createKvdb(contextId,
 										  users,
 										  managers,
 										  publicMeta,

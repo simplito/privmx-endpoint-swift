@@ -64,15 +64,21 @@ public class KvdbApi: @unchecked Sendable{
 		managers: privmx.UserWithPubKeyVector,
 		publicMeta: privmx.endpoint.core.Buffer,
 		privateMeta: privmx.endpoint.core.Buffer,
-		policies: privmx.OptionalContainerPolicy = nil
+		policies: privmx.endpoint.core.ContainerPolicy? = nil
 	) throws -> std.string {
+		
+		var optPolicies = privmx.OptionalContainerPolicy()
+		if let policies{
+			optPolicies = privmx.makeOptional(policies)
+		}
+		
 		let res = api.createKvdb(
 			contextId,
 			users,
 			managers,
 			publicMeta,
 			privateMeta,
-			policies)
+			optPolicies)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedCreatingKvdb(res.error.value!)
 		}
