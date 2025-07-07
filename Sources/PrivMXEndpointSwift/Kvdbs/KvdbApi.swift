@@ -114,8 +114,14 @@ public class KvdbApi: @unchecked Sendable{
 		version: Int64,
 		force:Bool,
 		forceGenerateNewKey:Bool,
-		policies:privmx.OptionalContainerPolicy = nil
+		policies:privmx.endpoint.core.ContainerPolicy? = nil
 	) throws -> Void {
+		
+		var op = privmx.OptionalContainerPolicy()
+		if let policies{
+			op = privmx.makeOptional(policies)
+		}
+		
 		let res = api.updateKvdb(
 			kvdbId,
 			users,
@@ -125,7 +131,7 @@ public class KvdbApi: @unchecked Sendable{
 			version,
 			force,
 			forceGenerateNewKey,
-			policies)
+			op)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUpdatingKvdb(res.error.value!)
 		}
