@@ -15,6 +15,7 @@
 #include <optional>
 #include <string>
 #include <vector>
+#include <map>
 #include <memory>
 #include <utility>
 
@@ -58,7 +59,11 @@
 #include "privmx/endpoint/event/EventException.hpp"
 #include "privmx/endpoint/event/Types.hpp"
 
-
+#include "privmx/endpoint/kvdb/Types.hpp"
+#include "privmx/endpoint/kvdb/KvdbException.hpp"
+#include "privmx/endpoint/kvdb/KvdbApi.hpp"
+#include "privmx/endpoint/kvdb/Events.hpp"
+#include "privmx/endpoint/kvdb/Constants.hpp"
 
 namespace privmx {
 
@@ -86,6 +91,8 @@ using OptionalString = std::optional<std::string>;
 using UserWithPubKeyVector = std::vector<endpoint::core::UserWithPubKey>;
 using UserInfoVector = std::vector<endpoint::core::UserInfo>;
 
+using KvdbKey = std::string;
+
 using OptionalInboxFilesConfig = std::optional<endpoint::inbox::FilesConfig>;
 
 using OptionalItemPolicy = std::optional<endpoint::core::ItemPolicy>;
@@ -100,7 +107,13 @@ using FileList = endpoint::core::PagingList<endpoint::store::File>;
 using InboxList = endpoint::core::PagingList<endpoint::inbox::Inbox>;
 using InboxEntryList = endpoint::core::PagingList<endpoint::inbox::InboxEntry>;
 
+using StringList = endpoint::core::PagingList<std::string>;
+
+using KvdbList = endpoint::core::PagingList<endpoint::kvdb::Kvdb>;
+using KvdbEntryList = endpoint::core::PagingList<endpoint::kvdb::KvdbEntry>;
+
 using BoolVector = std::vector<bool>;
+using StringBoolMap = std::map<std::string,bool>;
 using VerificationRequestVector = std::vector<endpoint::core::VerificationRequest>;
 
 using OptionalCUnsignedInt = std::optional<uint32_t>;
@@ -114,6 +127,7 @@ struct VerificationResult{
 	/// Vector holding results of the verification
 	BoolVector resultVector;
 };
+
 
 /**
  * Verifies whether the specified users are valid.

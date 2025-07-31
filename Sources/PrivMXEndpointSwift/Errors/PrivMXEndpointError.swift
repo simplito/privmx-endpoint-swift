@@ -24,211 +24,254 @@ public enum PrivMXEndpointError : Error{
 	
 	/// Failed to generate Symmetric Key
 	case failedGeneratingSymmetricKey(privmx.InternalError)
-	/// Failed to encrypt
+	/// Failed to encrypt data.
 	case failedEncrypting(privmx.InternalError)
-	/// Failed to decrypt
+	/// Failed to decrypt data.
 	case failedDecrypting(privmx.InternalError)
-	/// Failed to sign
+	/// Failed to sign data.
 	case failedSigning(privmx.InternalError)
-	/// Failed to verify Signature
+	/// Failed to verify Signature.
 	case failedVerifyingSignature(privmx.InternalError)
-	/// Failed to create a Public Key
+	/// Failed to create a Public Key.
 	case failedGeneratingPubKey(privmx.InternalError)
-	/// Failed to create a Private Key
+	/// Failed to create a Private Key.
 	case failedGeneratingPrivKey(privmx.InternalError)
-	/// Failed to convert a Key to WIF
+	/// Failed to convert a Key to WIF.
 	case failedConvertingKeyToWIF(privmx.InternalError)
 	
-	/// Failed to connect
+	/// Failed to connect.
 	case failedConnecting(privmx.InternalError)
-	/// Failed to disconnect
+	/// Failed to disconnect.
 	case failedDisconnecting(privmx.InternalError)
-	/// Failed to list Contexts
+	/// Failed to list Contexts.
 	case failedListingContexts(privmx.InternalError)
-	/// Failed to get a list of Users from a Context
+
+	/// Failed to get a list of Users from a Context.
 	case failedGettingContextUsers(privmx.InternalError)
 	
-	/// Failed to instantiate `ThreadApi`
+	/// Failed to instantiate `ThreadApi`.
 	case failedInstantiatingThreadApi(privmx.InternalError)
-	/// Failed to create a Thread
+	/// Failed to create a Thread.
 	case failedCreatingThread(privmx.InternalError)
-	/// Failed to get a Thread
+	/// Failed to get a Thread.
 	case failedGettingThread(privmx.InternalError)
-	/// Failed to list Threads
+	/// Failed to list Threads.
 	case failedListingThreads(privmx.InternalError)
-	/// Failed to get a Message
+	/// Failed to get a Message.
 	case failedGettingMessage(privmx.InternalError)
-	/// Failed to list Messages
+	/// Failed to list Messages.
 	case failedListingMessages(privmx.InternalError)
-	/// Failed to create a Message
+	/// Failed to create a Message.
 	case failedCreatingMessage(privmx.InternalError)
-	/// Failed to update a Thread
+	/// Failed to update a Thread.
 	case failedUpdatingThread(privmx.InternalError)
-	/// Failed to update a Message
+	/// Failed to update a Message.
 	case failedUpdatingMessage(privmx.InternalError)
 	
-	/// Failed to instantiate `StoreApi`
+	/// Failed to instantiate `StoreApi`.
 	case failedInstantiatingStoreApi(privmx.InternalError)
-	/// Failed to list Stores
+	/// Failed to list Stores.
 	case failedListingStores(privmx.InternalError)
-	/// Failed to get a Store
+	/// Failed to get a Store.
 	case failedGettingStore(privmx.InternalError)
-	/// Failed to create a Store
+	/// Failed to create a Store.
 	case failedCreatingStore(privmx.InternalError)
-	/// Failed to update a Store
+	/// Failed to update a Store.
 	case failedUpdatingStore(privmx.InternalError)
 	
-	/// Failed to get a File
+	/// Failed to get a File.
 	case failedGettingFile(privmx.InternalError)
-	/// Failed to list Files
+	/// Failed to list Files.
 	case failedListingFiles(privmx.InternalError)
-	/// Failed to create a File
+	/// Failed to create a File.
 	case failedCreatingFile(privmx.InternalError)
-	/// Failed to update a File
+	/// Failed to update a File.
 	case failedUpdatingFile(privmx.InternalError)
-	/// Failed to open a File
+	/// Failed to open a File.
 	case failedOpeningFile(privmx.InternalError)
-	/// Failed to read from a File
+	/// Failed to read from a File.
 	case failedReadingFromFile(privmx.InternalError)
-	/// Failed to seek in a File
+	/// Failed to seek in a File.
 	case failedSeekingInFile(privmx.InternalError)
-	/// Failed to write to a File
+	/// Failed to write to a File.
 	case failedWritingToFile(privmx.InternalError)
-	/// Failed to close a File
+	/// Failed to close a File.
 	case failedClosingFile(privmx.InternalError)
-	/// Failed to delete a File
+	/// Failed to delete a File.
 	case failedDeletingFile(privmx.InternalError)
 	
-	/// Failed to instantiate `InboxApi`
+	/// Failed to instantiate `InboxApi`.
 	case failedInstantiatingInboxApi(privmx.InternalError)
-	/// Failed to create an Inbox
+	/// Failed to create an Inbox.
 	case failedCreatingInbox(privmx.InternalError)
-	/// Failed to update an Inbox
+	/// Failed to update an Inbox.
 	case failedUpdatingInbox(privmx.InternalError)
-	/// Failed to delete an Inbox
+	/// Failed to delete an Inbox.
 	case failedDeletingInbox(privmx.InternalError)
-	/// Failed to get an Inbox
+	/// Failed to get an Inbox.
 	case failedGettingInbox(privmx.InternalError)
-	/// Failed to get a Public View of an Inbox
+	/// Failed to get a Public View of an Inbox.
 	case failedGettingInboxPublicView(privmx.InternalError)
-	/// Failed to list Inboxes
+	/// Failed to list Inboxes.
 	case failedListingInboxes(privmx.InternalError)
 	
-	/// Failed to prepare an Entry
+	/// Failed to prepare an Entry.
 	case failedPreparingEntry(privmx.InternalError)
-	/// Failed to send an Entry
+	/// Failed to send an Entry.
 	case failedSendingEntry(privmx.InternalError)
-	/// Failed to read an Entry
+	/// Failed to read an Entry.
 	case failedReadingEntry(privmx.InternalError)
-	/// Failed to delete an Entry
+	/// Failed to delete an Entry.
 	case failedDeletingEntry(privmx.InternalError)
-	/// Failed to list Entries
+	/// Failed to list Entries.
 	case failedListingEntries(privmx.InternalError)
 	
-	/// Failed to create a File Handle
+	/// Failed to create a File Handle.
 	case failedCreatingFileHandle(privmx.InternalError)
 	
-	/// Failed to wait for an Event
+	/// Failed to wait for an Event.
 	case failedWaitingForEvent(privmx.InternalError)
-	/// Failed to get an Event
+	/// Failed to get an Event.
 	case failedGettingEvent(privmx.InternalError)
 	
-	/// Failed to subscribe for Events
+	/// Failed to subscribe for Events.
 	case failedSubscribingForEvents(privmx.InternalError)
-	/// Failed to unsubscribe from Events
+	/// Failed to unsubscribe from Events.
 	case failedUnsubscribingFromEvents(privmx.InternalError)
 	
-	/// Failed to delete a Thread
+	/// Failed to delete a Thread.
 	case failedDeletingThread(privmx.InternalError)
-	/// Failed to delete a Message
+	/// Failed to delete a Message.
 	case failedDeletingMessage(privmx.InternalError)
-	/// Failed to delete a Store
+	/// Failed to delete a Store.
 	case failedDeletingStore(privmx.InternalError)
 	
-	/// Failed to query and `EventHolder`
+	/// Failed to query and `EventHolder`.
 	case failedQueryingEventHolder(privmx.InternalError)
-	/// Failed to extract an Event from an `EventHolder`
+	/// Failed to extract an Event from an `EventHolder`.
 	case failedExtractingEventFromHolder(privmx.InternalError)
 	
-	/// Failed to set Certificates
+	/// Failed to set Certificates.
 	case failedSettingCerts(privmx.InternalError)
 	
-	/// Failed to instantiate `EventQueue`
+	/// Failed to instantiate `EventQueue`.
 	case failedInstantiatingEventQueue(privmx.InternalError)
-	/// Failed to emit `LibBreakEvent`
+	/// Failed to emit `LibBreakEvent`.
 	case failedEmittingBreakEvent(privmx.InternalError)
 	
-	/// Failed to send a request to the backend
+	/// Failed to send a request to the backend.
 	case failedRequestingBackend(privmx.InternalError)
 	
-	/// Failed to instantiate `EventApi`
+	/// Failed to instantiate `EventApi`.
 	case failedInstantiatingEventApi(privmx.InternalError)
 	
-	/// Failed to emit a `CustomEvent`
+	/// Failed to emit a `CustomEvent`.
 	case failedEmittingCustomEvent(privmx.InternalError)
 
-	/// Failed to subscribe for Custom Events
+	/// Failed to subscribe for Custom Events.
 	case failedSubscribingForCustomEvents(privmx.InternalError)
 	
-	/// Failed to subscribe for Custom Events
+	/// Failed to subscribe for Custom Events.
 	case failedUnsubscribingFromCustomEvents(privmx.InternalError)
 	
+	/// Failed to set a User Verifier.
 	case failedSettingUserVerifier(privmx.InternalError)
 	
- 	/// Failed to instantiate ExtKey
+ 	/// Failed to instantiate ExtKey.
 	case failedInstantiatingExtKey(privmx.InternalError)
-	/// Failed to derive ExtKey
+	/// Failed to derive ExtKey.
 	case failedDerivingExtKey(privmx.InternalError)
-	/// Failed to get private part as Base58
+	/// Failed to get private part as Base58.
 	case failedGettingPrivatePartAsBase58(privmx.InternalError)
-	/// Failed to get public part as Base58
+	/// Failed to get public part as Base58.
 	case failedGettingPublicPartAsBase58(privmx.InternalError)
-	/// Failed to get private key
+	/// Failed to get private key.
 	case failedGettingPrivateKey(privmx.InternalError)
-	/// Failed to get public key
+	/// Failed to get public key.
 	case failedGettingPublicKey(privmx.InternalError)
-	/// Failed to get public key as Base58 Address
+	/// Failed to get public key as Base58 Address.
 	case failedGettingPublicKeyAsBase58Address(privmx.InternalError)
-	/// Failed to get private Enc key
+	/// Failed to get private Enc key.
 	case failedGettingPrivateEncKey(privmx.InternalError)
-	/// Failed to get chain code
+	/// Failed to get chain code.
 	case failedGettingChainCode(privmx.InternalError)
-	/// Failed to verify compact signature
+	/// Failed to verify compact signature.
 	case failedVerifyingCompactSignature(privmx.InternalError)
-	/// Failed to check if ExtKey is private
+	/// Failed to check if ExtKey is private.
 	case failedCheckingIfExtKeyIsPrivate(privmx.InternalError)
 
-	/// Failed to convert a PGP Asn1 key to Base58DER
+	/// Failed to convert a PGP Asn1 key to Base58DER.
 	case failedConvertingKeyToBase58DER(privmx.InternalError)
 	
-	/// Failed to generate a BIP39 instance
+	/// Failed to generate a BIP39 instance.
 	case failedGeneratingBIP39(privmx.InternalError)
 	
-	/// Failed to convert Entropy to a Mnemonic
+	/// Failed to convert Entropy to a Mnemonic.
 	case failedConvertingEntropyToMnemonic(privmx.InternalError)
 	
-	/// Failed to convert a Mnemonic to Entropy
+	/// Failed to convert a Mnemonic to Entropy.
 	case failedConvertingMnemonicToEntropy(privmx.InternalError)
 	
-	/// Failed to generate a Seed for BIP39 Key from a Mnemonic
+	/// Failed to generate a Seed for BIP39 Key from a Mnemonic.
 	case failedGeneratingSeedFromMnemonic(privmx.InternalError)
 	
+	/// Failed to encode data to Hex.
 	case failedEncodingToHex(privmx.InternalError)
+	/// Failed to encode data to Base64.
 	case failedEncodingToBase64(privmx.InternalError)
+	/// Failed to encode data to Base32.
 	case failedEncodingToBase32(privmx.InternalError)
+	/// Failed to decode from Hex.
 	case failedDecodingFromHex(privmx.InternalError)
+	/// Failed to decode from Base64.
 	case failedDecodingFromBase64(privmx.InternalError)
+	/// Failed to decode from Base32.
 	case failedDecodingFromBase32(privmx.InternalError)
+	/// Failed to check if the string is in Hex.
 	case failedCheckingifStringIsHex(privmx.InternalError)
+	/// Failed to check if the string is in Base64.
 	case failedCheckingifStringIsBase64(privmx.InternalError)
+	/// Failed to check if the string is in Base32.
 	case failedCheckingifStringIsBase32(privmx.InternalError)
+	/// Failed to trim the string.
 	case failedTrimmingString(privmx.InternalError)
+	/// Failed to split the string.
 	case failedSplittingString(privmx.InternalError)
 	
-	/// Gets the Message of the error
+	/// Failed to instantiate `KvdbApi`.
+	case failedInstantiatingKvdbApi(privmx.InternalError)
+	/// Failed to create a KVDB.
+	case failedCreatingKvdb(privmx.InternalError)
+	/// Failed to update a KVDB.
+	case failedUpdatingKvdb(privmx.InternalError)
+	/// Failed to delete a KVDB.
+	case failedDeletingKvdb(privmx.InternalError)
+	/// Falied to get a KVDB.
+	case failedGettingKvdb(privmx.InternalError)
+	/// Falied to list KVDBs.
+	case failedListingKvdbs(privmx.InternalError)
+	
+	/// Failed to check if a KVDB Entry exists.
+	case failedCheckingIfEntryExists(privmx.InternalError)
+	/// Falied to get an KVDB Entry.
+	case failedGettingKvdbEntry(privmx.InternalError)
+	/// Falied to list KVDB Entries.
+	case failedListingKvdbEntries(privmx.InternalError)
+	/// Falied to list KVDB Entries Keys.
+	case failedListingKvdbEntriesKeys(privmx.InternalError)
+	/// Falied to set an KVDB Entry.
+	case failedSettingKvdbEntry(privmx.InternalError)
+	/// Falied to delete an KVDB Entry.
+	case failedDeletingKvdbEntry(privmx.InternalError)
+	/// Falied to delete KVDB Entries.
+	case failedDeletingKvdbEntries(privmx.InternalError)
+	
+  
+	/// Gets the Message of the error.
 	///
 	///  - Returns: Message of the error
-	public func getMessage() -> String{
+	public func getMessage(
+	) -> String {
 		switch self{
 			case .failedUpdatingMessage(let err),
 					.failedGettingConnectionId(let err),
@@ -294,6 +337,19 @@ public enum PrivMXEndpointError : Error{
 					.failedGeneratingSymmetricKey(let err),
 					.failedVerifyingSignature(let err),
 					.failedCreatingFileHandle(let err),
+					.failedInstantiatingKvdbApi(let err),
+					.failedCreatingKvdb(let err),
+					.failedUpdatingKvdb(let err),
+					.failedDeletingKvdb(let err),
+					.failedGettingKvdb(let err),
+					.failedListingKvdbs(let err),
+					.failedSettingKvdbEntry(let err),
+					.failedGettingKvdbEntry(let err),
+					.failedCheckingIfEntryExists(let err),
+					.failedListingKvdbEntries(let err),
+					.failedListingKvdbEntriesKeys(let err),
+					.failedDeletingKvdbEntry(let err),
+					.failedDeletingKvdbEntries(let err),
 					.failedInstantiatingEventApi(let err),
 					.failedEmittingCustomEvent(let err),
 					.failedSubscribingForCustomEvents(let err),
@@ -330,10 +386,12 @@ public enum PrivMXEndpointError : Error{
 		}
 	}
 	
-	/// Gets the Code of the error, if it exists
+	/// Gets the Code of the error, if it exists.
 	///
 	///  - Returns: Code of the internal error, or nil
-	public func getCode() -> CUnsignedInt?{
+	public func getCode(
+		
+	) -> CUnsignedInt? {
 		switch self{
 			case .failedUpdatingMessage(let err),
 					.failedGettingConnectionId(let err),
@@ -399,6 +457,19 @@ public enum PrivMXEndpointError : Error{
 					.failedGeneratingSymmetricKey(let err),
 					.failedVerifyingSignature(let err),
 					.failedCreatingFileHandle(let err),
+					.failedInstantiatingKvdbApi(let err),
+					.failedCreatingKvdb(let err),
+					.failedUpdatingKvdb(let err),
+					.failedDeletingKvdb(let err),
+					.failedGettingKvdb(let err),
+					.failedListingKvdbs(let err),
+					.failedSettingKvdbEntry(let err),
+					.failedGettingKvdbEntry(let err),
+					.failedCheckingIfEntryExists(let err),
+					.failedListingKvdbEntries(let err),
+					.failedListingKvdbEntriesKeys(let err),
+					.failedDeletingKvdbEntry(let err),
+					.failedDeletingKvdbEntries(let err),
 					.failedInstantiatingEventApi(let err),
 					.failedEmittingCustomEvent(let err),
 					.failedSubscribingForCustomEvents(let err),
@@ -435,10 +506,11 @@ public enum PrivMXEndpointError : Error{
 		}
 	}
 	
-	/// Gets the Name of the error
+	/// Gets the Name of the error.
 	///
 	///  - Returns: Name of the error
-	public func getName() -> String{
+	public func getName(
+	) -> String {
 		switch self{
 			case .failedUpdatingMessage(let err),
 					.failedGettingConnectionId(let err),
@@ -504,6 +576,19 @@ public enum PrivMXEndpointError : Error{
 					.failedGeneratingSymmetricKey(let err),
 					.failedVerifyingSignature(let err),
 					.failedCreatingFileHandle(let err),
+					.failedInstantiatingKvdbApi(let err),
+					.failedCreatingKvdb(let err),
+					.failedUpdatingKvdb(let err),
+					.failedDeletingKvdb(let err),
+					.failedGettingKvdb(let err),
+					.failedListingKvdbs(let err),
+					.failedSettingKvdbEntry(let err),
+					.failedGettingKvdbEntry(let err),
+					.failedCheckingIfEntryExists(let err),
+					.failedListingKvdbEntries(let err),
+					.failedListingKvdbEntriesKeys(let err),
+					.failedDeletingKvdbEntry(let err),
+					.failedDeletingKvdbEntries(let err),
 					.failedInstantiatingEventApi(let err),
 					.failedEmittingCustomEvent(let err),
 					.failedSubscribingForCustomEvents(let err),
@@ -539,10 +624,12 @@ public enum PrivMXEndpointError : Error{
 				return String(err.name)
 		}
 	}
-	/// Gets the Description of the error
+	
+	/// Gets the Description of the error.
 	///
 	///  - Returns: Description of the error
-	public func getDescription() -> String{
+	public func getDescription(
+	) -> String {
 		switch self{
 			case .failedUpdatingMessage(let err),
 					.failedGettingConnectionId(let err),
@@ -608,6 +695,19 @@ public enum PrivMXEndpointError : Error{
 					.failedGeneratingSymmetricKey(let err),
 					.failedVerifyingSignature(let err),
 					.failedCreatingFileHandle(let err),
+					.failedInstantiatingKvdbApi(let err),
+					.failedCreatingKvdb(let err),
+					.failedUpdatingKvdb(let err),
+					.failedDeletingKvdb(let err),
+					.failedGettingKvdb(let err),
+					.failedListingKvdbs(let err),
+					.failedSettingKvdbEntry(let err),
+					.failedGettingKvdbEntry(let err),
+					.failedCheckingIfEntryExists(let err),
+					.failedListingKvdbEntries(let err),
+					.failedListingKvdbEntriesKeys(let err),
+					.failedDeletingKvdbEntry(let err),
+					.failedDeletingKvdbEntries(let err),
 					.failedInstantiatingEventApi(let err),
 					.failedEmittingCustomEvent(let err),
 					.failedSubscribingForCustomEvents(let err),
@@ -644,10 +744,11 @@ public enum PrivMXEndpointError : Error{
 		}
 	}
 	
-	/// Gets the Scope of the error as a String
+	/// Gets the Scope of the error as a String.
 	///
 	///  - Returns: Scope of the error
-	public func getScope() -> String?{
+	public func getScope(
+	) -> String? {
 		switch self{
 			case .failedUpdatingMessage(let err),
 					.failedGettingConnectionId(let err),
@@ -710,6 +811,19 @@ public enum PrivMXEndpointError : Error{
 					.failedReadingEntry(let err),
 					.failedDeletingEntry(let err),
 					.failedListingEntries(let err),
+					.failedInstantiatingKvdbApi(let err),
+					.failedCreatingKvdb(let err),
+					.failedUpdatingKvdb(let err),
+					.failedDeletingKvdb(let err),
+					.failedGettingKvdb(let err),
+					.failedListingKvdbs(let err),
+					.failedSettingKvdbEntry(let err),
+					.failedGettingKvdbEntry(let err),
+					.failedCheckingIfEntryExists(let err),
+					.failedListingKvdbEntries(let err),
+					.failedListingKvdbEntriesKeys(let err),
+					.failedDeletingKvdbEntry(let err),
+					.failedDeletingKvdbEntries(let err),
 					.failedGeneratingSymmetricKey(let err),
 					.failedVerifyingSignature(let err),
 					.failedCreatingFileHandle(let err),
