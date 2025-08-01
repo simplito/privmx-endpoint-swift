@@ -373,52 +373,67 @@ public class KvdbApi: @unchecked Sendable{
 		return result
 	}
 	
-	/// Subscribes for the KVDB module main events.
+	/// Subscribe for the Kvdb events on the given subscription query.
 	///
-	/// - Throws: `PrivMXEndpointError.failedSubscribingForEvents` if the operation fails.
-	public func subscribeForKvdbEvents(
-	) throws -> Void {
-		let res = api.subscribeForKvdbEvents()
+	/// - Parameter subscriptionQueries: list of queries
+	///
+	/// - Throws: When subscribing for events fails.
+	///
+	/// - Returns: list of subscriptionIds in maching order to subscriptionQueries.
+	public func subscribeFor(
+		subscriptionQueries: privmx.SubscriptionQueryVector
+	) throws -> privmx.SubscriptionIdVector {
+		let res = api.subscribeFor(subscriptionQueries)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
 		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedSubscribingForEvents(err)
+		}
+		return result
 	}
 	
-	/// Unsubscribes from the KVDB module main events.
+	/// Unsubscribe from events for the given subscriptionId.
 	///
-	/// - Throws: `PrivMXEndpointError.failedUnsubscribingFromEvents` if the operation fails.
-	public func unsubscribeFromKvdbEvents(
+	/// - Parameter subscriptionIds: list of subscriptionId
+	///
+	/// - Throws: When unsubscribing fails.
+	public func unsubscribeFrom(
+		subscriptionId: privmx.SubscriptionIdVector
 	) throws -> Void {
-		let res = api.unsubscribeFromKvdbEvents()
+		let res = api.unsubscribeFrom(subscriptionId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
 		}
 	}
 	
-	/// Subscribes for events in given KVDB.
+	/// Generate subscription Query for the Kvdb events.
 	///
-	/// - Parameter kvdbId: ID of the KVDB to subscribe
-	/// - Throws: `PrivMXEndpointError.failedSubscribingForEvents` if the operation fails.
-	public func subscribeForEntryEvents(
-		kvdbId: std.string
-	) throws -> Void {
-		let res = api.subscribeForEntryEvents(kvdbId)
+	/// - Parameter eventType: type of event which you listen for
+	/// - Parameter selectorType: scope on which you listen for events
+	/// - Parameter selectorId: ID of the selector
+	///
+	/// - Throws: When building the subscription Query fails.
+	///
+	/// - Returns: a properly formatted event subscription request.
+	public func buildSubscriptionQuery(
+	eventType: privmx.endpoint.kvdb.EventType,
+	selectorType: privmx.endpoint.kvdb.EventSelectorType,
+	selectorId: std.string
+	) throws -> privmx.SubscriptionQuery {
+		let res = api.buildSubscriptionQuery(eventType, selectorType, selectorId)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
+			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(res.error.value!)
 		}
-	}
-	
-	/// Unsubscribes from events in given KVDB.
-	///
-	/// - Parameter kvdbId: ID of the KVDB to unsubscribe
-	///
-	/// - Throws: `PrivMXEndpointError.failedUnsubscribingFromEvents` if the operation fails.
-	public func unsubscribeFromEntryEvents(
-		kvdbId: std.string
-	) throws -> Void {
-		let res = api.unsubscribeFromEntryEvents(kvdbId)
-		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(err)
 		}
+		return result
 	}
 }

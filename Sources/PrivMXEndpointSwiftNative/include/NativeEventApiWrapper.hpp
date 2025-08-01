@@ -37,7 +37,7 @@ public:
 	 * Unsubscribe from events for the given subscriptionId.
 	 * @param subscriptionIds list of subscriptionId
 	 */
-	void unsubscribeFrom(const SubscriptionIdVector& subscriptionIds);
+	ResultWithError<std::nullptr_t> unsubscribeFrom(const SubscriptionIdVector& subscriptionIds);
 	/**
 	 * Generate subscription Query for the Thread events.
 	 * @param eventType type of event which you listen for

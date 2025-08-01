@@ -346,53 +346,67 @@ public class ThreadApi{
 		}
 	}
 	
-	/// Subscribes to Thread-related events, allowing notifications when Thread changes occur.
+	/// Subscribe for the Thread events on the given subscription query.
 	///
-	/// - Throws: `PrivMXEndpointError.failedSubscribingForEvents` if subscribing to Thread events fails.
-	public func subscribeForThreadEvents(
-	) throws -> Void {
-		let res = api.subscribeForThreadEvents()
+	/// - Parameter subscriptionQueries: list of queries
+	///
+	/// - Throws: When subscribing for events fails.
+	///
+	/// - Returns: list of subscriptionIds in maching order to subscriptionQueries.
+	public func subscribeFor(
+		subscriptionQueries: privmx.SubscriptionQueryVector
+	) throws -> privmx.SubscriptionIdVector {
+		let res = api.subscribeFor(subscriptionQueries)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
 		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedSubscribingForEvents(err)
+		}
+		return result
 	}
 	
-	/// Unsubscribes from Thread-related events.
+	/// Unsubscribe from events for the given subscriptionId.
 	///
-	/// - Throws: `PrivMXEndpointError.failedUnsubscribingFromEvents` if unsubscribing from Thread events fails.
-	public func unsubscribeFromThreadEvents(
+	/// - Parameter subscriptionIds: list of subscriptionId
+	///
+	/// - Throws: When unsubscribing fails.
+	public func unsubscribeFrom(
+		subscriptionId: privmx.SubscriptionIdVector
 	) throws -> Void {
-		let res = api.unsubscribeFromThreadEvents()
+		let res = api.unsubscribeFrom(subscriptionId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
 		}
 	}
 	
-	/// Subscribes to message-related events within a specific Thread, allowing notifications when messages are updated or received.
+	/// Generate subscription Query for the Thread events.
 	///
-	/// - Parameter threadId: The unique identifier of the Thread for which to subscribe to message events.
+	/// - Parameter eventType: type of event which you listen for
+	/// - Parameter selectorType: scope on which you listen for events
+	/// - Parameter selectorId: ID of the selector
 	///
-	/// - Throws: `PrivMXEndpointError.failedSubscribingForEvents` if subscribing to message events fails.
-	public func subscribeForMessageEvents(
-		threadId: std.string
-	) throws -> Void {
-		let res = api.subscribeForMessageEvents(threadId)
+	/// - Throws: When building the subscription Query fails.
+	///
+	/// - Returns: a properly formatted event subscription request.
+	public func buildSubscriptionQuery(
+	eventType: privmx.endpoint.thread.EventType,
+	selectorType: privmx.endpoint.thread.EventSelectorType,
+	selectorId: std.string
+	) throws -> privmx.SubscriptionQuery {
+		let res = api.buildSubscriptionQuery(eventType, selectorType, selectorId)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
+			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(res.error.value!)
 		}
-	}
-	
-	/// Unsubscribes from message-related events within a specific Thread.
-	///
-	/// - Parameter threadId: The unique identifier of the Thread for which to unsubscribe from message events.
-	///
-	/// - Throws: `PrivMXEndpointError.failedUnsubscribingFromEvents` if unsubscribing from message events fails.
-	public func unsubscribeFromMessageEvents(
-		threadId: std.string
-	) throws -> Void {
-		let res = api.unsubscribeFromMessageEvents(threadId)
-		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(err)
 		}
+		return result
 	}
 }
