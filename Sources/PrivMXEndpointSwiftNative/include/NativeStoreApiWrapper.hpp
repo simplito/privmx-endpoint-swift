@@ -237,11 +237,6 @@ public:
 	 */
 	ResultWithError<std::nullptr_t> deleteFile(const std::string& fileId);
 	
-	ResultWithError<std::nullptr_t> subscribeForStoreEvents();
-	ResultWithError<std::nullptr_t> unsubscribeFromStoreEvents();
-	ResultWithError<std::nullptr_t> subscribeForFileEvents(const std::string& storeId);
-	ResultWithError<std::nullptr_t> unsubscribeFromFileEvents(const std::string& storeId);
-	
 private:
 	std::shared_ptr<endpoint::store::StoreApi> getapi(){
 		if (!api) throw NullApiException();

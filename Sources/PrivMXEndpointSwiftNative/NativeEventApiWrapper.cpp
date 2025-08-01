@@ -77,62 +77,6 @@ ResultWithError<std::nullptr_t> NativeEventApiWrapper::emitEvent(const std::stri
 	return res;
 }
 
-ResultWithError<std::nullptr_t> NativeEventApiWrapper::subscribeForCustomEvents(const std::string &contextId,
-																				const std::string &channelName) {
-	auto res = ResultWithError<>();
-	try{
-		getapi()->subscribeForCustomEvents(contextId,
-										   channelName);
-	}catch(core::Exception& err){
-		res.error = {
-			.name = err.getName(),
-			.code = err.getCode(),
-			.scope = err.getScope(),
-			.description = err.getDescription(),
-			.message = err.what()
-		};
-	}catch (std::exception & err) {
-		res.error ={
-			.name = "std::Exception",
-			.message = err.what()
-		};
-	}catch (...) {
-		res.error ={
-			.name = "Unknown Exception",
-			.message = "Failed to work"
-		};
-	}
-	return res;
-}
-
-ResultWithError<std::nullptr_t> NativeEventApiWrapper::unsubscribeFromCustomEvents(const std::string &contextId,
-																				   const std::string &channelName){
-	auto res = ResultWithError<>();
-	try {
-		getapi()->unsubscribeFromCustomEvents(contextId,
-											  channelName);
-	}catch(core::Exception& err){
-		res.error = {
-			.name = err.getName(),
-			.code = err.getCode(),
-			.scope = err.getScope(),
-			.description = err.getDescription(),
-			.message = err.what()
-		};
-	}catch (std::exception & err) {
-		res.error ={
-			.name = "std::Exception",
-			.message = err.what()
-		};
-	}catch (...) {
-		res.error ={
-			.name = "Unknown Exception",
-			.message = "Failed to work"
-		};
-	}
-	return res;
-}
-
 ResultWithError<bool> CustomEventHandler::isContextCustomEvent(const core::EventHolder &eventHolder){
 	auto res = ResultWithError<bool>();
 	try{

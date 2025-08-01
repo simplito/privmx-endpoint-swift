@@ -213,29 +213,6 @@ public:
 	 * @return string ID of closed file
 	 */
 	ResultWithError<std::string> closeFile(const InboxFileHandle fileHandle);
-
-	/**
-	 * Subscribes for the Inbox module main events.
-	 */
-	ResultWithError<nullptr_t> subscribeForInboxEvents();
-
-	/**
-	 * Unsubscribes from the Inbox module main events.
-	 */
-	ResultWithError<nullptr_t> unsubscribeFromInboxEvents();
-
-	/**
-	 * Subscribes for the events in given Inbox
-	 * @param inbox ID of the inbox to subscribe to
-	 */
-	ResultWithError<nullptr_t> subscribeForEntryEvents(const std::string& inboxId);
-
-	/**
-	 * Unsubscribes from the events in given Inbox
-	 * @param inbox ID of the inbox to unsubscribe from
-	 */
-	ResultWithError<nullptr_t> unsubscribeFromEntryEvents(const std::string& inboxId);
-
 	
 private:
 	std::shared_ptr<endpoint::inbox::InboxApi> getapi(){

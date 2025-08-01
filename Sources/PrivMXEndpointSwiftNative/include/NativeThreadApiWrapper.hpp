@@ -166,11 +166,6 @@ public:
 											 const endpoint::core::Buffer& privateMeta,
 											 const endpoint::core::Buffer& data);
 
-	ResultWithError<nullptr_t> subscribeForThreadEvents();
-	ResultWithError<nullptr_t> unsubscribeFromThreadEvents();
-	ResultWithError<nullptr_t> subscribeForMessageEvents(const std::string& threadId);
-	ResultWithError<nullptr_t> unsubscribeFromMessageEvents(const std::string& threadId);
-	
 private:
 	std::shared_ptr<endpoint::thread::ThreadApi> getapi(){
 		if (!api) throw NullApiException();

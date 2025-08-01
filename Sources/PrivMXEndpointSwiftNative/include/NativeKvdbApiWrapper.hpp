@@ -64,11 +64,6 @@ public:
 	ResultWithError<StringBoolMap> deleteEntries(const std::string& kvdbId,
 												const StringVector& keys);
 	
-	ResultWithError<std::nullptr_t> subscribeForKvdbEvents();
-	ResultWithError<std::nullptr_t> unsubscribeFromKvdbEvents();
-	ResultWithError<std::nullptr_t> subscribeForEntryEvents(std::string kvdbId);
-	ResultWithError<std::nullptr_t> unsubscribeFromEntryEvents(std::string kvdbId);
-	
 private:
 	NativeKvdbApiWrapper(NativeConnectionWrapper& connection);
 	NativeKvdbApiWrapper() = default;
