@@ -116,6 +116,10 @@ using BoolVector = std::vector<bool>;
 using StringBoolMap = std::map<std::string,bool>;
 using VerificationRequestVector = std::vector<endpoint::core::VerificationRequest>;
 
+using SubscriptionQuery = std::string;
+using SubscriptionQueryVector = std::vector<SubscriptionQuery>;
+using SubscriptionIdVector = std::vector<std::string>;
+
 using OptionalCUnsignedInt = std::optional<uint32_t>;
 
 struct _verif_request{

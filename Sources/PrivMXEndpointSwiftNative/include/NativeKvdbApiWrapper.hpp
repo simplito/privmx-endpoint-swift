@@ -63,7 +63,29 @@ public:
 											   const std::string& key);
 	ResultWithError<StringBoolMap> deleteEntries(const std::string& kvdbId,
 												const StringVector& keys);
-	
+	/**
+	 * Subscribe for the Thread events on the given subscription query.
+	 *
+	 * @param subscriptionQueries list of queries
+	 * @return list of subscriptionIds in maching order to subscriptionQueries
+	 */
+	ResultWithError<SubscriptionIdVector> subscribeFor(const SubscriptionQueryVector& subscriptionQueries);
+
+	/**
+	 * Unsubscribe from events for the given subscriptionId.
+	 * @param subscriptionIds list of subscriptionId
+	 */
+	void unsubscribeFrom(const SubscriptionIdVector& subscriptionIds);
+	/**
+	 * Generate subscription Query for the Thread events.
+	 * @param eventType type of event which you listen for
+	 * @param selectorType scope on which you listen for events
+	 * @param selectorId ID of the selector
+	 */
+	ResultWithError<SubscriptionQuery> buildSubscriptionQuery(endpoint::kvdb::EventType eventType,
+															  endpoint::kvdb::EventSelectorType selectorType,
+															  const std::string& selectorId);
+
 private:
 	NativeKvdbApiWrapper(NativeConnectionWrapper& connection);
 	NativeKvdbApiWrapper() = default;

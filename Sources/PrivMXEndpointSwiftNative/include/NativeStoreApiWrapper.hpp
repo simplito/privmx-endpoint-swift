@@ -237,6 +237,29 @@ public:
 	 */
 	ResultWithError<std::nullptr_t> deleteFile(const std::string& fileId);
 	
+	/**
+	 * Subscribe for the Thread events on the given subscription query.
+	 *
+	 * @param subscriptionQueries list of queries
+	 * @return list of subscriptionIds in maching order to subscriptionQueries
+	 */
+	ResultWithError<SubscriptionIdVector> subscribeFor(const SubscriptionQueryVector& subscriptionQueries);
+
+	/**
+	 * Unsubscribe from events for the given subscriptionId.
+	 * @param subscriptionIds list of subscriptionId
+	 */
+	void unsubscribeFrom(const SubscriptionIdVector& subscriptionIds);
+	/**
+	 * Generate subscription Query for the Thread events.
+	 * @param eventType type of event which you listen for
+	 * @param selectorType scope on which you listen for events
+	 * @param selectorId ID of the selector
+	 */
+	ResultWithError<SubscriptionQuery> buildSubscriptionQuery(endpoint::store::EventType eventType,
+															  endpoint::store::EventSelectorType selectorType,
+															  const std::string& selectorId);
+
 private:
 	std::shared_ptr<endpoint::store::StoreApi> getapi(){
 		if (!api) throw NullApiException();
