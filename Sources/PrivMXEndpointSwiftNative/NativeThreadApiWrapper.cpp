@@ -346,6 +346,86 @@ ResultWithError<nullptr_t> NativeThreadApiWrapper::updateMessage(const std::stri
 	
 }
 
+ResultWithError<SubscriptionIdVector> NativeThreadApiWrapper::subscribeFor(const SubscriptionQueryVector& subscriptionQueries){
+	ResultWithError<SubscriptionIdVector> res;
+	try {
+		getapi()->subscribeFor(subscriptionQueries);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<std::nullptr_t> NativeThreadApiWrapper::unsubscribeFrom(const SubscriptionIdVector& subscriptionIds){
+	ResultWithError<std::nullptr_t> res;
+	try {
+		getapi()->unsubscribeFrom(subscriptionIds);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<SubscriptionQuery> NativeThreadApiWrapper::buildSubscriptionQuery(endpoint::thread::EventType eventType,
+																				  endpoint::thread::EventSelectorType selectorType,
+																				  const std::string& selectorId){
+	ResultWithError<SubscriptionQuery> res;
+	try {
+		getapi()->buildSubscriptionQuery(eventType, selectorType, selectorId);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
 ResultWithError<bool> ThreadEventHandler::isThreadCreatedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
 	try{

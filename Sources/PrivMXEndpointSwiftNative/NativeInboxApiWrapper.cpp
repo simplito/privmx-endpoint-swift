@@ -20,7 +20,7 @@ NativeInboxApiWrapper::NativeInboxApiWrapper(std::shared_ptr<inbox::InboxApi> _a
 
 ResultWithError<NativeInboxApiWrapper> NativeInboxApiWrapper::create(NativeConnectionWrapper &connection,
 																	 NativeThreadApiWrapper &threadApi,
-																	 NativeStoreApiWrapper &storeApi){
+																	 NativeInboxApiWrapper &storeApi){
 	ResultWithError<NativeInboxApiWrapper> res;
 	try {
 		res.result = NativeInboxApiWrapper(std::make_shared<endpoint::inbox::InboxApi>(endpoint::inbox::InboxApi::create(*(connection.getApi()),
@@ -541,6 +541,87 @@ ResultWithError<std::string> NativeInboxApiWrapper::closeFile(const InboxFileHan
 	}
 	return res;
 }
+
+ResultWithError<SubscriptionIdVector> NativeInboxApiWrapper::subscribeFor(const SubscriptionQueryVector& subscriptionQueries){
+	ResultWithError<SubscriptionIdVector> res;
+	try {
+		res.result = getapi()->subscribeFor(subscriptionQueries);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<std::nullptr_t> NativeInboxApiWrapper::unsubscribeFrom(const SubscriptionIdVector& subscriptionIds){
+	ResultWithError<std::nullptr_t> res;
+	try {
+		getapi()->unsubscribeFrom(subscriptionIds);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<SubscriptionQuery> NativeInboxApiWrapper::buildSubscriptionQuery(endpoint::inbox::EventType eventType,
+																				  endpoint::inbox::EventSelectorType selectorType,
+																				  const std::string& selectorId){
+	ResultWithError<SubscriptionQuery> res;
+	try {
+		res.result = getapi()->buildSubscriptionQuery(eventType, selectorType, selectorId);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
 
 ResultWithError<bool> InboxEventHandler::isInboxCreatedEvent(const endpoint::core::EventHolder& eventHolder){
 	ResultWithError<bool> res;

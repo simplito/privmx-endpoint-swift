@@ -393,6 +393,87 @@ ResultWithError<StringBoolMap> NativeKvdbApiWrapper::deleteEntries(const std::st
 	return res;
 }
 
+ResultWithError<SubscriptionIdVector> NativeKvdbApiWrapper::subscribeFor(const SubscriptionQueryVector& subscriptionQueries){
+	ResultWithError<SubscriptionIdVector> res;
+	try {
+		res.result = getapi()->subscribeFor(subscriptionQueries);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<std::nullptr_t> NativeKvdbApiWrapper::unsubscribeFrom(const SubscriptionIdVector& subscriptionIds){
+	ResultWithError<std::nullptr_t> res;
+	try {
+		getapi()->unsubscribeFrom(subscriptionIds);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<SubscriptionQuery> NativeKvdbApiWrapper::buildSubscriptionQuery(endpoint::kvdb::EventType eventType,
+																				  endpoint::kvdb::EventSelectorType selectorType,
+																				  const std::string& selectorId){
+	ResultWithError<SubscriptionQuery> res;
+	try {
+		res.result = getapi()->buildSubscriptionQuery(eventType, selectorType, selectorId);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+
 ResultWithError<bool> KvdbEventHandler::isKvdbCreatedEvent(const endpoint::core::EventHolder &eventHolder){
 	ResultWithError<bool> res;
 	try{

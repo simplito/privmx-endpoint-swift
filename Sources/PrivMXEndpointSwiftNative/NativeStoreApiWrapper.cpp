@@ -500,6 +500,88 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::deleteStore(const std::st
 	return res;
 }
 
+
+ResultWithError<SubscriptionIdVector> NativeStoreApiWrapper::subscribeFor(const SubscriptionQueryVector& subscriptionQueries){
+	ResultWithError<SubscriptionIdVector> res;
+	try {
+		res.result = getapi()->subscribeFor(subscriptionQueries);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<std::nullptr_t> NativeStoreApiWrapper::unsubscribeFrom(const SubscriptionIdVector& subscriptionIds){
+	ResultWithError<std::nullptr_t> res;
+	try {
+		getapi()->unsubscribeFrom(subscriptionIds);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<SubscriptionQuery> NativeStoreApiWrapper::buildSubscriptionQuery(endpoint::store::EventType eventType,
+																				  endpoint::store::EventSelectorType selectorType,
+																				  const std::string& selectorId){
+	ResultWithError<SubscriptionQuery> res;
+	try {
+		res.result = getapi()->buildSubscriptionQuery(eventType, selectorType, selectorId);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+
 ResultWithError<bool> StoreEventHandler::isStoreCreatedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
 	try{
