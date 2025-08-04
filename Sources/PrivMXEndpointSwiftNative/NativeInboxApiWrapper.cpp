@@ -20,7 +20,7 @@ NativeInboxApiWrapper::NativeInboxApiWrapper(std::shared_ptr<inbox::InboxApi> _a
 
 ResultWithError<NativeInboxApiWrapper> NativeInboxApiWrapper::create(NativeConnectionWrapper &connection,
 																	 NativeThreadApiWrapper &threadApi,
-																	 NativeInboxApiWrapper &storeApi){
+																	 NativeStoreApiWrapper &storeApi){
 	ResultWithError<NativeInboxApiWrapper> res;
 	try {
 		res.result = NativeInboxApiWrapper(std::make_shared<endpoint::inbox::InboxApi>(endpoint::inbox::InboxApi::create(*(connection.getApi()),

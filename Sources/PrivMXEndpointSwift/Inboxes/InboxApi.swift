@@ -23,7 +23,7 @@ public class InboxApi{
 	///
 	/// - Parameters:
 	///   - connection: The connection object to interact with PrivMX.
-	///   - threadApi: The Inbox API instance.
+	///   - threadApi: The Thread API instance.
 	///   - storeApi: The Store API instance.
 	///
 	/// - Throws: `PrivMXEndpointError.failedInstantiatingInboxApi` if an error occurs during initialization.
@@ -31,7 +31,7 @@ public class InboxApi{
 	/// - Returns: A new `InboxApi` instance.
 	public static func create(
 		connection:inout Connection,
-		threadApi: inout InboxApi,
+		threadApi: inout ThreadApi,
 		storeApi: inout StoreApi
 	) throws -> InboxApi{
 		let res = privmx.NativeInboxApiWrapper.create(&connection.api,
