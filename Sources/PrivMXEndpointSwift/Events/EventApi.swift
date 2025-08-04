@@ -76,7 +76,7 @@ public class EventApi{
 	}
 	
 	
-	/// Subscribe for the Thread events on the given subscription query.
+	/// Subscribe for the events on the given subscription query.
 	///
 	/// - Parameter subscriptionQueries: list of queries
 	///
@@ -113,7 +113,7 @@ public class EventApi{
 		}
 	}
 	
-	/// Generate subscription Query for the Thread events.
+	/// Generate subscription Query for the Custom events.
 	///
 	/// - Parameter eventType: type of event which you listen for
 	/// - Parameter selectorType: scope on which you listen for events
