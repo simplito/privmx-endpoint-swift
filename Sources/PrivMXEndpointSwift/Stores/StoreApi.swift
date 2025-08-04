@@ -287,11 +287,11 @@ public class StoreApi{
     ///
     /// Use `writeToFile()` to upload data to this handle and `closeFile()` to finalize the process.
     ///
-    /// - Parameters:
-    ///   - storeId: The Store in which the file should be created.
-    ///   - publicMeta: Public metadata for the file.
-    ///   - privateMeta: Private metadata for the file.
-    ///   - size: The size of the file in bytes.
+    /// - Parameter storeId: The Store in which the file should be created.
+    /// - Parameter publicMeta: Public metadata for the file.
+    /// - Parameter privateMeta: Private metadata for the file.
+    /// - Parameter size: The size of the file in bytes.
+    /// - Parameter randomWriteSupport: enable random write support for file
     ///
     /// - Throws: `PrivMXEndpointError.failedCreatingFile` if creating the file handle fails.
     ///
