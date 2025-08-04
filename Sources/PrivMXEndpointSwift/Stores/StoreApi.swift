@@ -300,9 +300,10 @@ public class StoreApi{
 		storeId: std.string,
 		publicMeta:privmx.endpoint.core.Buffer,
 		privateMeta:privmx.endpoint.core.Buffer,
-		size: Int64
+		size: Int64,
+		randomWriteSupport: Bool = false
 	) throws -> privmx.StoreFileHandle{
-		let res = api.createFile(storeId,publicMeta,privateMeta,size)
+		let res = api.createFile(storeId,publicMeta,privateMeta,size,randomWriteSupport)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedCreatingFile(res.error.value!)
 		}

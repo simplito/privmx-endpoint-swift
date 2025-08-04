@@ -232,10 +232,11 @@ ResultWithError<FileList> NativeStoreApiWrapper::listFiles(const std::string& st
 ResultWithError<StoreFileHandle> NativeStoreApiWrapper::createFile(const std::string &storeId,
 																 const core::Buffer& publicMeta,
 																 const core::Buffer& privateMeta,
-																 int64_t size){
+																 int64_t size,
+																   bool randomWriteSupport){
 	ResultWithError<StoreFileHandle> res;
 	try{
-		res.result = getapi()->createFile(storeId, publicMeta, privateMeta, size);
+		res.result = getapi()->createFile(storeId, publicMeta, privateMeta, size,randomWriteSupport);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),

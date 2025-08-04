@@ -147,7 +147,8 @@ public:
 	ResultWithError<StoreFileHandle> createFile(const std::string &storeId,
 											  const endpoint::core::Buffer& publicMeta,
 											  const endpoint::core::Buffer& privateMeta,
-											  int64_t size);
+											  int64_t size,
+												bool randomWriteSupport = false);
 	
 	/**
 	 * Creates a new file handle for overwiting a file.
