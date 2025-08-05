@@ -554,53 +554,67 @@ public class InboxApi{
 		return result
 	}
 	
-	/// Subscribes to Inbox-related events.
+	/// Subscribe for the Inbox events on the given subscription query.
 	///
-	/// - Throws: `PrivMXEndpointError.failedSubscribingForEvents` if subscribing to Inbox events fails.
-	public func subscribeForInboxEvents(
-	) throws -> Void {
-		let res = api.subscribeForInboxEvents()
+	/// - Parameter subscriptionQueries: list of queries
+	///
+	/// - Throws: When subscribing for events fails.
+	///
+	/// - Returns: list of subscriptionIds in maching order to subscriptionQueries.
+	public func subscribeFor(
+		subscriptionQueries: privmx.SubscriptionQueryVector
+	) throws -> privmx.SubscriptionIdVector {
+		let res = api.subscribeFor(subscriptionQueries)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
 		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedSubscribingForEvents(err)
+		}
+		return result
 	}
 	
-	/// Unsubscribes from Inbox-related events.
+	/// Unsubscribe from events for the given subscriptionId.
 	///
-	/// - Throws: `PrivMXEndpointError.failedUnsubscribingFromEvents` if unsubscribing from Inbox events fails.
-	public func unsubscribeFromInboxEvents(
+	/// - Parameter subscriptionIds: list of subscriptionId
+	///
+	/// - Throws: When unsubscribing fails.
+	public func unsubscribeFrom(
+		subscriptionId: privmx.SubscriptionIdVector
 	) throws -> Void {
-		let res = api.unsubscribeFromInboxEvents()
+		let res = api.unsubscribeFrom(subscriptionId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
 		}
 	}
 	
-	/// Subscribes to entry-related events within a specific Inbox.
+	/// Generate subscription Query for the Inbox events.
 	///
-	/// - Parameter inboxId: The ID of the Inbox to subscribe to entry events for.
+	/// - Parameter eventType: type of event which you listen for
+	/// - Parameter selectorType: scope on which you listen for events
+	/// - Parameter selectorId: ID of the selector
 	///
-	/// - Throws: `PrivMXEndpointError.failedSubscribingForEvents` if subscribing to entry events fails.
-	public func subscribeForEntryEvents(
-		inboxId: std.string
-	) throws -> Void {
-		let res = api.subscribeForEntryEvents(inboxId)
+	/// - Throws: When building the subscription Query fails.
+	///
+	/// - Returns: a properly formatted event subscription request.
+	public func buildSubscriptionQuery(
+	eventType: privmx.endpoint.inbox.EventType,
+	selectorType: privmx.endpoint.inbox.EventSelectorType,
+	selectorId: std.string
+	) throws -> privmx.SubscriptionQuery {
+		let res = api.buildSubscriptionQuery(eventType, selectorType, selectorId)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
+			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(res.error.value!)
 		}
-	}
-	
-	/// Unsubscribes from entry-related events within a specific Inbox.
-	///
-	/// - Parameter inboxId: The ID of the Inbox to unsubscribe from entry events for.
-	///
-	/// - Throws: `PrivMXEndpointError.failedUnsubscribingFromEvents` if unsubscribing from entry events fails.
-	public func unsubscribeFromEntryEvents(
-		inboxId: std.string
-	) throws -> Void {
-		let res = api.unsubscribeFromEntryEvents(inboxId)
-		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(err)
 		}
+		return result
 	}
 }

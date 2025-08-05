@@ -138,6 +138,8 @@ public enum PrivMXEndpointError : Error{
 	case failedSubscribingForEvents(privmx.InternalError)
 	/// Failed to unsubscribe from Events.
 	case failedUnsubscribingFromEvents(privmx.InternalError)
+	/// Failed to construct a Subscription Query.
+	case failedBuildingSubscriptionQuery(privmx.InternalError)
 	
 	/// Failed to delete a Thread.
 	case failedDeletingThread(privmx.InternalError)
@@ -312,6 +314,7 @@ public enum PrivMXEndpointError : Error{
 					.failedGettingEvent(let err),
 					.failedSubscribingForEvents(let err),
 					.failedUnsubscribingFromEvents(let err),
+					.failedBuildingSubscriptionQuery(let err),
 					.failedDeletingThread(let err),
 					.failedDeletingMessage(let err),
 					.failedDeletingStore(let err),
@@ -432,6 +435,7 @@ public enum PrivMXEndpointError : Error{
 					.failedGettingEvent(let err),
 					.failedSubscribingForEvents(let err),
 					.failedUnsubscribingFromEvents(let err),
+					.failedBuildingSubscriptionQuery(let err),
 					.failedDeletingThread(let err),
 					.failedDeletingMessage(let err),
 					.failedDeletingStore(let err),
@@ -551,6 +555,7 @@ public enum PrivMXEndpointError : Error{
 					.failedGettingEvent(let err),
 					.failedSubscribingForEvents(let err),
 					.failedUnsubscribingFromEvents(let err),
+					.failedBuildingSubscriptionQuery(let err),
 					.failedDeletingThread(let err),
 					.failedDeletingMessage(let err),
 					.failedDeletingStore(let err),
@@ -670,6 +675,7 @@ public enum PrivMXEndpointError : Error{
 					.failedGettingEvent(let err),
 					.failedSubscribingForEvents(let err),
 					.failedUnsubscribingFromEvents(let err),
+					.failedBuildingSubscriptionQuery(let err),
 					.failedDeletingThread(let err),
 					.failedDeletingMessage(let err),
 					.failedDeletingStore(let err),
@@ -789,6 +795,7 @@ public enum PrivMXEndpointError : Error{
 					.failedGettingEvent(let err),
 					.failedSubscribingForEvents(let err),
 					.failedUnsubscribingFromEvents(let err),
+					.failedBuildingSubscriptionQuery(let err),
 					.failedDeletingThread(let err),
 					.failedDeletingMessage(let err),
 					.failedDeletingStore(let err),

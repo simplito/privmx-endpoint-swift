@@ -490,53 +490,67 @@ public class StoreApi{
 		}
 	}
 	
-	/// Subscribes to Store-related events.
-    ///
-    /// - Throws: `PrivMXEndpointError.failedSubscribingForEvents` if subscribing to Store events fails.
-    public func subscribeForStoreEvents(
-	) throws -> Void {
-		let res = api.subscribeForStoreEvents()
+	/// Subscribe for the Store events on the given subscription query.
+	///
+	/// - Parameter subscriptionQueries: list of queries
+	///
+	/// - Throws: When subscribing for events fails.
+	///
+	/// - Returns: list of subscriptionIds in maching order to subscriptionQueries.
+	public func subscribeFor(
+		subscriptionQueries: privmx.SubscriptionQueryVector
+	) throws -> privmx.SubscriptionIdVector {
+		let res = api.subscribeFor(subscriptionQueries)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
 		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedSubscribingForEvents(err)
+		}
+		return result
 	}
 	
-	/// Unsubscribes from Store-related events.
-    ///
-    /// - Throws: `PrivMXEndpointError.failedUnsubscribingFromEvents` if unsubscribing from Store events fails.
-    public func unsubscribeFromStoreEvents(
+	/// Unsubscribe from events for the given subscriptionId.
+	///
+	/// - Parameter subscriptionIds: list of subscriptionId
+	///
+	/// - Throws: When unsubscribing fails.
+	public func unsubscribeFrom(
+		subscriptionId: privmx.SubscriptionIdVector
 	) throws -> Void {
-		let res = api.unsubscribeFromStoreEvents()
+		let res = api.unsubscribeFrom(subscriptionId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
 		}
 	}
 	
-	/// Subscribes to file-related events within a specified Store.
-    ///
-    /// - Parameter storeId: The unique identifier of the Store to subscribe to file events for.
-    ///
-    /// - Throws: `PrivMXEndpointError.failedSubscribingForEvents` if subscribing to file events fails.
-   public func subscribeForFileEvents(
-		storeId: std.string
-	) throws -> Void {
-		let res = api.subscribeForFileEvents(storeId)
+	/// Generate subscription Query for the Store events.
+	///
+	/// - Parameter eventType: type of event which you listen for
+	/// - Parameter selectorType: scope on which you listen for events
+	/// - Parameter selectorId: ID of the selector
+	///
+	/// - Throws: When building the subscription Query fails.
+	///
+	/// - Returns: a properly formatted event subscription request.
+	public func buildSubscriptionQuery(
+	eventType: privmx.endpoint.store.EventType,
+	selectorType: privmx.endpoint.store.EventSelectorType,
+	selectorId: std.string
+	) throws -> privmx.SubscriptionQuery {
+		let res = api.buildSubscriptionQuery(eventType, selectorType, selectorId)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
+			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(res.error.value!)
 		}
-	}
-	
-	/// Unsubscribes from file-related events within a specified Store.
-    ///
-    /// - Parameter storeId: The unique identifier of the Store to unsubscribe from file events for.
-    ///
-    /// - Throws: `PrivMXEndpointError.failedUnsubscribingFromEvents` if unsubscribing from file events fails.
-    public func unsubscribeFromFileEvents(
-		storeId: std.string
-	) throws -> Void {
-		let res = api.unsubscribeFromFileEvents(storeId)
-		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(err)
 		}
+		return result
 	}
 }

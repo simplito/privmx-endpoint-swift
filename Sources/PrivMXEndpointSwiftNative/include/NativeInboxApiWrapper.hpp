@@ -213,28 +213,29 @@ public:
 	 * @return string ID of closed file
 	 */
 	ResultWithError<std::string> closeFile(const InboxFileHandle fileHandle);
+	
+	/**
+	 * Subscribe for the Thread events on the given subscription query.
+	 *
+	 * @param subscriptionQueries list of queries
+	 * @return list of subscriptionIds in maching order to subscriptionQueries
+	 */
+	ResultWithError<SubscriptionIdVector> subscribeFor(const SubscriptionQueryVector& subscriptionQueries);
 
 	/**
-	 * Subscribes for the Inbox module main events.
+	 * Unsubscribe from events for the given subscriptionId.
+	 * @param subscriptionIds list of subscriptionId
 	 */
-	ResultWithError<nullptr_t> subscribeForInboxEvents();
-
+	ResultWithError<std::nullptr_t> unsubscribeFrom(const SubscriptionIdVector& subscriptionIds);
 	/**
-	 * Unsubscribes from the Inbox module main events.
+	 * Generate subscription Query for the Thread events.
+	 * @param eventType type of event which you listen for
+	 * @param selectorType scope on which you listen for events
+	 * @param selectorId ID of the selector
 	 */
-	ResultWithError<nullptr_t> unsubscribeFromInboxEvents();
-
-	/**
-	 * Subscribes for the events in given Inbox
-	 * @param inbox ID of the inbox to subscribe to
-	 */
-	ResultWithError<nullptr_t> subscribeForEntryEvents(const std::string& inboxId);
-
-	/**
-	 * Unsubscribes from the events in given Inbox
-	 * @param inbox ID of the inbox to unsubscribe from
-	 */
-	ResultWithError<nullptr_t> unsubscribeFromEntryEvents(const std::string& inboxId);
+	ResultWithError<SubscriptionQuery> buildSubscriptionQuery(endpoint::inbox::EventType eventType,
+															  endpoint::inbox::EventSelectorType selectorType,
+															  const std::string& selectorId);
 
 	
 private:

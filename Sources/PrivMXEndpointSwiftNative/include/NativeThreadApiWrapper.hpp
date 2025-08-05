@@ -165,12 +165,29 @@ public:
 											 const endpoint::core::Buffer& publicMeta,
 											 const endpoint::core::Buffer& privateMeta,
 											 const endpoint::core::Buffer& data);
-
-	ResultWithError<nullptr_t> subscribeForThreadEvents();
-	ResultWithError<nullptr_t> unsubscribeFromThreadEvents();
-	ResultWithError<nullptr_t> subscribeForMessageEvents(const std::string& threadId);
-	ResultWithError<nullptr_t> unsubscribeFromMessageEvents(const std::string& threadId);
 	
+	/**
+	 * Subscribe for the Thread events on the given subscription query.
+	 *
+	 * @param subscriptionQueries list of queries
+	 * @return list of subscriptionIds in maching order to subscriptionQueries
+	 */
+	ResultWithError<SubscriptionIdVector> subscribeFor(const SubscriptionQueryVector& subscriptionQueries);
+
+	/**
+	 * Unsubscribe from events for the given subscriptionId.
+	 * @param subscriptionIds list of subscriptionId
+	 */
+	ResultWithError<std::nullptr_t> unsubscribeFrom(const SubscriptionIdVector& subscriptionIds);
+	/**
+	 * Generate subscription Query for the Thread events.
+	 * @param eventType type of event which you listen for
+	 * @param selectorType scope on which you listen for events
+	 * @param selectorId ID of the selector
+	 */
+	ResultWithError<SubscriptionQuery> buildSubscriptionQuery(endpoint::thread::EventType eventType,
+															  endpoint::thread::EventSelectorType selectorType,
+															  const std::string& selectorId);
 private:
 	std::shared_ptr<endpoint::thread::ThreadApi> getapi(){
 		if (!api) throw NullApiException();
