@@ -403,7 +403,7 @@ ResultWithError<SubscriptionQuery> NativeThreadApiWrapper::buildSubscriptionQuer
 																				  const std::string& selectorId){
 	ResultWithError<SubscriptionQuery> res;
 	try {
-		getapi()->buildSubscriptionQuery(eventType, selectorType, selectorId);
+		res.result = getapi()->buildSubscriptionQuery(eventType, selectorType, selectorId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
