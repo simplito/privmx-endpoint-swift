@@ -501,6 +501,35 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::deleteStore(const std::st
 	return res;
 }
 
+/**
+ * Synchronize file handle data with newset data on serwer
+ * @param handle handle to read/write file data
+ */
+ResultWithError<std::nullptr_t> NativeStoreApiWrapper::syncFile(const StoreFileHandle){
+	ResultWithError<std::nullptr_t> res;
+	try {
+		getapi()->deleteStore(storeId);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
 
 ResultWithError<SubscriptionIdVector> NativeStoreApiWrapper::subscribeFor(const SubscriptionQueryVector& subscriptionQueries){
 	ResultWithError<SubscriptionIdVector> res;

@@ -238,6 +238,8 @@ public:
 	 */
 	ResultWithError<std::nullptr_t> deleteFile(const std::string& fileId);
 	
+	ResultWithError<std::nullptr_t> syncFile(const StoreFileHandle handle);
+	
 	/**
 	 * Subscribe for the Thread events on the given subscription query.
 	 *

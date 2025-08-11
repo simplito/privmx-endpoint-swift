@@ -490,6 +490,23 @@ public class StoreApi{
 		}
 	}
 	
+	
+	public func syncFile(
+		handle: privmx.StoreFileHandle
+	) throws -> Void {
+		let res = api.syncFile(handle)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedSyncingFile(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedSyncingFile(err)
+		}
+		return result
+	}
+	
 	/// Subscribe for the Store events on the given subscription query.
 	///
 	/// - Parameter subscriptionQueries: list of queries
