@@ -490,7 +490,11 @@ public class StoreApi{
 		}
 	}
 	
-	
+	/// Synchronize file handle data with newset data on server.
+	///
+	/// - Parameter handle: Store File handle to sync
+	///
+	/// - Throws: if the operation fails.
 	public func syncFile(
 		handle: privmx.StoreFileHandle
 	) throws -> Void {
@@ -498,13 +502,6 @@ public class StoreApi{
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSyncingFile(res.error.value!)
 		}
-		guard let result = res.result.value else {
-			var err = privmx.InternalError()
-			err.name = "Value error"
-			err.description = "Unexpectedly recived nil result"
-			throw PrivMXEndpointError.failedSyncingFile(err)
-		}
-		return result
 	}
 	
 	/// Subscribe for the Store events on the given subscription query.
