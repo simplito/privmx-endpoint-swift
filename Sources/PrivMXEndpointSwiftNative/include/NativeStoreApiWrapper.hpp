@@ -193,7 +193,8 @@ public:
 	 * @return `ResultWithError` structure for error handling.
 	 */
 	ResultWithError<std::nullptr_t> writeToFile(const StoreFileHandle handle,
-												const endpoint::core::Buffer& dataChunk);
+												const endpoint::core::Buffer& dataChunk,
+												bool truncate);
 	
 	/**
 	 * Reads from an opened file.

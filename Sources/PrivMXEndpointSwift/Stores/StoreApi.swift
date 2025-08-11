@@ -460,17 +460,18 @@ public class StoreApi{
 	
 	/// Writes a chunk of data to an open file on the platform.
     ///
-    /// - Parameters:
-    ///   - handle: The handle to the open file.
-    ///   - dataChunk: The chunk of data to be written to the file.
+    /// - Parameter handle: The handle to the open file.
+    /// - Parameter dataChunk: The chunk of data to be written to the file.
+    /// - Parameter truncate: truncate the file from: current pos + dataChunk size
     ///
     /// - Throws: `PrivMXEndpointError.failedWritingToFile` if writing to the file fails.
     public func writeToFile(
 		handle: privmx.StoreFileHandle,
-		dataChunk: privmx.endpoint.core.Buffer
+		dataChunk: privmx.endpoint.core.Buffer,
+		truncate: Bool = false
 	) throws -> Void{
 		
-		let res = api.writeToFile(handle,dataChunk)
+		let res = api.writeToFile(handle,dataChunk,truncate)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedWritingToFile(res.error.value!)
 		}

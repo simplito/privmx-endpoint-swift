@@ -370,7 +370,8 @@ ResultWithError<core::Buffer> NativeStoreApiWrapper::readFromFile(StoreFileHandl
 }
 
 ResultWithError<std::nullptr_t> NativeStoreApiWrapper::writeToFile(StoreFileHandle handle,
-																   const core::Buffer& dataChunk){
+																   const core::Buffer& dataChunk,
+																   bool truncate = false){
 	ResultWithError<std::nullptr_t> res;
 	try{
 		getapi()->writeToFile(handle, dataChunk);
@@ -501,10 +502,10 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::deleteStore(const std::st
 	return res;
 }
 
-ResultWithError<std::nullptr_t> NativeStoreApiWrapper::syncFile(const StoreFileHandle){
+ResultWithError<std::nullptr_t> NativeStoreApiWrapper::syncFile(const StoreFileHandle handle){
 	ResultWithError<std::nullptr_t> res;
 	try {
-		getapi()->deleteStore(storeId);
+		getapi()->syncFile(handle);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
