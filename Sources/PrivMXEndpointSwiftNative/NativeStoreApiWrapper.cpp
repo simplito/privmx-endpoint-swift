@@ -501,10 +501,6 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::deleteStore(const std::st
 	return res;
 }
 
-/**
- * Synchronize file handle data with newset data on serwer
- * @param handle handle to read/write file data
- */
 ResultWithError<std::nullptr_t> NativeStoreApiWrapper::syncFile(const StoreFileHandle){
 	ResultWithError<std::nullptr_t> res;
 	try {
