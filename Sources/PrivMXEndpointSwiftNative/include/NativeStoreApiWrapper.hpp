@@ -193,7 +193,8 @@ public:
 	 * @return `ResultWithError` structure for error handling.
 	 */
 	ResultWithError<std::nullptr_t> writeToFile(const StoreFileHandle handle,
-												const endpoint::core::Buffer& dataChunk);
+												const endpoint::core::Buffer& dataChunk,
+												bool truncate);
 	
 	/**
 	 * Reads from an opened file.
@@ -237,6 +238,8 @@ public:
 	 * @return Status of the operation, wrapped in a  `ResultWithError` structure for error handling.
 	 */
 	ResultWithError<std::nullptr_t> deleteFile(const std::string& fileId);
+	
+	ResultWithError<std::nullptr_t> syncFile(const StoreFileHandle handle);
 	
 	/**
 	 * Subscribe for the Thread events on the given subscription query.

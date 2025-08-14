@@ -268,6 +268,7 @@ public enum PrivMXEndpointError : Error{
 	/// Falied to delete KVDB Entries.
 	case failedDeletingKvdbEntries(privmx.InternalError)
 	
+	case failedSyncingFile(privmx.InternalError)
   
 	/// Gets the Message of the error.
 	///
@@ -384,6 +385,7 @@ public enum PrivMXEndpointError : Error{
 					.failedCheckingifStringIsBase64(let err),
 					.failedTrimmingString(let err),
 					.failedSplittingString(let err),
+					.failedSyncingFile(let err),
 					.failedGeneratingBIP39(let err):
 				return String(err.message)
 		}
@@ -505,6 +507,7 @@ public enum PrivMXEndpointError : Error{
 					.failedCheckingifStringIsBase64(let err),
 					.failedTrimmingString(let err),
 					.failedSplittingString(let err),
+					.failedSyncingFile(let err),
 					.failedGeneratingBIP39(let err):
 				return err.code.value
 		}
@@ -625,6 +628,7 @@ public enum PrivMXEndpointError : Error{
 					.failedCheckingifStringIsBase64(let err),
 					.failedTrimmingString(let err),
 					.failedSplittingString(let err),
+					.failedSyncingFile(let err),
 					.failedGeneratingBIP39(let err):
 				return String(err.name)
 		}
@@ -745,6 +749,7 @@ public enum PrivMXEndpointError : Error{
 					.failedCheckingifStringIsBase64(let err),
 					.failedTrimmingString(let err),
 					.failedSplittingString(let err),
+					.failedSyncingFile(let err),
 					.failedGeneratingBIP39(let err):
 				return String(err.description)
 		}
@@ -865,6 +870,7 @@ public enum PrivMXEndpointError : Error{
 					.failedCheckingifStringIsBase64(let err),
 					.failedTrimmingString(let err),
 					.failedSplittingString(let err),
+					.failedSyncingFile(let err),
 					.failedGeneratingBIP39(let err):
 				if let scope = err.scope.value{
 					return String(scope)
