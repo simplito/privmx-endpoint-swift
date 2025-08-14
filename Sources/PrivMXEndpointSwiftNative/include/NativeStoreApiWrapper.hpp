@@ -194,7 +194,7 @@ public:
 	 */
 	ResultWithError<std::nullptr_t> writeToFile(const StoreFileHandle handle,
 												const endpoint::core::Buffer& dataChunk,
-												bool truncate);
+												bool truncate=false);
 	
 	/**
 	 * Reads from an opened file.

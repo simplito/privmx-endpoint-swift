@@ -371,10 +371,10 @@ ResultWithError<core::Buffer> NativeStoreApiWrapper::readFromFile(StoreFileHandl
 
 ResultWithError<std::nullptr_t> NativeStoreApiWrapper::writeToFile(StoreFileHandle handle,
 																   const core::Buffer& dataChunk,
-																   bool truncate = false){
+																   bool truncate){
 	ResultWithError<std::nullptr_t> res;
 	try{
-		getapi()->writeToFile(handle, dataChunk);
+		getapi()->writeToFile(handle, dataChunk,truncate);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
