@@ -349,7 +349,7 @@ ResultWithError<nullptr_t> NativeThreadApiWrapper::updateMessage(const std::stri
 ResultWithError<SubscriptionIdVector> NativeThreadApiWrapper::subscribeFor(const SubscriptionQueryVector& subscriptionQueries){
 	ResultWithError<SubscriptionIdVector> res;
 	try {
-		getapi()->subscribeFor(subscriptionQueries);
+		res.result = getapi()->subscribeFor(subscriptionQueries);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
