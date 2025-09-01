@@ -116,7 +116,8 @@ public:
 	 */
 	ResultWithError<ContextList> listContexts(const endpoint::core::PagingQuery& query);
 	
-	ResultWithError<UserInfoVector> getContextUsers(const std::string& contextId);
+	ResultWithError<UserInfoList> listContextUsers(const std::string& contextId,
+													 const endpoint::core::PagingQuery& query);
 	
 	ResultWithError<std::nullptr_t> setUserVerifier(const UserVerifier& verifier);
 private:

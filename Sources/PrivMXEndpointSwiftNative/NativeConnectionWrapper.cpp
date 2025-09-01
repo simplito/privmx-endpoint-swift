@@ -181,10 +181,11 @@ ResultWithError<ContextList> NativeConnectionWrapper::listContexts(const core::P
 	return res;
 }
 
-ResultWithError<UserInfoVector> NativeConnectionWrapper::getContextUsers(const std::string &contextId){
-	ResultWithError<UserInfoVector> res;
+ResultWithError<UserInfoList> NativeConnectionWrapper::listContextUsers(const std::string &contextId,
+																		const endpoint::core::PagingQuery& query){
+	ResultWithError<UserInfoList> res;
 	try{
-		res.result = getApi()->getContextUsers(contextId);
+		res.result = getApi()->listContextUsers(contextId,query);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
