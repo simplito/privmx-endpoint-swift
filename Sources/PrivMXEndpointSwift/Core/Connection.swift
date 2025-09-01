@@ -240,9 +240,10 @@ public class Connection{
 	///
 	/// - returns: a list of UserInfo objects.
 	public func getContextUsers(
-		contextId: std.string
-	) throws -> privmx.UserInfoVector {
-		let res = api.getContextUsers(contextId)
+		contextId: std.string,
+		query: privmx.endpoint.core.PagingQuery
+	) throws -> privmx.UserInfoList {
+		let res = api.listContextUsers(contextId,query)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGettingContextUsers(res.error.value!)
 		}
