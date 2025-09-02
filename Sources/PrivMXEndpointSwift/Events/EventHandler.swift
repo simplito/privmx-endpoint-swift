@@ -86,6 +86,29 @@ public enum EventHandler{
 		return result
 	}
 	
+	/// Checks if the `EventHolder` contains a `CollectionChangedEvent`.
+	///
+	/// This method queries the provided `EventHolder` to determine if it contains an event that corresponds to a `CollectionChangedEvent`.
+	///
+	/// - Parameter eventHolder: The `EventHolder` instance to be queried.
+	/// - Returns: `true` if the `EventHolder` contains a `CollectionChangedEvent`; otherwise, `false`.
+	/// - Throws: `PrivMXEndpointError.failedQueryingEventHolder` if an error occurs in the underlying C++ code or another issue arises.
+	public static func isCollectionChangedEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.CoreEventHandlerWrapper.isCollectionChangedEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly received nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	
 	/// Extracts a `LibConnectedEvent` from the provided `EventHolder`.
 	///
 	/// - Parameter eventHolder: An `EventHolder` containing a `LibConnectedEvent`.
@@ -181,6 +204,27 @@ public enum EventHandler{
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.core.LibBreakEvent{
 		let res = privmx.CoreEventHandlerWrapper.extractLibBreakEvent(eventHolder)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly received nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
+	
+	/// Extracts a `CollectionChangedEvent` from the provided `EventHolder`.
+	///
+	/// - Parameter eventHolder: An `EventHolder` containing a `CollectionChangedEvent`.
+	/// - Returns: The extracted `CollectionChangedEvent`.
+	/// - Throws: `PrivMXEndpointError.failedExtractingEventFromHolder` if an error occurs while extracting the event.
+	public static func extractCollectionChangedEvent(
+		eventHolder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.core.CollectionChangedEvent{
+		let res = privmx.CoreEventHandlerWrapper.extractCollectionChangedEvent(eventHolder)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
 		}

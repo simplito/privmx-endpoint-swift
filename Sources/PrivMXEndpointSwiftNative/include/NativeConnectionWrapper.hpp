@@ -120,6 +120,16 @@ public:
 													 const endpoint::core::PagingQuery& query);
 	
 	ResultWithError<std::nullptr_t> setUserVerifier(const UserVerifier& verifier);
+	
+	
+	ResultWithError<SubscriptionIdVector> subscribeFor(const SubscriptionQueryVector& subscriptionQueries);
+
+	
+	ResultWithError<std::nullptr_t> unsubscribeFrom(const SubscriptionIdVector& subscriptionIds);
+	
+	ResultWithError<SubscriptionQuery> buildSubscriptionQuery(endpoint::core::EventType eventType,
+															  endpoint::core::EventSelectorType selectorType,
+															  const std::string& selectorId);
 private:
 	
 	std::shared_ptr<endpoint::core::Connection> getApi();
@@ -196,8 +206,6 @@ public:
 	 *
 	 * @return Boolean value wrapped in a `ResultWithError` object for error handling.
 	 *
-	 * \sa
-	 * [link to cpp doc]
 	 */
 	static ResultWithError<bool> isLibDisconnectedEvent(const endpoint::core::EventHolder& eventHolder);
 	
@@ -210,6 +218,86 @@ public:
 	 *
 	 */
 	static ResultWithError<endpoint::core::LibDisconnectedEvent> extractLibDisconnectedEvent(const endpoint::core::EventHolder& eventHolder);
+	
+	/**
+	 * Checks if an EventHolder contains an `privmx::endpoint::core::CollectionChangedEvent`
+	 *
+	 * @param eventHolder  : `const endpoint::core::EventHolder&`
+	 *
+	 * @return Boolean value wrapped in a `ResultWithError` object for error handling.
+	 *
+	 */
+	static ResultWithError<bool> isCollectionChangedEvent(const endpoint::core::EventHolder& eventHolder);
+	
+	/**
+	 * Extracts an `privmx::endpoint::core::CollectionChangedEvent` from the `privmx::endpoint::core::EventHolder`
+	 *
+	 * @param eventHolder  : `const endpoint::core::EventHolder&`
+	 *
+	 * @return Extracted `privmx::endpoint::core::CollectionChangedEvent` wrapped in a `ResultWithError` object for error handling.
+	 *
+	 */
+	static ResultWithError<endpoint::core::CollectionChangedEvent> extractCollectionChangedEvent(const endpoint::core::EventHolder& eventHolder);
+
+	/**
+	 * Checks if an EventHolder contains an `privmx::endpoint::core::ContextUserAddedEvent`
+	 *
+	 * @param eventHolder  : `const endpoint::core::EventHolder&`
+	 *
+	 * @return Boolean value wrapped in a `ResultWithError` object for error handling.
+	 *
+	 */
+	static ResultWithError<bool> isContextUserAddedEvent(const endpoint::core::EventHolder& eventHolder);
+	
+	/**
+	 * Extracts an `privmx::endpoint::core::ContextUserAddedEvent` from the `privmx::endpoint::core::EventHolder`
+	 *
+	 * @param eventHolder  : `const endpoint::core::EventHolder&`
+	 *
+	 * @return Extracted `privmx::endpoint::core::ContextUserAddedEvent` wrapped in a `ResultWithError` object for error handling.
+	 *
+	 */
+	static ResultWithError<endpoint::core::ContextUserAddedEvent> extractContextUserAddedEvent(const endpoint::core::EventHolder& eventHolder);
+
+	/**
+	 * Checks if an EventHolder contains an `privmx::endpoint::core::ContextUserRemovedEvent`
+	 *
+	 * @param eventHolder  : `const endpoint::core::EventHolder&`
+	 *
+	 * @return Boolean value wrapped in a `ResultWithError` object for error handling.
+	 *
+	 */
+	static ResultWithError<bool> isContextUserRemovedEvent(const endpoint::core::EventHolder& eventHolder);
+	
+	/**
+	 * Extracts an `privmx::endpoint::core::ContextUserRemovedEvent` from the `privmx::endpoint::core::EventHolder`
+	 *
+	 * @param eventHolder  : `const endpoint::core::EventHolder&`
+	 *
+	 * @return Extracted `privmx::endpoint::core::ContextUserRemovedEvent` wrapped in a `ResultWithError` object for error handling.
+	 *
+	 */
+	static ResultWithError<endpoint::core::ContextUserRemovedEvent> extractContextUserRemovedEvent(const endpoint::core::EventHolder& eventHolder);
+
+	/**
+	 * Checks if an EventHolder contains an `privmx::endpoint::core::ContextUsersStatusChangeEvent`
+	 *
+	 * @param eventHolder  : `const endpoint::core::EventHolder&`
+	 *
+	 * @return Boolean value wrapped in a `ResultWithError` object for error handling.
+	 *
+	 */
+	static ResultWithError<bool> isContextUsersStatusChangeEvent(const endpoint::core::EventHolder& eventHolder);
+	
+	/**
+	 * Extracts an `privmx::endpoint::core::ContextUsersStatusChangeEvent` from the `privmx::endpoint::core::EventHolder`
+	 *
+	 * @param eventHolder  : `const endpoint::core::EventHolder&`
+	 *
+	 * @return Extracted `privmx::endpoint::core::ContextUsersStatusChangeEvent` wrapped in a `ResultWithError` object for error handling.
+	 *
+	 */
+	static ResultWithError<endpoint::core::ContextUsersStatusChangeEvent> extractContextUsersStatusChangeEvent(const endpoint::core::EventHolder& eventHolder);
 };
 
 }

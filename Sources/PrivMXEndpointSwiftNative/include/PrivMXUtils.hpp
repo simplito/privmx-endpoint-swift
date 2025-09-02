@@ -715,8 +715,18 @@ static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::cor
 static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::core::LibConnectedEvent& event){
 	return _get_subIds_from_event(event);
 }
-
-
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::core::ContextUserAddedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::core::ContextUserRemovedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::core::ContextUsersStatusChangeEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::core::CollectionChangedEvent& event){
+	return _get_subIds_from_event(event);
+}
 
 }
 }

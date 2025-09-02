@@ -261,6 +261,88 @@ ResultWithError<std::nullptr_t> NativeConnectionWrapper::setUserVerifier(const U
 	return res;
 }
 
+
+ResultWithError<SubscriptionIdVector> NativeConnectionWrapper::subscribeFor(const SubscriptionQueryVector& subscriptionQueries){
+	ResultWithError<SubscriptionIdVector> res;
+	try {
+		res.result = getApi()->subscribeFor(subscriptionQueries);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<std::nullptr_t> NativeConnectionWrapper::unsubscribeFrom(const SubscriptionIdVector& subscriptionIds){
+	ResultWithError<std::nullptr_t> res;
+	try {
+		getApi()->unsubscribeFrom(subscriptionIds);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<SubscriptionQuery> NativeConnectionWrapper::buildSubscriptionQuery(endpoint::core::EventType eventType,
+																				  endpoint::core::EventSelectorType selectorType,
+																				  const std::string& selectorId){
+	ResultWithError<SubscriptionQuery> res;
+	try {
+		res.result = getApi()->buildSubscriptionQuery(eventType, selectorType, selectorId);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+
 ResultWithError<bool> CoreEventHandlerWrapper::isLibPlatformDisconnectedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
 	try{
@@ -447,6 +529,214 @@ ResultWithError<core::LibDisconnectedEvent> CoreEventHandlerWrapper::extractLibD
 	ResultWithError<core::LibDisconnectedEvent> res;
 	try{
 		res.result = core::Events::extractLibDisconnectedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<bool> CoreEventHandlerWrapper::isCollectionChangedEvent(const core::EventHolder& eventHolder){
+	ResultWithError<bool> res;
+	try{
+		res.result = core::Events::isCollectionChangedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<core::CollectionChangedEvent> CoreEventHandlerWrapper::extractCollectionChangedEvent(const core::EventHolder& eventHolder){
+	ResultWithError<core::CollectionChangedEvent> res;
+	try{
+		res.result = core::Events::extractCollectionChangedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<bool> CoreEventHandlerWrapper::isContextUserAddedEvent(const core::EventHolder& eventHolder){
+	ResultWithError<bool> res;
+	try{
+		res.result = core::Events::isContextUserAddedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<core::ContextUserAddedEvent> CoreEventHandlerWrapper::extractContextUserAddedEvent(const core::EventHolder& eventHolder){
+	ResultWithError<core::ContextUserAddedEvent> res;
+	try{
+		res.result = core::Events::extractContextUserAddedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<bool> CoreEventHandlerWrapper::isContextUserRemovedEvent(const core::EventHolder& eventHolder){
+	ResultWithError<bool> res;
+	try{
+		res.result = core::Events::isContextUserRemovedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<core::ContextUserRemovedEvent> CoreEventHandlerWrapper::extractContextUserRemovedEvent(const core::EventHolder& eventHolder){
+	ResultWithError<core::ContextUserRemovedEvent> res;
+	try{
+		res.result = core::Events::extractContextUserRemovedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<bool> CoreEventHandlerWrapper::isContextUsersStatusChangeEvent(const core::EventHolder& eventHolder){
+	ResultWithError<bool> res;
+	try{
+		res.result = core::Events::isContextUsersStatusChangeEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
+ResultWithError<core::ContextUsersStatusChangeEvent> CoreEventHandlerWrapper::extractContextUsersStatusChangeEvent(const core::EventHolder& eventHolder){
+	ResultWithError<core::ContextUsersStatusChangeEvent> res;
+	try{
+		res.result = core::Events::extractContextUsersStatusChangeEvent(eventHolder);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),

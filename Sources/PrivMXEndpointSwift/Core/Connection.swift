@@ -274,4 +274,41 @@ public class Connection{
 			throw PrivMXEndpointError.failedSettingUserVerifier(res.error.value!)
 		}
 	}
+	
+	/// Subscribe for the events on the given subscription query.
+	///
+	/// - Parameter subscriptionQueries: list of queries
+	///
+	/// - Throws: When subscribing for events fails.
+	///
+	/// - Returns: list of subscriptionIds in maching order to subscriptionQueries.
+	public func subscribeFor(
+		subscriptionQueries: privmx.SubscriptionQueryVector
+	) throws -> privmx.SubscriptionIdVector {
+		let res = api.subscribeFor(subscriptionQueries)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedSubscribingForEvents(err)
+		}
+		return result
+	}
+	
+	/// Unsubscribe from events for the given subscriptionId.
+	///
+	/// - Parameter subscriptionIds: list of subscriptionId
+	///
+	/// - Throws: When unsubscribing fails.
+	public func unsubscribeFrom(
+		subscriptionId: privmx.SubscriptionIdVector
+	) throws -> Void {
+		let res = api.unsubscribeFrom(subscriptionId)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
+		}
+	}
 }
