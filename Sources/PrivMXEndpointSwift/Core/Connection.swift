@@ -311,4 +311,23 @@ public class Connection{
 			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
 		}
 	}
+	
+	
+	public func buildSubscriptionQuery(
+		eventType: privmx.endpoint.core.EventType,
+		selectorType: privmx.endpoint.core.EventSelectorType,
+		selectorId: std.string
+	) throws -> std.string {
+		let res = api.buildSubscriptionQuery(eventType,selectorType,selectorId)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(err)
+		}
+		return result
+	}
 }
