@@ -436,4 +436,31 @@ public class KvdbApi: @unchecked Sendable{
 		}
 		return result
 	}
+
+	/// Generate subscription Query for the KvdbEntry events.
+	///
+	/// - Parameter eventType: type of event which you listen for
+	/// - Parameter kvdbId: ID of the KVDB
+	/// - Parameter kvdbEntryKey: key of the KVDB Entry
+	///
+	/// - Throws: When building the subscription Query fails.
+	///
+	/// - Returns: a properly formatted event subscription request.
+	public func buildSubscriptionQueryForSelectedEntry(
+	eventType: privmx.endpoint.kvdb.EventType,
+	kvdbId: std.string,
+	kvdbEntryKey: std.string
+	) throws -> privmx.SubscriptionQuery {
+		let res = api.buildSubscriptionQueryForSelectedEntry(eventType, kvdbId, kvdbEntryKey)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(err)
+		}
+		return result
+	}
 }
