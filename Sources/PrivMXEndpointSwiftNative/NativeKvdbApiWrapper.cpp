@@ -473,6 +473,34 @@ ResultWithError<SubscriptionQuery> NativeKvdbApiWrapper::buildSubscriptionQuery(
 	return res;
 }
 
+ResultWithError<SubscriptionQuery> NativeKvdbApiWrapper::buildSubscriptionQueryForSelectedEntry(endpoint::kvdb::EventType eventType,
+																				  const std::string& kvdbId,
+																				  const std::string& kvdbEntryKey){
+	ResultWithError<SubscriptionQuery> res;
+	try {
+		res.result = getapi()->buildSubscriptionQueryForSelectedEntry(eventType, kvdbId, kvdbEntryKey);
+		}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.scope = err.getScope(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
 
 ResultWithError<bool> KvdbEventHandler::isKvdbCreatedEvent(const endpoint::core::EventHolder &eventHolder){
 	ResultWithError<bool> res;

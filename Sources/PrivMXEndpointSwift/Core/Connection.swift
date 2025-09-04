@@ -239,7 +239,7 @@ public class Connection{
 	/// - throws: When the operation fails.
 	///
 	/// - returns: a list of UserInfo objects.
-	public func getContextUsers(
+	public func listContextUsers(
 		contextId: std.string,
 		query: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.UserInfoList {

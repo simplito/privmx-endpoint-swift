@@ -76,15 +76,13 @@ public:
 	 * @param subscriptionIds list of subscriptionId
 	 */
 	ResultWithError<std::nullptr_t> unsubscribeFrom(const SubscriptionIdVector& subscriptionIds);
-	/**
-	 * Generate subscription Query for the Thread events.
-	 * @param eventType type of event which you listen for
-	 * @param selectorType scope on which you listen for events
-	 * @param selectorId ID of the selector
-	 */
+	
 	ResultWithError<SubscriptionQuery> buildSubscriptionQuery(endpoint::kvdb::EventType eventType,
 															  endpoint::kvdb::EventSelectorType selectorType,
 															  const std::string& selectorId);
+	ResultWithError<SubscriptionQuery> buildSubscriptionQueryForSelectedEntry(endpoint::kvdb::EventType eventType,
+																			  const std::string& kvdbId,
+																			  const std::string& kvdbEntryKey);
 
 private:
 	NativeKvdbApiWrapper(NativeConnectionWrapper& connection);
