@@ -287,7 +287,7 @@ public:
 	 * @return Boolean value wrapped in a `ResultWithError` object for error handling.
 	 *
 	 */
-	static ResultWithError<bool> isContextUsersStatusChangeEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<bool> isContextUsersStatusChangedEvent(const endpoint::core::EventHolder& eventHolder);
 	
 	/**
 	 * Extracts an `privmx::endpoint::core::ContextUsersStatusChangeEvent` from the `privmx::endpoint::core::EventHolder`
@@ -297,7 +297,7 @@ public:
 	 * @return Extracted `privmx::endpoint::core::ContextUsersStatusChangeEvent` wrapped in a `ResultWithError` object for error handling.
 	 *
 	 */
-	static ResultWithError<endpoint::core::ContextUsersStatusChangeEvent> extractContextUsersStatusChangeEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<endpoint::core::ContextUsersStatusChangedEvent> extractContextUsersStatusChangedEvent(const endpoint::core::EventHolder& eventHolder);
 };
 
 }
