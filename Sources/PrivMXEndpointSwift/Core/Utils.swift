@@ -14,7 +14,9 @@ import PrivMXEndpointSwiftNative
 public enum Hex{
 	
 	/// Encodes buffer to a string in Hex format.
+	///
 	/// - Parameter data: buffer to encode
+	///
 	/// - Returns: string in Hex format
 	public static func encode(
 		data: privmx.endpoint.core.Buffer
@@ -34,7 +36,9 @@ public enum Hex{
 	}
 	
 	/// Decodes  string in Hex to buffer.
+	///
 	/// - Parameter hex_data: string to decode
+	///
 	/// - Returns: buffer with decoded data
 	public static func decode(
 		hex_data: std.string
@@ -53,7 +57,9 @@ public enum Hex{
 	}
 	
 	/// Checks if given string is in Hex format.
+	///
 	/// - Parameter data: string to check
+	///
 	/// - Returns: check result
 	public static func `is`(
 		data: std.string
@@ -76,7 +82,9 @@ public enum Hex{
 public enum Base32{
 	
 	/// Encodes buffer to a string in Base32 format.
+	///
 	/// - Parameter data: buffer to encode
+	///
 	/// - Returns: string in Hex format
 	public static func encode(
 		data: privmx.endpoint.core.Buffer
@@ -96,7 +104,9 @@ public enum Base32{
 	}
 	
 	/// Decodes  string in Base32 to buffer.
+	///
 	/// - Parameter base32_data: string to decode
+	///
 	/// - Returns: buffer with decoded data
 	public static func decode(
 		base32_data: std.string
@@ -115,7 +125,9 @@ public enum Base32{
 	}
 	
 	/// Checks if given string is in Base32 format.
+	///
 	/// - Parameter data: string to check
+	///
 	/// - Returns: check result
 	public static func `is`(
 		data: std.string
@@ -138,7 +150,9 @@ public enum Base32{
 public enum Base64{
 	
 	/// Encodes buffer to a string in Base64 format.
+	///
 	/// - Parameter data: buffer to encode
+	///
 	/// - Returns: string in Hex format
 	public static func encode(
 		data: privmx.endpoint.core.Buffer
@@ -158,7 +172,9 @@ public enum Base64{
 	}
 	
 	/// Decodes  string in Base64 to buffer.
+	///
 	/// - Parameter base64_data: string to decode
+	///
 	/// - Returns: buffer with decoded data
 	public static func decode(
 		base64_data: std.string
@@ -177,7 +193,9 @@ public enum Base64{
 	}
 	
 	/// Checks if given string is in Base64 format.
+	///
 	/// - Parameter data: string to check
+	///
 	/// - Returns: check result
 	public static func `is`(
 		data: std.string
@@ -201,7 +219,9 @@ public enum Base64{
 public enum Utils{
 	
 	/// Removes all trailing whitespace.
-	/// - Parameter data:
+	///
+	/// - Parameter data: string to trim
+	///
 	/// - Returns: copy of the string with removed trailing whitespace.
 	public static func trim(
 		data: std.string
@@ -220,8 +240,8 @@ public enum Utils{
 	}
 	
 	/// Removes all whitespace from the left of given string.
-	/// - Parameter data: inout string to trim
-	/// - Returns: copy of the string with removed leading whitespace.
+	///
+	/// - Parameter data: reference to string
 	public static func ltrim(
 		data: inout std.string
 	) throws -> Void {
@@ -232,8 +252,8 @@ public enum Utils{
 	}
 	
 	/// Removes all whitespace from the right of given string.
-	/// - Parameter data: inout string to trim
-	/// - Returns: copy of the string with removed trailing whitespace.
+	///
+	/// - Parameter data: reference to string
 	public static func rtrim(
 		data: inout std.string
 	) throws -> Void {
@@ -247,6 +267,7 @@ public enum Utils{
 	///
 	/// - Parameter data: string to split
 	/// - Parameter delimiter: string which will be split
+	///
 	/// - Returns: vector containing all split parts
 	public static func split(
 		data: std.string,
