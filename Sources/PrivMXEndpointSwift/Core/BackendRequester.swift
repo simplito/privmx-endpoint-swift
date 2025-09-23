@@ -12,33 +12,27 @@
 import Foundation
 import PrivMXEndpointSwiftNative
 
-/// Tool for direct requests to PrivMX Bridge.
+/// 'BackendRequester' provides functions to call PrivMX Bridge API.
 public enum BackendRequester{
 	
 	/// Makes a direct request to PrivMX Bridge.
-    ///
-    /// This function allows you to make direct API requests to PrivMX Bridge with the required authorization and parameters. The response is returned as a string, representing the result of the request.
-    ///
-    /// - Parameters:
-    ///   - serverUrl: The URL of PrivMX cloud server to which the request will be sent.
-    ///   - memberToken: The authorization token for the member making the request.
-    ///   - method: The API method or endpoint to be called on PrivMX Bridge.
-    ///   - paramsAsJson: The parameters for the request, formatted as a JSON string.
-    ///
-    /// - Throws: 
-    ///   - `PrivMXEndpointError.failedRequestingBackend` if the request to the backend fails due to any error from the bridge or incorrect request formatting.
-    ///   - Any other unexpected errors that might occur during the execution of the request.
-    ///
-    /// - Returns: 
-    ///   - A string containing the response from PrivMX Bridge, typically in JSON format.
+	///
+	/// - Parameter serverUrl: PrivMX Bridge server URL
+	/// - Parameter accessToken: token for authorization (see PrivMX Bridge API for more details)
+	/// - Parameter method: API method to call
+	/// - Parameter paramsAsJson: API method's parameters in JSON format
+	///
+	/// - Throws: `PrivMXEndpointError.failedRequestingBackend` if the request to the backend fails due to any error from the bridge or incorrect request formatting. And any other unexpected errors that might occur during the execution of the request.
+	///
+	/// - Returns: JSON string representing raw server response
 	public static func backendRequest(
 		serverUrl: std.string,
-		memberToken: std.string,
+		accessToken: std.string,
 		method: std.string,
 		paramsAsJson: std.string
 	) throws -> std.string {
 		let res = privmx.NativeBackendRequesterWrapper.backendRequest(serverUrl,
-																	  memberToken,
+																	  accessToken,
 																	  method,
 																	  paramsAsJson)
 		guard res.error.value == nil else{
@@ -53,21 +47,15 @@ public enum BackendRequester{
 		return result
 	}
 	
-	/// Makes a direct request to PrivMX Bridge.
+	/// Sends request to PrivMX Bridge API.
 	///
-	/// This function allows you to make direct API requests to PrivMX Bridge with the required parameters. The response is returned as a string, representing the result of the request.
+	/// - Parameter serverUrl: PrivMX Bridge server URL
+	/// - Parameter method: API method to call
+	/// - Parameter paramsAsJson: API method's parameters in JSON format
 	///
-	/// - Parameters:
-	///   - serverUrl: The URL of PrivMX cloud server to which the request will be sent.
-	///   - method: The API method or endpoint to be called on PrivMX Bridge.
-	///   - paramsAsJson: The parameters for the request, formatted as a JSON string.
+	/// - Throws: `PrivMXEndpointError.failedRequestingBackend` if the request to the backend fails due to any error from the bridge or incorrect request formatting. And any other unexpected errors that might occur during the execution of the request.
 	///
-	/// - Throws:
-	///   - `PrivMXEndpointError.failedRequestingBackend` if the request to the backend fails due to any error from the bridge or incorrect request formatting.
-	///   - Any other unexpected errors that might occur during the execution of the request.
-	///
-	/// - Returns:
-	///   - A string containing the response from PrivMX Bridge, typically in JSON format.
+	/// - Returns: JSON string representing raw server response
 	public static func backendRequest(
 		serverUrl: std.string,
 		method: std.string,
@@ -91,13 +79,13 @@ public enum BackendRequester{
 	
 	/// Sends a request to PrivMX Bridge API using pair of API KEY ID and API KEY SECRET for authorization.
 	///
-	/// - Parameters:
-	///   - serverUrl: PrivMX Bridge server URL
-	///   - apiKeyId: API KEY ID (see PrivMX Bridge API for more details)
-	///   - apiKeySecret: API KEY SECRET (see PrivMX Bridge API for more details)
-	///   - mode: allows you to set whether the request should be signed (mode = 1) or plain (mode = 0)
-	///   - method: API method to call
-	///   - paramsAsJson: API method's parameters in JSON format
+	/// - Parameter serverUrl: PrivMX Bridge server URL
+	/// - Parameter apiKeyId: API KEY ID (see PrivMX Bridge API for more details)
+	/// - Parameter apiKeySecret: API KEY SECRET (see PrivMX Bridge API for more details)
+	/// - Parameter mode: allows you to set whether the request should be signed (mode = 1) or plain (mode = 0)
+	/// - Parameter method: API method to call
+	/// - Parameter paramsAsJson: API method's parameters in JSON format
+	///
 	/// - Returns: A string containing the response from PrivMX Bridge, typically in JSON format.
 	public static func backendRequest(
 		serverUrl: std.string,
