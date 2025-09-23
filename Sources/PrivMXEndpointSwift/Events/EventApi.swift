@@ -11,6 +11,7 @@
 
 import PrivMXEndpointSwiftNative
 
+/// 'EventApi' is a class representing Endpoint's API for context custom events.
 public class EventApi{
 	internal var api : privmx.NativeEventApiWrapper
 	
@@ -20,15 +21,13 @@ public class EventApi{
 		self.api = api
 	}
 	
-	/// Creates a new instance of `EventApi` from a `Connection` object.
+	/// Creates an instance of 'EventApi'.
 	///
-	/// This method initializes the `EventApi` instance, enabling CustomEvent-related operations over the specified connection.
-	///
-	/// - Parameter connection: The connection object to be used for interacting with Custom Events.
+	/// - Parameter connection: instance of 'Connection'
 	///
 	/// - Throws: `PrivMXEndpointError.failedInstantiatingEventApi` if an error occurs during the initialization.
 	///
-	/// - Returns: A newly created `EventApi` instance.
+	/// - Returns: `EventApi` object
 	public static func create(
 		connection: inout Connection
 	) throws -> EventApi {
@@ -58,7 +57,6 @@ public class EventApi{
 	/// - Parameter users: event's data
 	///
 	/// - Throws: `PrivMXEndpointError.failedEmittingCustomEvent` if listing the messages fails.
-	///
 	public func emitEvent(
 		contextId: std.string,
 		users: privmx.UserWithPubKeyVector,
@@ -76,7 +74,7 @@ public class EventApi{
 	}
 	
 	
-	/// Subscribe for the events on the given subscription query.
+	/// Subscribe for the custom events on the given subscription query.
 	///
 	/// - Parameter subscriptionQueries: list of queries
 	///
@@ -105,9 +103,9 @@ public class EventApi{
 	///
 	/// - Throws: When unsubscribing fails.
 	public func unsubscribeFrom(
-		subscriptionId: privmx.SubscriptionIdVector
+		subscriptionIds: privmx.SubscriptionIdVector
 	) throws -> Void {
-		let res = api.unsubscribeFrom(subscriptionId)
+		let res = api.unsubscribeFrom(subscriptionIds)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
 		}
@@ -115,13 +113,11 @@ public class EventApi{
 	
 	/// Generate subscription Query for the Custom events.
 	///
-	/// - Parameter eventType: type of event which you listen for
-	/// - Parameter selectorType: scope on which you listen for events
+	/// - Parameter channelName: name of the Channel
+	/// - Parameter selectorType: selector of scope on which you listen for events
 	/// - Parameter selectorId: ID of the selector
 	///
 	/// - Throws: When building the subscription Query fails.
-	///
-	/// - Returns: a properly formatted event subscription request.
 	public func buildSubscriptionQuery(
 		channelName: std.string,
 		selectorType: privmx.endpoint.event.EventSelectorType,
