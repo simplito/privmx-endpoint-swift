@@ -47,6 +47,20 @@ public enum BackendRequester{
 		return result
 	}
 	
+	@available(*, deprecated, renamed: "backendRequest(serverUrl:accessToken:method:paramsAsJson:)")
+	public static func backendRequest(
+		serverUrl: std.string,
+		memberToken: std.string,
+		method: std.string,
+		paramsAsJson: std.string
+	) throws -> std.string {
+		try self.backendRequest(
+			serverUrl: serverUrl,
+			accessToken: memberToken,
+			method: method,
+			paramsAsJson: paramsAsJson)
+	}
+	
 	/// Sends request to PrivMX Bridge API.
 	///
 	/// - Parameter serverUrl: PrivMX Bridge server URL
