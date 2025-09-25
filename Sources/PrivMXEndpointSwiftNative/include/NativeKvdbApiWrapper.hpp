@@ -16,13 +16,7 @@ namespace privmx {
 
 class NativeKvdbApiWrapper {
 public:
-	/**
-	 * Creates an instance of 'KvdbApi'.
-	 *
-	 * @param connection instance of 'Connection'
-	 *
-	 * @return KvdbApi object
-	 */
+	
 	static ResultWithError<NativeKvdbApiWrapper> create(NativeConnectionWrapper& connection);
 	
 	ResultWithError<std::string> createKvdb(const std::string& contextId,
@@ -63,18 +57,10 @@ public:
 											   const std::string& key);
 	ResultWithError<StringBoolMap> deleteEntries(const std::string& kvdbId,
 												const StringVector& keys);
-	/**
-	 * Subscribe for the Thread events on the given subscription query.
-	 *
-	 * @param subscriptionQueries list of queries
-	 * @return list of subscriptionIds in maching order to subscriptionQueries
-	 */
+	
 	ResultWithError<SubscriptionIdVector> subscribeFor(const SubscriptionQueryVector& subscriptionQueries);
 
-	/**
-	 * Unsubscribe from events for the given subscriptionId.
-	 * @param subscriptionIds list of subscriptionId
-	 */
+	
 	ResultWithError<std::nullptr_t> unsubscribeFrom(const SubscriptionIdVector& subscriptionIds);
 	
 	ResultWithError<SubscriptionQuery> buildSubscriptionQuery(endpoint::kvdb::EventType eventType,
