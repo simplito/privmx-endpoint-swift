@@ -25,12 +25,10 @@ public class EventQueue {
 		self.api = api
 	}
 	
-	/// Retrieves a singleton instance of `EventQueue`.
+	/// Gets the EventQueue instance.
 	///
-	/// This method attempts to access the global instance of `EventQueue`, ensuring only one instance
-	/// of the event queue wrapper exists. It should be used whenever event queue interaction is needed.
+	/// - Returns: EventQueue object
 	///
-	/// - Returns: The singleton `EventQueue` instance.
 	/// - Throws: `PrivMXEndpointError.failedInstantiatingEventQueue` if an error occurs while instantiating the event queue.
 	public static func getInstance(
 	) throws -> EventQueue{
@@ -47,10 +45,9 @@ public class EventQueue {
 		return EventQueue(api: result)
 	}
 	
-	/// Inserts a special break event into the event queue.
+	/// Puts the break event on the events queue.
 	///
-	/// This method emits a special event, `privmx.endpoint.core.libBreakEvent`, into the event queue.
-	/// This break event can be used to interrupt or signal specific conditions in the event processing flow.
+	/// You can use it to break the `waitEvent` loop.
 	///
 	/// - Throws: `PrivMXEndpointError.failedEmittingBreakEvent` if an error occurs during event emission.
 	public func emitBreakEvent(
@@ -61,13 +58,10 @@ public class EventQueue {
 		}
 	}
 	
-	/// Waits for the next event in the queue.
+	/// Starts a loop waiting for an Event.
 	///
-	/// This method will pause and wait until a new event arrives in the queue. If there are
-	/// any unprocessed events already in the queue, it will return the first unprocessed event.
-	/// The returned event should be queried using `is*Event` methods and extracted with the appropriate method.
+	/// - Returns: EventHolder object
 	///
-	/// - Returns: An `EventHolder` object containing the next available event.
 	/// - Throws: `PrivMXEndpointError.failedWaitingForEvent` if an error occurs while waiting for the event.
 	public func waitEvent(
 	) throws -> privmx.endpoint.core.EventHolder{
@@ -84,13 +78,10 @@ public class EventQueue {
 		return result
 	}
 	
-	/// Attempts to retrieve the next unprocessed event from the queue.
-	///
-	/// This method retrieves the next unprocessed event from the queue without waiting. If there are
-	/// no unprocessed events, it will simply return `nil`. The returned event, if present, should be
-	/// queried using `is*Event` methods and extracted with the appropriate method.
-	///
-	/// - Returns: An `EventHolder` containing the next unprocessed event, or `nil` if no unprocessed events are available.
+	/// Gets the first event from the events queue.
+	/// 
+	/// - Returns: EventHolder object (optional)
+	/// 
 	/// - Throws: `PrivMXEndpointError.failedGettingEvent` if an error occurs while retrieving the event.
 	public func getEvent(
 	) throws -> privmx.endpoint.core.EventHolder?{
