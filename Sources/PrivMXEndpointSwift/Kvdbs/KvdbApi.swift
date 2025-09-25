@@ -26,7 +26,7 @@ public class KvdbApi: @unchecked Sendable{
 	///
 	/// - Parameter connection: instance of 'Connection'
 	///
-	/// - Returns: `KvdbApi` object.
+	/// - Returns: KvdbApi object
 	public static func create(
 		connection: inout Connection
 	) throws -> KvdbApi {
@@ -53,9 +53,8 @@ public class KvdbApi: @unchecked Sendable{
 	/// - Parameter publicMeta: public (unencrypted) metadata
 	/// - Parameter privateMeta: private (encrypted) metadata
 	/// - Parameter policies: KVDB's policies
-	/// - Parameter contextId: ID of the Context to create the KVDB in
 	///
-	/// - Returns: Id of the created KVDB
+	/// - Returns: ID of the created KVDB
 	///
 	/// - Throws: `PrivMXEndpointError.failedCreatingKvdb` if creating a Kvdb fails.
 	public func createKvdb(
@@ -102,7 +101,6 @@ public class KvdbApi: @unchecked Sendable{
 	/// - Parameter force: force update (without checking version)
 	/// - Parameter forceGenerateNewKey: force to regenerate a key for the KVDB
 	/// - Parameter policies: KVDB's policies
-	/// - Parameter kvdbId: ID of the KVDB to update
 	///
 	/// - Throws: `PrivMXEndpointError.failedUpdatingKvdb` when the operation fails.
 	public func updateKvdb(
@@ -152,7 +150,7 @@ public class KvdbApi: @unchecked Sendable{
 	}
 	
 	
-	///Check whether the KVDB entry exists.
+	/// Check whether the KVDB entry exists.
 	///
 	/// - Parameter kvdbId: KVDB ID of the KVDB entry to check
 	/// - Parameter key: key of the KVDB entry to check
@@ -175,9 +173,9 @@ public class KvdbApi: @unchecked Sendable{
 		return result
 	}
 	
-	///Gets a KVDB by given KVDB ID.
+	/// Gets a KVDB by given KVDB ID.
 	///
-	/// - Parameter kvdbId:ID of KVDB to get
+	/// - Parameter kvdbId: ID of KVDB to get
 	///
 	/// - Returns: struct containing info about the KVDB
 	///
@@ -279,7 +277,7 @@ public class KvdbApi: @unchecked Sendable{
 	/// Gets a list of KVDB entries from a KVDB.
 	///
 	/// - Parameter kvdbId: ID of the KVDB to list KVDB entries from
-	/// - Parameter pagingQuery:  with list query parameters
+	/// - Parameter pagingQuery: with list query parameters
 	///
 	/// - Returns: struct containing a list of KVDB entries
 	///
@@ -309,6 +307,7 @@ public class KvdbApi: @unchecked Sendable{
 	/// - Parameter publicMeta: public KVDB entry metadata
 	/// - Parameter privateMeta: private KVDB entry metadata
 	/// - Parameter data: content of the KVDB entry
+	/// - Parameter version: when 0 indicates creation of new entry, otherwise required to be equal to the version provided by the server
 	///
 	/// - Returns: ID of the new KVDB entry
 	///
@@ -355,6 +354,8 @@ public class KvdbApi: @unchecked Sendable{
 	/// - Parameter keys: vector of the keys of the KVDB entries to delete
 	///
 	/// - Returns: map with the statuses of deletion for every key
+	///
+	/// - Throws: when an error occurs
 	public func deleteEntries(
 		kvdbId: std.string,
 		keys: privmx.StringVector
@@ -373,13 +374,13 @@ public class KvdbApi: @unchecked Sendable{
 		return result
 	}
 	
-	/// Subscribe for the Kvdb events on the given subscription query.
+	/// Subscribe for the KVDB events on the given subscription query.
 	///
 	/// - Parameter subscriptionQueries: list of queries
 	///
 	/// - Throws: When subscribing for events fails.
 	///
-	/// - Returns: list of subscriptionIds in maching order to subscriptionQueries.
+	/// - Returns: list of subscriptionIds in maching order to subscriptionQueries
 	public func subscribeFor(
 		subscriptionQueries: privmx.SubscriptionQueryVector
 	) throws -> privmx.SubscriptionIdVector {
@@ -402,15 +403,15 @@ public class KvdbApi: @unchecked Sendable{
 	///
 	/// - Throws: When unsubscribing fails.
 	public func unsubscribeFrom(
-		subscriptionId: privmx.SubscriptionIdVector
+		subscriptionIds: privmx.SubscriptionIdVector
 	) throws -> Void {
-		let res = api.unsubscribeFrom(subscriptionId)
+		let res = api.unsubscribeFrom(subscriptionIds)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
 		}
 	}
 	
-	/// Generate subscription Query for the Kvdb events.
+	/// Generate subscription Query for the KVDB events.
 	///
 	/// - Parameter eventType: type of event which you listen for
 	/// - Parameter selectorType: scope on which you listen for events
@@ -437,11 +438,11 @@ public class KvdbApi: @unchecked Sendable{
 		return result
 	}
 
-	/// Generate subscription Query for the KvdbEntry events.
+	/// Generate subscription Query for the KVDB events for single KvdbEntry.
 	///
 	/// - Parameter eventType: type of event which you listen for
-	/// - Parameter kvdbId: ID of the KVDB
-	/// - Parameter kvdbEntryKey: key of the KVDB Entry
+	/// - Parameter kvdbId: Id of Kvdb
+	/// - Parameter kvdbEntryKey: Key of Kvdb Entry
 	///
 	/// - Throws: When building the subscription Query fails.
 	///
