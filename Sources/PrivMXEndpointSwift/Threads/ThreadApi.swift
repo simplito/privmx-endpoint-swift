@@ -361,9 +361,9 @@ public class ThreadApi{
 	///
 	/// - Throws: When unsubscribing fails.
 	public func unsubscribeFrom(
-		subscriptionId: privmx.SubscriptionIdVector
+		subscriptionIds: privmx.SubscriptionIdVector
 	) throws -> Void {
-		let res = api.unsubscribeFrom(subscriptionId)
+		let res = api.unsubscribeFrom(subscriptionIds)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
 		}
