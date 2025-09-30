@@ -707,10 +707,10 @@ ResultWithError<core::ContextUserRemovedEvent> CoreEventHandlerWrapper::extractC
 	return res;
 }
 
-ResultWithError<bool> CoreEventHandlerWrapper::isContextUsersStatusChangeEvent(const core::EventHolder& eventHolder){
+ResultWithError<bool> CoreEventHandlerWrapper::isContextUsersStatusChangedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
 	try{
-		res.result = core::Events::isContextUsersStatusChangeEvent(eventHolder);
+		res.result = core::Events::isContextUsersStatusChangedEvent(eventHolder);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -733,10 +733,10 @@ ResultWithError<bool> CoreEventHandlerWrapper::isContextUsersStatusChangeEvent(c
 	return res;
 }
 
-ResultWithError<core::ContextUsersStatusChangeEvent> CoreEventHandlerWrapper::extractContextUsersStatusChangeEvent(const core::EventHolder& eventHolder){
-	ResultWithError<core::ContextUsersStatusChangeEvent> res;
+ResultWithError<core::ContextUsersStatusChangedEvent> CoreEventHandlerWrapper::extractContextUsersStatusChangedEvent(const core::EventHolder& eventHolder){
+	ResultWithError<core::ContextUsersStatusChangedEvent> res;
 	try{
-		res.result = core::Events::extractContextUsersStatusChangeEvent(eventHolder);
+		res.result = core::Events::extractContextUsersStatusChangedEvent(eventHolder);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),

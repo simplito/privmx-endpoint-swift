@@ -14,7 +14,7 @@ import Cxx
 import CxxStdlib
 import PrivMXEndpointSwiftNative
 
-/// Swift wrapper for `privmx.NativeThreadApiWrapper`, providing Thread-related operations within PrivMX platform.
+/// 'ThreadApi' is a class representing Endpoint's API for Threads and their messages.
 public class ThreadApi{
 	
 	/// An instance of the wrapped C++ class.
@@ -24,15 +24,13 @@ public class ThreadApi{
 		self.api = api
 	}
 	
-	/// Creates a new instance of `ThreadApi` from a `Connection` object.
+	/// Creates an instance of 'ThreadApi'.
 	///
-	/// This method initializes the `ThreadApi` instance, enabling Thread-related operations over the specified connection.
-	///
-	/// - Parameter connection: The connection object to be used for interacting with Threads.
+	/// - Parameter connection: instance of 'Connection'
 	///
 	/// - Throws: `PrivMXEndpointError.failedInstantiatingThreadApi` if an error occurs during the initialization.
 	///
-	/// - Returns: A newly created `ThreadApi` instance.
+	/// - Returns: ThreadApi object
 	public static func create(
 		connection: inout Connection
 	) throws -> ThreadApi{
@@ -49,23 +47,19 @@ public class ThreadApi{
 		return ThreadApi(api: result)
 	}
 	
-	/// Creates a new Thread within PrivMX Bridge.
+	/// Creates a new Thread in given Context.
 	///
-	/// This method creates a new Thread in the specified context, assigning users and managers to it. Note that managers must be added explicitly as users to access the Thread.
-	///
-	/// If `policies` argument is set to `nil`, the default policies will be applied.
-	///
-	/// - Parameters:
-	///   - contextId: The context in which the Thread should be created.
-	///   - users: A vector of users who will have access to the Thread.
-	///   - managers: A vector of managers responsible for the Thread.
-	///   - publicMeta: Public metadata for the Thread, which will not be encrypted.
-	///   - privateMeta: Private metadata for the Thread, which will be encrypted.
-	///   - policies: A set of policies for the Container.
+	/// - Parameter contextId: ID of the Context to create the Thread in
+	/// - Parameter users: vector of UserWithPubKey structs which indicates who will have access to the created Thread
+	/// - Parameter managers: vector of UserWithPubKey structs which indicates who will have access (and management rights) to
+	///   the created Thread
+	/// - Parameter publicMeta: public (unencrypted) metadata
+	/// - Parameter privateMeta: private (encrypted) metadata
+	/// - Parameter policies: Thread's policies
 	///
 	/// - Throws: `PrivMXEndpointError.failedCreatingThread` if the Thread creation fails.
 	///
-	/// - Returns: The ID of the newly created Thread as a `std.string`.
+	/// - Returns: ID of the created Thread
 	public func createThread(
 		contextId: std.string,
 		users: privmx.UserWithPubKeyVector,
@@ -98,13 +92,13 @@ public class ThreadApi{
 		return result
 	}
 	
-	/// Retrieves detailed information about a specific Thread.
+	/// Gets a Thread by given Thread ID.
 	///
-	/// - Parameter threadId: The unique identifier of the Thread to retrieve.
+	/// - Parameter threadId: ID of Thread to get
 	///
 	/// - Throws: `PrivMXEndpointError.failedGettingThread` if fetching Thread details fails.
 	///
-	/// - Returns: A `privmx.endpoint.thread.Thread` instance representing the Thread details.
+	/// - Returns: Thread struct containing info about the Thread
 	public func getThread(
 		threadId: std.string
 	) throws -> privmx.endpoint.thread.Thread {
@@ -122,22 +116,17 @@ public class ThreadApi{
 		return result
 	}
 	
-	/// Updates an existing Thread with new values.
+	/// Updates an existing Thread.
 	///
-	/// This method updates the metadata, users, and managers of a Thread. The update can be forced, and a new key can be generated if needed.
-	///
-	/// If `policies` argument is set to `nil`, the default policies will be applied.
-	///
-	/// - Parameters:
-	///   - threadId: The unique identifier of the Thread to be updated.
-	///   - version: The current version of the Thread to ensure version consistency.
-	///   - users: A vector of users who will have access to the Thread.
-	///   - managers: A vector of managers responsible for the Thread.
-	///   - publicMeta: New public metadata for the Thread, which will not be encrypted.
-	///   - privateMeta: New private metadata for the Thread, which will be encrypted.
-	///   - force: Whether to force the update, bypassing version control.
-	///   - forceGenerateNewKey: Whether to generate a new key for the Thread.
-	///   - policies: A new set of policies for the Container.
+	/// - Parameter threadId: ID of the Thread to update
+	/// - Parameter version: vector of UserWithPubKey structs which indicates who will have access to the created Thread
+	/// - Parameter users: vector of UserWithPubKey structs which indicates who will have access (and management rights) to
+	/// - Parameter managers: public (unencrypted) metadata
+	/// - Parameter publicMeta: private (encrypted) metadata
+	/// - Parameter privateMeta: current version of the updated Thread
+	/// - Parameter force: force update (without checking version)
+	/// - Parameter forceGenerateNewKey: force to regenerate a key for the Thread
+	/// - Parameter policies: Thread's policies
 	///
 	/// - Throws: `PrivMXEndpointError.failedUpdatingThread` if the update process fails.
 	public func updateThread(
@@ -171,9 +160,9 @@ public class ThreadApi{
 		}
 	}
 	
-	/// Deletes a specified Thread.
+	/// Deletes a Thread by given Thread ID.
 	///
-	/// - Parameter threadId: The unique identifier of the Thread to delete.
+	/// - Parameter threadId: ID of the Thread to delete
 	///
 	/// - Throws: `PrivMXEndpointError.failedDeletingThread` if the deletion fails.
 	public func deleteThread(
@@ -186,15 +175,14 @@ public class ThreadApi{
 		}
 	}
 	
-	/// Lists all Threads accessible to the user within a specified context.
+	/// Gets a list of Threads in given Context.
 	///
-	/// - Parameters:
-	///   - contextId: The unique identifier of the context from which to list Threads.
-	///   - pagingQuery: A query object to filter and paginate the results.
+	/// - Parameter contextId: ID of the Context to get the Threads from
+	/// - Parameter pagingQuery: struct with list query parameters
 	///
 	/// - Throws: `PrivMXEndpointError.failedListingThreads` if the listing process fails.
 	///
-	/// - Returns: A `privmx.ThreadList` instance containing the list of Threads.
+	/// - Returns: struct containing a list of Threads
 	public func listThreads(
 		contextId: std.string,
 		pagingQuery: privmx.endpoint.core.PagingQuery
@@ -221,15 +209,14 @@ public class ThreadApi{
 	
 	/// Sends a message in a Thread.
 	///
-	/// - Parameters:
-	///   - threadId: The unique identifier of the Thread to send the message to.
-	///   - publicMeta: Public metadata for the message, which will not be encrypted.
-	///   - privateMeta: Encrypted metadata for the message.
-	///   - data: The actual content of the message.
+	/// - Parameter threadId: ID of the Thread to send message to
+	/// - Parameter publicMeta: public message metadata
+	/// - Parameter privateMeta: private message metadata
+	/// - Parameter data: content of the message
 	///
 	/// - Throws: `PrivMXEndpointError.failedCreatingMessage` if the message creation fails.
 	///
-	/// - Returns: The ID of the created message as a `std.string`.
+	/// - Returns: ID of the new message
 	public func sendMessage(
 		threadId: std.string,
 		publicMeta: privmx.endpoint.core.Buffer,
@@ -252,9 +239,9 @@ public class ThreadApi{
 		return result
 	}
 	
-	/// Deletes a specified message.
+	/// Deletes a message by given message ID.
 	///
-	/// - Parameter messageId: The unique identifier of the message to delete.
+	/// - Parameter messageId: ID of the message to delete
 	///
 	/// - Throws: `PrivMXEndpointError.failedDeletingMessage` if the deletion process fails.
 	public func deleteMessage(
@@ -266,13 +253,13 @@ public class ThreadApi{
 		}
 	}
 	
-	/// Retrieves a specific message by its ID.
+	/// Gets a message by given message ID.
 	///
-	/// - Parameter messageId: The unique identifier of the message to retrieve.
+	/// - Parameter messageId: of the message to get
 	///
 	/// - Throws: `PrivMXEndpointError.failedGettingMessage` if retrieving the message fails.
 	///
-	/// - Returns: A `privmx.endpoint.thread.Message` instance representing the message details.
+	/// - Returns: struct containing the message
 	public func getMessage(
 		_ messageId: std.string
 	) throws -> privmx.endpoint.thread.Message {
@@ -290,15 +277,14 @@ public class ThreadApi{
 		return result
 	}
 	
-	/// Lists all messages from a specified Thread based on a query.
+	/// Gets a list of messages from a Thread.
 	///
-	/// - Parameters:
-	///   - threadId: The unique identifier of the Thread from which to list messages.
-	///   - pagingQuery: A query object to filter and paginate the results.
+	/// - Parameter threadId: ID of the Thread to list messages from
+	/// - Parameter pagingQuery: struct with list query parameters
 	///
 	/// - Throws: `PrivMXEndpointError.failedListingMessages` if listing the messages fails.
 	///
-	/// - Returns: A `privmx.MessageList` instance containing the list of messages.
+	/// - Returns: struct containing a list of messages
 	public func listMessages(
 		threadId: std.string,
 		pagingQuery: privmx.endpoint.core.PagingQuery
@@ -323,13 +309,13 @@ public class ThreadApi{
 	) throws -> privmx.MessageList {
 		try listMessages(threadId: threadId, pagingQuery: query)
 	}
-	/// Updates an existing message with new metadata and content.
+	
+	/// Update message in a Thread.
 	///
-	/// - Parameters:
-	///   - messageId: The unique identifier of the message to be updated.
-	///   - publicMeta: New public metadata for the message, which will not be encrypted.
-	///   - privateMeta: New encrypted metadata for the message.
-	///   - data: New content for the message, which will not be encrypted.
+	/// - Parameter messageId: ID of the message to update
+	/// - Parameter publicMeta: public message metadata
+	/// - Parameter privateMeta: private message metadata
+	/// - Parameter data: content of the message
 	///
 	/// - Throws: `PrivMXEndpointError.failedUpdatingMessage` if the update fails.
 	public func updateMessage(
@@ -352,7 +338,7 @@ public class ThreadApi{
 	///
 	/// - Throws: When subscribing for events fails.
 	///
-	/// - Returns: list of subscriptionIds in maching order to subscriptionQueries.
+	/// - Returns: list of subscriptionIds in maching order to subscriptionQueries
 	public func subscribeFor(
 		subscriptionQueries: privmx.SubscriptionQueryVector
 	) throws -> privmx.SubscriptionIdVector {
@@ -375,9 +361,9 @@ public class ThreadApi{
 	///
 	/// - Throws: When unsubscribing fails.
 	public func unsubscribeFrom(
-		subscriptionId: privmx.SubscriptionIdVector
+		subscriptionIds: privmx.SubscriptionIdVector
 	) throws -> Void {
-		let res = api.unsubscribeFrom(subscriptionId)
+		let res = api.unsubscribeFrom(subscriptionIds)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
 		}
@@ -393,9 +379,9 @@ public class ThreadApi{
 	///
 	/// - Returns: a properly formatted event subscription request.
 	public func buildSubscriptionQuery(
-	eventType: privmx.endpoint.thread.EventType,
-	selectorType: privmx.endpoint.thread.EventSelectorType,
-	selectorId: std.string
+		eventType: privmx.endpoint.thread.EventType,
+		selectorType: privmx.endpoint.thread.EventSelectorType,
+		selectorId: std.string
 	) throws -> privmx.SubscriptionQuery {
 		let res = api.buildSubscriptionQuery(eventType, selectorType, selectorId)
 		guard res.error.value == nil else {

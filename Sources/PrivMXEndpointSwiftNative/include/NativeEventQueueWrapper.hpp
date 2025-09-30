@@ -24,38 +24,13 @@ namespace privmx {
 class NativeEventQueueWrapper{
 public:
 	
-	/**
-	 * Returns an instance of  `EventQueue`. Note that all instances share the same queue.
-	 *
-	 *@return `privmx::endpoint::core::EventQueue` wrapped in a `ResultWithError` structure for error handling.
-	 */
+	
 	static ResultWithError<NativeEventQueueWrapper> getInstance();
 	
-	/**
-	 * Emits a special event that allows for ending of a running `waitEvent()`
-	 *
-	 *@return `ResultWithError` structure for error handling.
-	 */
 	ResultWithError<nullptr_t> emitBreakEvent();
 	
-	/**
-	 * Waits for an event from Platform Bridge.
-	 *
-	 * If there are no events available, this method wil wait until a new one arrives.
-	 *
-	 * @return `privmx::endpoint::core::EventHolder` wrapped in a `ResultWithError` structure for error handling.
-	 *
-	 */
 	ResultWithError<endpoint::core::EventHolder> waitEvent();
 	
-	/**
-	 * Returns an event from Platform Bringe, if one is available
-	 *
-	 * This method returns immediately, regardles if there were any events.
-	 *
-	 * @return Optional `privmx::endpoint::core::EventHolder` wrapped in a `ResultWithError` structure for error handling.
-	 *
-	 */
 	ResultWithError<std::optional<endpoint::core::EventHolder>> getEvent();
 private:
 	std::shared_ptr<endpoint::core::EventQueue> api;

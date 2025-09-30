@@ -19,16 +19,15 @@ public class InboxApi{
 	internal var api: privmx.NativeInboxApiWrapper
 	
 	
-	/// Creates a new instance of `InboxApi` using a connection, `threadApi`, and `StoreApi`.
+	/// Creates an instance of 'InboxApi'.
 	///
-	/// - Parameters:
-	///   - connection: The connection object to interact with PrivMX.
-	///   - threadApi: The Thread API instance.
-	///   - storeApi: The Store API instance.
+	/// - Parameter  connection: instance of 'Connection'
+	/// - Parameter  threadApi: instance of 'ThreadApi'
+	/// - Parameter  storeApi: instance of 'StoreApi'
 	///
 	/// - Throws: `PrivMXEndpointError.failedInstantiatingInboxApi` if an error occurs during initialization.
 	///
-	/// - Returns: A new `InboxApi` instance.
+	/// - Returns: InboxApi object
 	public static func create(
 		connection:inout Connection,
 		threadApi: inout ThreadApi,
@@ -56,22 +55,19 @@ public class InboxApi{
 		self.api = api
 	}
 	
-	/// Creates a new Inbox in the specified context.
+	/// Creates a new Inbox.
 	///
-	/// If `policies` argument is set to `nil`, the default policies will be applied.
-	///
-	/// - Parameters:
-	///   - contextId: The ID of the context where the Inbox should be created.
-	///   - users: A vector of users who will have access to the Inbox.
-	///   - managers: A vector of users who will manage the Inbox.
-	///   - publicMeta: Public metadata that is not encrypted.
-	///   - privateMeta: Private metadata that is encrypted.
-	///   - filesConfig: An optional configuration for file storage.
-	///   - policies: A set of policies for the Container.
+	///  - Parameter contextId: ID of the Context of the new Inbox
+	///  - Parameter users: vector of UserWithPubKey structs which indicates who will have access to the created Inbox
+	///  - Parameter managers: vector of UserWithPubKey structs which indicates who will have access (and management rights) to
+	///  - Parameter publicMeta: public (unencrypted) metadata
+	///  - Parameter privateMeta: private (encrypted) metadata
+	///  - Parameter filesConfig: struct to override default file configuration
+	///  - Parameter policies: Inbox policies
 	///
 	/// - Throws: `PrivMXEndpointError.failedCreatingInbox` if Inbox creation fails.
 	///
-	/// - Returns: The ID of the newly created Inbox as a `std.string`.
+	/// - Returns: ID of the created Inbox
 	public func createInbox(
 		contextId: std.string,
 		users: privmx.UserWithPubKeyVector,
@@ -113,21 +109,19 @@ public class InboxApi{
 		return result
 	}
 	
-	/// Updates an existing Inbox with new metadata and configuration.
+	/// Updates an existing Inbox.
 	///
-	/// If `policies` argument is set to `nil`, the default policies will be applied.
-	///
-	/// - Parameters:
-	///   - inboxId: The ID of the Inbox to be updated.
-	///   - users: A vector of users who will have access to the Inbox.
-	///   - managers: A vector of users who will manage the Inbox.
-	///   - publicMeta: Updated public metadata for the Inbox.
-	///   - privateMeta: Updated private metadata for the Inbox.
-	///   - filesConfig: An optional configuration for file storage.
-	///   - version: The current version of the Inbox for version control.
-	///   - force: Whether to force the update, ignoring version control.
-	///   - forceGenerateNewKey: Whether to force regeneration of a new key for the Inbox.
-	///   - policies: New set of policies for the Container.
+	/// - Parameter inboxId: ID of the Inbox to update
+	/// - Parameter users: vector of UserWithPubKey structs which indicates who will have access to the created Inbox
+	/// - Parameter managers: vector of UserWithPubKey structs which indicates who will have access (and management rights) to
+	/// the created Inbox
+	/// - Parameter publicMeta: public (unencrypted) metadata
+	/// - Parameter privateMeta: private (encrypted) metadata
+	/// - Parameter filesConfig: struct to override default files configuration
+	/// - Parameter version: current version of the updated Inbox
+	/// - Parameter force: force update (without checking version)
+	/// - Parameter forceGenerateNewKey: force to regenerate a key for the Inbox
+	/// - Parameter policies: Inbox policies
 	///
 	/// - Throws: `PrivMXEndpointError.failedUpdatingInbox` if the update process fails.
 	public func updateInbox(
@@ -170,13 +164,13 @@ public class InboxApi{
 		}
 	}
 	
-	/// Retrieves detailed information about a specific Inbox.
+	/// Gets a single Inbox by given Inbox ID.
 	///
-	/// - Parameter inboxId: The ID of the Inbox to retrieve.
+	/// - Parameter inboxId: ID of the Inbox to get
 	///
 	/// - Throws: `PrivMXEndpointError.failedGettingInbox` if fetching Inbox details fails.
 	///
-	/// - Returns: An `Inbox` instance containing Inbox details.
+	/// - Returns: struct containing information about the Inbox
 	public func getInbox(
 		inboxId: std.string
 	) throws -> privmx.endpoint.inbox.Inbox{
@@ -194,15 +188,14 @@ public class InboxApi{
 		return result
 	}
 	
-	/// Lists all Inboxes within a specified context.
+	/// Gets s list of Inboxes in given Context.
 	///
-	/// - Parameters:
-	///   - contextId: The ID of the context from which to list Inboxes.
-	///   - pagingQuery: A query object to filter and paginate the results.
+	/// - Parameter contextId: ID of the Context to get Inboxes from
+	/// - Parameter pagingQuery: struct with list query parameters
 	///
 	/// - Throws: `PrivMXEndpointError.failedListingInboxes` if listing Inboxes fails.
 	///
-	/// - Returns: An `InboxList` containing the list of Inboxes.
+	/// - Returns: struct containing list of Inboxes
 	public func listInboxes(
 		contextId: std.string,
 		pagingQuery: privmx.endpoint.core.PagingQuery
@@ -223,13 +216,14 @@ public class InboxApi{
 		return result
 	}
 	
-	/// Retrieves the public view of a specific Inbox.
+	/// Gets public data of given Inbox.
+	/// You do not have to be logged in to call this function.
 	///
-	/// - Parameter inboxId: The ID of the Inbox to retrieve the public view for.
+	/// - Parameter inboxId: ID of the Inbox to get
 	///
 	/// - Throws: `PrivMXEndpointError.failedGettingInboxPublicView` if fetching the public view fails.
 	///
-	/// - Returns: An `InboxPublicView` containing the public view of the Inbox.
+	/// - Returns: struct containing public accessible information about the Inbox
 	public func getInboxPublicView(
 		inboxId: std.string
 	) throws -> privmx.endpoint.inbox.InboxPublicView {
@@ -247,9 +241,9 @@ public class InboxApi{
 		return result
 	}
 	
-	/// Deletes a specified Inbox.
+	/// Deletes an Inbox by given Inbox ID.
 	///
-	/// - Parameter inboxId: The ID of the Inbox to delete.
+	/// - Parameter inboxId: ID of the Inbox to delete
 	///
 	/// - Throws: `PrivMXEndpointError.failedDeletingInbox` if deleting the Inbox fails.
 	public func deleteInbox(
@@ -263,19 +257,18 @@ public class InboxApi{
 		}
 	}
 	
-	/// Prepares a new entry to be sent to the Inbox.
+	/// Prepares a request to send data to an Inbox.
+	/// You do not have to be logged in to call this function.
 	///
-	/// If the entry contains files, they must first be prepared using `createFileHandle()` and attached to the entry.
-	///
-	/// - Parameters:
-	///   - inboxId: The ID of the Inbox to which the entry will be sent.
-	///   - data: The data to be included in the entry.
-	///   - inboxFileHandles: An optional vector of file handles to be attached to the entry. By default, no files are attached.
-	///   - userPrivKey: An optional private key of the user preparing the entry, if required.
+	/// - Parameter inboxId: ID of the Inbox to which the request applies
+	/// - Parameter data: entry data to send
+	/// - Parameter inboxFileHandles: optional list of file handles that will be sent with the request
+	/// - Parameter userPrivKey: sender can optionally provide a private key, which will be used: 1) to sign the sent data, 2) to derivation of the public key,
+	/// which will then be transferred along with the sent data and can be used in the future for further secure communication with the sender
 	///
 	/// - Throws: `PrivMXEndpointError.failedPreparingEntry` if preparing the entry fails.
 	///
-	/// - Returns: An `EntryHandle` representing the prepared entry, which should then be sent.
+	/// - Returns: handle
 	public func prepareEntry(
 		inboxId: std.string,
 		data: privmx.endpoint.core.Buffer,
@@ -304,11 +297,10 @@ public class InboxApi{
 		return result
 	}
 	
-	/// Sends a previously prepared entry to the Inbox.
+	/// Sends data to an Inbox.
+	/// You do not have to be logged in to call this function.
 	///
-	/// This method finalizes the process of sending an entry and handles closing of uploaded files.
-	///
-	/// - Parameter entryHandle: The handle of the prepared entry to be sent.
+	/// - Parameter entryHandle: ID of the Inbox to which the request applies
 	///
 	/// - Throws: `PrivMXEndpointError.failedSendingEntry` if sending the entry fails.
 	public func sendEntry(
@@ -334,13 +326,13 @@ public class InboxApi{
 		}
 	}
 	
-	/// Retrieves an entry from a specific Inbox.
+	/// Gets an entry from an Inbox.
 	///
-	/// - Parameter inboxEntryId: The ID of the entry to be retrieved.
+	/// - Parameter inboxEntryId: ID of an entry to read from the Inbox
 	///
 	/// - Throws: `PrivMXEndpointError.failedReadingEntry` if retrieving the entry fails.
 	///
-	/// - Returns: An `InboxEntry` instance representing the entry.
+	/// - Returns: struct containing data of the selected entry stored in the Inbox
 	public func readEntry(
 		inboxEntryId: std.string
 	) throws -> privmx.endpoint.inbox.InboxEntry {
@@ -357,15 +349,14 @@ public class InboxApi{
 		return result
 	}
 	
-	/// Lists entries within a specific Inbox.
+	/// Gets list of entries in given Inbox.
 	///
-	/// - Parameters:
-	///   - inboxId: The ID of the Inbox from which to list entries.
-	///   - pagingQuery: A query object to filter and paginate the results.
+	/// - Parameter inboxId: ID of the Inbox
+	/// - Parameter pagingQuery: struct with list query parameters
 	///
 	/// - Throws: `PrivMXEndpointError.failedListingEntries` if listing the entries fails.
 	///
-	/// - Returns: An `InboxEntryList` containing the list of entries.
+	/// - Returns: struct containing list of entries
 	public func listEntries(
 		inboxId: std.string,
 		pagingQuery: privmx.endpoint.core.PagingQuery
@@ -398,16 +389,16 @@ public class InboxApi{
 		}
 	}
 	
-	/// Creates a new file handle for writing data to the Inbox.
+	/// Creates a file handle to send a file to an Inbox.
+	/// You do not have to be logged in to call this function.
 	///
-	/// - Parameters:
-	///   - publicMeta: Public metadata for the file.
-	///   - privateMeta: Private metadata for the file.
-	///   - fileSize: The size of the file in bytes.
+	///  - Parameter publicMeta: file's public metadata
+	///  - Parameter privateMeta: file's private metadata
+	///  - Parameter fileSize: size of the file to send
 	///
 	/// - Throws: `PrivMXEndpointError.failedCreatingFileHandle` if creating the file handle fails.
 	///
-	/// - Returns: An `InboxFileHandle` for writing data to the file.
+	/// - Returns: file handle
 	public func createFileHandle(
 		publicMeta:privmx.endpoint.core.Buffer,
 		privateMeta:privmx.endpoint.core.Buffer,
@@ -428,12 +419,13 @@ public class InboxApi{
 		return result
 	}
 	
-	/// Writes a chunk of data to a file in the Inbox.
+	/// Sends file's data chunk to an Inbox.
+	/// (note: To send the entire file - divide it into pieces of the desired size and call the function for each fragment.)
+	/// You do not have to be logged in to call this function.
 	///
-	/// - Parameters:
-	///   - entryHandle: Handle to the prepared Inbox entry
-	///   - inboxFileHandle: handle to the file where the uploaded chunk belongs
-	///   - Buffer: dataChunk - file chunk to send
+	/// - Parameter entryHandle: Handle to the prepared Inbox entry
+	/// - Parameter inboxFileHandle: handle to the file where the uploaded chunk belongs
+	/// - Parameter Buffer: dataChunk - file chunk to send
 	///
 	/// - Throws: `PrivMXEndpointError.failedWritingToFile` if writing the data chunk fails.
 	public func writeToFile(
@@ -449,6 +441,7 @@ public class InboxApi{
 		}
 	}
 
+	
 	@available(*, deprecated, renamed: "writeToFile(entryHandle:inboxFileHandle:dataChunk:)")
 	public func writeToFile(
 		inboxHandle: privmx.EntryHandle,
@@ -463,13 +456,13 @@ public class InboxApi{
 		}
 	}
 	
-	/// Opens a file for reading from the Inbox.
+	/// Opens a file to read.
 	///
-	/// - Parameter fileId: The ID of the file to open.
+	/// - Parameter fileId: ID of the file to read
 	///
 	/// - Throws: `PrivMXEndpointError.failedOpeningFile` if opening the file fails.
 	///
-	/// - Returns: An `InboxFileHandle` for reading from the file.
+	/// - Returns: handle to read file data
 	public func openFile(
 		fileId: std.string
 	) throws -> privmx.InboxFileHandle {
@@ -486,15 +479,15 @@ public class InboxApi{
 		return result
 	}
 	
-	/// Reads data from an open file in the inbox.
+	/// Reads file data.
+	/// Single read call moves the files's cursor position by declared length or set it at the end of the file.
 	///
-	/// - Parameters:
-	///   - fileHandle: The file handle to read from.
-	///   - length: The number of bytes to read.
+	/// - Parameter fileHandle: handle to the file
+	/// - Parameter length: size of data to read
 	///
 	/// - Throws: `PrivMXEndpointError.failedReadingFromFile` if reading from the file fails.
 	///
-	/// - Returns: A buffer containing the read data.
+	/// - Returns: buffer with file data chunk
 	public func readFromFile(
 		fileHandle: privmx.InboxFileHandle,
 		length: Int64
@@ -513,11 +506,10 @@ public class InboxApi{
 		return result
 	}
 	
-	/// Moves the read cursor in an open file.
+	/// Moves file's read cursor.
 	///
-	/// - Parameters:
-	///   - fileHandle: The file handle to move the cursor in.
-	///   - position: The new position of the cursor in bytes.
+	/// - Parameter fileHandle: handle to the file
+	/// - Parameter position: sets new cursor position
 	///
 	/// - Throws: `PrivMXEndpointError.failedSeekingInFile` if moving the cursor fails.
 	public func seekInFile(
@@ -531,13 +523,13 @@ public class InboxApi{
 		}
 	}
 	
-	/// Closes an open file in the Inbox.
+	/// Closes a file by given handle.
 	///
-	/// - Parameter fileHandle: The file handle to close.
+	/// - Parameter fileHandle: handle to the file
 	///
 	/// - Throws: `PrivMXEndpointError.failedClosingFile` if closing the file fails.
 	///
-	/// - Returns: The ID of the closed file as a `std.string`.
+	/// - Returns: ID of closed file
 	public func closeFile(
 		fileHandle: privmx.InboxFileHandle
 	) throws -> std.string {
@@ -560,7 +552,7 @@ public class InboxApi{
 	///
 	/// - Throws: When subscribing for events fails.
 	///
-	/// - Returns: list of subscriptionIds in maching order to subscriptionQueries.
+	/// - Returns: list of subscriptionIds in maching order to subscriptionQueries
 	public func subscribeFor(
 		subscriptionQueries: privmx.SubscriptionQueryVector
 	) throws -> privmx.SubscriptionIdVector {
@@ -583,9 +575,9 @@ public class InboxApi{
 	///
 	/// - Throws: When unsubscribing fails.
 	public func unsubscribeFrom(
-		subscriptionId: privmx.SubscriptionIdVector
+		subscriptionIds: privmx.SubscriptionIdVector
 	) throws -> Void {
-		let res = api.unsubscribeFrom(subscriptionId)
+		let res = api.unsubscribeFrom(subscriptionIds)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
 		}
