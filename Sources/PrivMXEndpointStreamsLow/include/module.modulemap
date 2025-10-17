@@ -1,0 +1,7 @@
+module PrivMXEndpointStreamsLow{
+	header "NativeStreamApiLowWrapper.hpp"
+	header "WebRtcInterfaceInstance.hpp"
+	
+    requires cplusplus17
+    export *
+}

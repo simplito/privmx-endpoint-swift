@@ -18,7 +18,6 @@ using namespace endpoint;
 std::shared_ptr<core::Connection> NativeConnectionWrapper::getApi(){
 	if (!api) throw NullApiException();
 	return api;
-	core::BackendRequester();
 }
 
 NativeConnectionWrapper::NativeConnectionWrapper(std::shared_ptr<core::Connection> connection){

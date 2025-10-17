@@ -13,7 +13,7 @@ import PrivMXEndpointSwiftNative
 
 /// 'EventApi' is a class representing Endpoint's API for context custom events.
 public class EventApi{
-	internal var api : privmx.NativeEventApiWrapper
+	package var api : privmx.NativeEventApiWrapper
 	
 	private init(
 		api: privmx.NativeEventApiWrapper

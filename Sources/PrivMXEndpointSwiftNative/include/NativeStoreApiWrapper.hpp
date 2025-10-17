@@ -101,7 +101,7 @@ public:
 															  const std::string& selectorId);
 
 private:
-	std::shared_ptr<endpoint::store::StoreApi> getapi(){
+	std::shared_ptr<endpoint::store::StoreApi> getApi(){
 		if (!api) throw NullApiException();
 		return api;
 	}

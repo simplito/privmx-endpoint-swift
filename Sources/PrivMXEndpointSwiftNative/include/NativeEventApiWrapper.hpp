@@ -17,6 +17,7 @@
 
 namespace privmx{
 class NativeEventApiWrapper {
+	friend class NativeStreamApiLowWrapper;
 public:
 	static ResultWithError<NativeEventApiWrapper> create(NativeConnectionWrapper& connection);
 	
@@ -35,7 +36,7 @@ public:
 
 	
 private:
-	std::shared_ptr<endpoint::event::EventApi> getapi(){
+	std::shared_ptr<endpoint::event::EventApi> getApi(){
 		if (!api) throw NullApiException();
 		return api;
 	}

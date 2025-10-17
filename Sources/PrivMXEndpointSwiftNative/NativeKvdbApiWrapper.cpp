@@ -51,7 +51,7 @@ ResultWithError<std::string> NativeKvdbApiWrapper::createKvdb(const std::string&
 															  const OptionalContainerPolicy& policies){
 	auto res = ResultWithError<std::string>();
 	try{
-		res.result = getapi()->createKvdb(contextId,
+		res.result = getApi()->createKvdb(contextId,
 										  users,
 										  managers,
 										  publicMeta,
@@ -90,7 +90,7 @@ ResultWithError<nullptr_t> NativeKvdbApiWrapper::updateKvdb(const std::string& k
 															const OptionalContainerPolicy& policies){
 	auto res = ResultWithError();
 	try{
-		getapi()->updateKvdb(kvdbId,
+		getApi()->updateKvdb(kvdbId,
 							 users,
 							 managers,
 							 publicMeta,
@@ -123,7 +123,7 @@ ResultWithError<nullptr_t> NativeKvdbApiWrapper::updateKvdb(const std::string& k
 ResultWithError<nullptr_t> NativeKvdbApiWrapper::deleteKvdb(const std::string &kvdbId){
 	auto res = ResultWithError();
 	try {
-		getapi()->deleteKvdb(kvdbId);
+		getApi()->deleteKvdb(kvdbId);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -148,7 +148,7 @@ ResultWithError<nullptr_t> NativeKvdbApiWrapper::deleteKvdb(const std::string &k
 ResultWithError<kvdb::Kvdb> NativeKvdbApiWrapper::getKvdb(const std::string &kvdbId){
 	auto res = ResultWithError<kvdb::Kvdb>();
 	try{
-		res.result = getapi()->getKvdb(kvdbId);
+		res.result = getApi()->getKvdb(kvdbId);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -174,7 +174,7 @@ ResultWithError<KvdbList> NativeKvdbApiWrapper::listKvdbs(const std::string &con
 														  const endpoint::core::PagingQuery pagingQuery){
 	auto res = ResultWithError<KvdbList>();
 	try{
-		res.result = getapi()->listKvdbs(contextId,
+		res.result = getApi()->listKvdbs(contextId,
 										 pagingQuery);
 	}catch(core::Exception& err){
 		res.error = {
@@ -201,7 +201,7 @@ ResultWithError<bool> NativeKvdbApiWrapper::hasEntry(const std::string& kvdbId,
 													 const std::string& key){
 	ResultWithError<bool> res;
 	try{
-		res.result = getapi()->hasEntry(kvdbId, key);
+		res.result = getApi()->hasEntry(kvdbId, key);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -227,7 +227,7 @@ ResultWithError<kvdb::KvdbEntry> NativeKvdbApiWrapper::getEntry(const std::strin
 														  const std::string &key){
 	auto res = ResultWithError<kvdb::KvdbEntry>();
 	try{
-		res.result = getapi()->getEntry(kvdbId,
+		res.result = getApi()->getEntry(kvdbId,
 									   key);
 	}catch(core::Exception& err){
 		res.error = {
@@ -254,7 +254,7 @@ ResultWithError<StringList> NativeKvdbApiWrapper::listEntriesKeys(const std::str
 																const endpoint::core::PagingQuery &pagingQuery){
 	auto res = ResultWithError<StringList>();
 	try{
-		res.result = getapi()->listEntriesKeys(kvdbId,
+		res.result = getApi()->listEntriesKeys(kvdbId,
 											pagingQuery);
 	}catch(core::Exception& err){
 		res.error = {
@@ -281,7 +281,7 @@ ResultWithError<KvdbEntryList> NativeKvdbApiWrapper::listEntries(const std::stri
 														  const endpoint::core::PagingQuery &pagingQuery){
 	auto res = ResultWithError<KvdbEntryList>();
 	try{
-		res.result = getapi()->listEntries(kvdbId,
+		res.result = getApi()->listEntries(kvdbId,
 										pagingQuery);
 	}catch(core::Exception& err){
 		res.error = {
@@ -312,7 +312,7 @@ ResultWithError<nullptr_t> NativeKvdbApiWrapper::setEntry(const std::string &kvd
 														 const int64_t version){
 	auto res = ResultWithError();
 	try{
-		getapi()->setEntry(kvdbId,
+		getApi()->setEntry(kvdbId,
 						  key,
 						  publicMeta,
 						  privateMeta,
@@ -343,7 +343,7 @@ ResultWithError<nullptr_t> NativeKvdbApiWrapper::deleteEntry(const std::string &
 															const std::string &key){
 	auto res = ResultWithError();
 	try{
-		getapi()->deleteEntry(kvdbId,
+		getApi()->deleteEntry(kvdbId,
 							 key);
 	}catch(core::Exception& err){
 		res.error = {
@@ -370,7 +370,7 @@ ResultWithError<StringBoolMap> NativeKvdbApiWrapper::deleteEntries(const std::st
 															 const StringVector &keys){
 	ResultWithError<StringBoolMap> res;
 	try{
-		res.result = getapi()->deleteEntries(kvdbId,
+		res.result = getApi()->deleteEntries(kvdbId,
 							  keys);
 	}catch(core::Exception& err){
 		res.error = {
@@ -396,7 +396,7 @@ ResultWithError<StringBoolMap> NativeKvdbApiWrapper::deleteEntries(const std::st
 ResultWithError<SubscriptionIdVector> NativeKvdbApiWrapper::subscribeFor(const SubscriptionQueryVector& subscriptionQueries){
 	ResultWithError<SubscriptionIdVector> res;
 	try {
-		res.result = getapi()->subscribeFor(subscriptionQueries);
+		res.result = getApi()->subscribeFor(subscriptionQueries);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -422,7 +422,7 @@ ResultWithError<SubscriptionIdVector> NativeKvdbApiWrapper::subscribeFor(const S
 ResultWithError<std::nullptr_t> NativeKvdbApiWrapper::unsubscribeFrom(const SubscriptionIdVector& subscriptionIds){
 	ResultWithError<std::nullptr_t> res;
 	try {
-		getapi()->unsubscribeFrom(subscriptionIds);
+		getApi()->unsubscribeFrom(subscriptionIds);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -450,7 +450,7 @@ ResultWithError<SubscriptionQuery> NativeKvdbApiWrapper::buildSubscriptionQuery(
 																				  const std::string& selectorId){
 	ResultWithError<SubscriptionQuery> res;
 	try {
-		res.result = getapi()->buildSubscriptionQuery(eventType, selectorType, selectorId);
+		res.result = getApi()->buildSubscriptionQuery(eventType, selectorType, selectorId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -478,7 +478,7 @@ ResultWithError<SubscriptionQuery> NativeKvdbApiWrapper::buildSubscriptionQueryF
 																				  const std::string& kvdbEntryKey){
 	ResultWithError<SubscriptionQuery> res;
 	try {
-		res.result = getapi()->buildSubscriptionQueryForSelectedEntry(eventType, kvdbId, kvdbEntryKey);
+		res.result = getApi()->buildSubscriptionQueryForSelectedEntry(eventType, kvdbId, kvdbEntryKey);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),

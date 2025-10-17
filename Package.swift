@@ -1,4 +1,4 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.1
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -21,12 +21,29 @@ let package = Package(
 					  "OpenSSL",
 					 ]
 		),
+		.library(
+			name: "PrivMXEndpointSwiftWithStreams",
+			targets: [
+				"PrivMXEndpointSwift",
+				"PrivMXEndpointStreamsSwift",
+				"PrivMXEndpointSwiftNative",
+				"PrivMXEndpointStreamsLow",
+				"PrivMXEndpoint",
+				"WebRTC",
+				"POCO",
+				"PSON",
+				"GMP",
+				"OpenSSL",])
+	],
+	traits:[
+		"Streams"
 	],
 	targets: [
 		.target(
 			name: "PrivMXEndpointSwiftNative",
 			dependencies: ["GMP","POCO","PSON","PrivMXEndpoint","OpenSSL"],
-			swiftSettings: [.interoperabilityMode(.Cxx)]
+			cxxSettings: [.headerSearchPath("include")],
+			swiftSettings: [.interoperabilityMode(.Cxx)],
 		),
 		.target(
 			name: "PrivMXEndpointSwift",
@@ -34,6 +51,33 @@ let package = Package(
 			swiftSettings: [
 				.interoperabilityMode(.Cxx),
 						   ]),
+		.target(
+			name: "PrivMXEndpointStreamsSwift",
+			dependencies: [
+				.target(
+					name: "PrivMXEndpointStreamsLow",
+					//condition: .when(traits: ["Streams"])
+				),
+				.target(name: "PrivMXEndpointSwift")
+			],
+			swiftSettings: [
+				.interoperabilityMode(.Cxx),
+			]),
+		.target(
+			name: "PrivMXEndpointStreamsLow",
+			dependencies: [
+				"WebRTC",
+				"PrivMXEndpointSwiftNative"
+			],
+			swiftSettings: [
+				.interoperabilityMode(.Cxx),
+						   ]),
+		//.binaryTarget(
+		//	name:"PMXStreamModule",
+		//	path: "../Frameworks/WebRTC.xcframework"),
+		.binaryTarget(
+			name:"WebRTC",
+			path: "../Frameworks/WebRTC.xcframework"),
 		.binaryTarget(
 			name:"GMP",
 			url: "https://github.com/simplito/privmx-endpoint-xcframeworks/releases/download/2.6.4/gmp-6.3.0.xcframework.zip",
@@ -58,3 +102,4 @@ let package = Package(
 	],
 	cxxLanguageStandard: .cxx17
 )
+

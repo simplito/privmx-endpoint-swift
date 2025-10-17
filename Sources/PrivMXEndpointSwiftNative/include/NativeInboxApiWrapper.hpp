@@ -113,7 +113,7 @@ public:
 
 	
 private:
-	std::shared_ptr<endpoint::inbox::InboxApi> getapi(){
+	std::shared_ptr<endpoint::inbox::InboxApi> getApi(){
 		if (!api) throw NullApiException();
 		return api;
 	}

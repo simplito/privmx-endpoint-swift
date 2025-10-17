@@ -20,7 +20,7 @@ import PrivMXEndpointSwiftNative
 public class CryptoApi{
 	
 	/// An instance of the wrapped C++ class.
-	private var api: privmx.NativeCryptoApiWrapper
+	package var api: privmx.NativeCryptoApiWrapper
 	
 	/// Creates instance of 'CryptoApi'.
 	///

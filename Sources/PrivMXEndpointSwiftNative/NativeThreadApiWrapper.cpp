@@ -52,7 +52,7 @@ ResultWithError<std::string> NativeThreadApiWrapper::createThread(const std::str
 																  const OptionalContainerPolicy& policies){
 	ResultWithError<std::string> res;
 	try {
-		res.result = getapi()->createThread(contextId,
+		res.result = getApi()->createThread(contextId,
 											users,
 											managers,
 											publicMeta,
@@ -84,7 +84,7 @@ ResultWithError<std::string> NativeThreadApiWrapper::createThread(const std::str
 ResultWithError<thread::Thread> NativeThreadApiWrapper::getThread(const std::string& threadId){
 	ResultWithError<thread::Thread> res;
 	try {
-		res.result = getapi()->getThread(threadId);
+		res.result = getApi()->getThread(threadId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -113,7 +113,7 @@ ResultWithError<ThreadList> NativeThreadApiWrapper::listThreads(const std::strin
 	try {
 		
 		
-		res.result = getapi()->listThreads(contextId,pagingQuery);
+		res.result = getApi()->listThreads(contextId,pagingQuery);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -140,7 +140,7 @@ ResultWithError<MessageList> NativeThreadApiWrapper::listMessages(const std::str
 																  const core::PagingQuery& pagingQuery){
 	ResultWithError<MessageList> res;
 	try {
-		res.result = getapi()->listMessages(threadId,pagingQuery);
+		res.result = getApi()->listMessages(threadId,pagingQuery);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -169,7 +169,7 @@ ResultWithError<std::string> NativeThreadApiWrapper::sendMessage(const std::stri
 																 const core::Buffer& data){
 	ResultWithError<std::string> res;
 	try {
-		res.result = getapi()->sendMessage(threadId, publicMeta, privateMeta, data);
+		res.result = getApi()->sendMessage(threadId, publicMeta, privateMeta, data);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -195,7 +195,7 @@ ResultWithError<std::string> NativeThreadApiWrapper::sendMessage(const std::stri
 ResultWithError<std::nullptr_t> NativeThreadApiWrapper::deleteThread(const std::string &threadId){
 	ResultWithError<std::nullptr_t> res;
 	try {
-		getapi()->deleteThread(threadId);
+		getApi()->deleteThread(threadId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -221,7 +221,7 @@ ResultWithError<std::nullptr_t> NativeThreadApiWrapper::deleteThread(const std::
 ResultWithError<std::nullptr_t> NativeThreadApiWrapper::deleteMessage(const std::string &messageId){
 	ResultWithError<std::nullptr_t> res;
 	try {
-		getapi()->deleteMessage(messageId);
+		getApi()->deleteMessage(messageId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -247,7 +247,7 @@ ResultWithError<std::nullptr_t> NativeThreadApiWrapper::deleteMessage(const std:
 ResultWithError<thread::Message> NativeThreadApiWrapper::getMessage(const std::string &messageId){
 	ResultWithError<thread::Message> res;
 	try{
-		res.result = getapi()->getMessage(messageId);
+		res.result = getApi()->getMessage(messageId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -281,7 +281,7 @@ ResultWithError<std::nullptr_t> NativeThreadApiWrapper::updateThread(const std::
 																	 const OptionalContainerPolicy& policies){
 	ResultWithError<std::nullptr_t> res;
 	try {
-		getapi()->updateThread(threadId,
+		getApi()->updateThread(threadId,
 							   users,
 							   managers,
 							   publicMeta,
@@ -319,7 +319,7 @@ ResultWithError<nullptr_t> NativeThreadApiWrapper::updateMessage(const std::stri
 																 const core::Buffer& data){
 	ResultWithError<std::nullptr_t> res;
 	try {
-		getapi()->updateMessage(messageId,
+		getApi()->updateMessage(messageId,
 							   publicMeta,
 							   privateMeta,
 							   data);
@@ -349,7 +349,7 @@ ResultWithError<nullptr_t> NativeThreadApiWrapper::updateMessage(const std::stri
 ResultWithError<SubscriptionIdVector> NativeThreadApiWrapper::subscribeFor(const SubscriptionQueryVector& subscriptionQueries){
 	ResultWithError<SubscriptionIdVector> res;
 	try {
-		res.result = getapi()->subscribeFor(subscriptionQueries);
+		res.result = getApi()->subscribeFor(subscriptionQueries);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -375,7 +375,7 @@ ResultWithError<SubscriptionIdVector> NativeThreadApiWrapper::subscribeFor(const
 ResultWithError<std::nullptr_t> NativeThreadApiWrapper::unsubscribeFrom(const SubscriptionIdVector& subscriptionIds){
 	ResultWithError<std::nullptr_t> res;
 	try {
-		getapi()->unsubscribeFrom(subscriptionIds);
+		getApi()->unsubscribeFrom(subscriptionIds);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -403,7 +403,7 @@ ResultWithError<SubscriptionQuery> NativeThreadApiWrapper::buildSubscriptionQuer
 																				  const std::string& selectorId){
 	ResultWithError<SubscriptionQuery> res;
 	try {
-		res.result = getapi()->buildSubscriptionQuery(eventType, selectorType, selectorId);
+		res.result = getApi()->buildSubscriptionQuery(eventType, selectorType, selectorId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),

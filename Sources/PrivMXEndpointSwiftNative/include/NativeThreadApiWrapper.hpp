@@ -75,11 +75,11 @@ public:
 	ResultWithError<SubscriptionQuery> buildSubscriptionQuery(endpoint::thread::EventType eventType,
 															  endpoint::thread::EventSelectorType selectorType,
 															  const std::string& selectorId);
-private:
-	std::shared_ptr<endpoint::thread::ThreadApi> getapi(){
+	std::shared_ptr<endpoint::thread::ThreadApi> getApi(){
 		if (!api) throw NullApiException();
 		return api;
 	}
+private:
 	
 	NativeThreadApiWrapper() = default;
 	NativeThreadApiWrapper(NativeConnectionWrapper& connection);
