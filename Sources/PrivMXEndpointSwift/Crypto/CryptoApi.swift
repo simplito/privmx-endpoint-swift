@@ -16,7 +16,7 @@ import PrivMXEndpointSwiftNative
 
 /// 'CryptoApi' is a class representing Endpoint's API for cryptographic operations.
 ///
-/// This class wrsize of BIP-39 entropy, must be a multiple of 32 between 128 and 256.aps the underlying C++ implementation for use in Swift.
+/// This class wraps the underlying C++ implementation for use in Swift.
 public class CryptoApi{
 	
 	/// An instance of the wrapped C++ class.
