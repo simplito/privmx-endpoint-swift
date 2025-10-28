@@ -468,7 +468,7 @@ public class StoreApi{
 		}
 	}
 	
-	/// Synchronize file handle data with newset data on serwer.
+	/// Synchronize file handle data with newest data on serwer.
 	///
 	/// - Parameter handle: Store File handle to sync
 	///
