@@ -309,8 +309,6 @@ public class KvdbApi: @unchecked Sendable{
 	/// - Parameter data: content of the KVDB entry
 	/// - Parameter version: when 0 indicates creation of new entry, otherwise required to be equal to the version provided by the server
 	///
-	/// - Returns: ID of the new KVDB entry
-	///
 	/// - Throws: PrivMXEndpointError.failedSettingKvdbEntry.
 	public func setEntry(
 		kvdbId: std.string,
