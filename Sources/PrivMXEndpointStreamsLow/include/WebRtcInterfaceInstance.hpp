@@ -13,11 +13,13 @@
 #ifndef _WebRtcInterfaceInstance_
 #define _WebRtcInterfaceInstance_
 
-#include "WebRTC/PMXFrameCryptorTransformer.h"
 #include "PrivMXUtils.hpp"
+#include "Types.hpp"
+#include "WebRTCInterface.hpp"
+
 namespace privmx{
 
-using KeyVector = std::vector<Key>;
+using KeyVector = std::vector<privmx::endpoint::stream::Key>;
 
 typedef std::string(*CreateOfferAndSetLocalDescriptionCallback)(const std::string&);
 typedef std::string(*CreateAnswerAndSetDescriptionCallback)(const std::string&,const std::string&, const std::string&);
@@ -26,33 +28,31 @@ typedef void(*UpdateSessionIdCallback)(const std::string&,const int64_t, const s
 typedef void(*CloseCallback)(const std::string&);
 typedef void(*UpdateKeysCallback)(const std::string&,const KeyVector&);
 
-using ThreadSaveMapIntStreamData = utils::ThreadSaveMap<uint64_t,std::shared_ptr<endpoint::stream::StreamData>;
-
-class WebRtcInterfaceInstance: public privmx::endpoint::WebRtcInterface{
+class WebRtcInterfaceInstance: public privmx::endpoint::stream::WebRTCInterface{
 public:
-	std::string createOfferAndSetLocalDescription(const std::string& streamRoomId) override {
+	virtual std::string createOfferAndSetLocalDescription(const std::string& streamRoomId) override {
 		return _coasldcb(streamRoomId);
 	}
-	std::string createAnswerAndSetDescriptions(const std::string& streamRoomId,
+	virtual std::string createAnswerAndSetDescriptions(const std::string& streamRoomId,
 											   const std::string& sdp,
 											   const std::string& type)override{
 		return _caasdcb(streamRoomId, sdp, type);
 	}
-	void setAnswerAndSetRemoteDescription(const std::string& streamRoomId,
+	virtual void setAnswerAndSetRemoteDescription(const std::string& streamRoomId,
 										  const std::string& sdp,
 										  const std::string& type)override{
 		_saasrdcb(streamRoomId, sdp, type);
 	}
-	void updateSessionId(const std::string& streamRoomId,
+	 virtual void updateSessionId(const std::string& streamRoomId,
 						 const int64_t sessionId,
-						 const std::string& connectionType){
+						 const std::string& connectionType) override{
 		_usicb(streamRoomId, sessionId, connectionType);
 	}
-	void close(const std::string& streamRoomId)override{
+	virtual void close(const std::string& streamRoomId)override{
 		_ccb(streamRoomId);
 	}
-	void updateKeys(const std::string& streamRoomId,
-					const std::vector<Key>& keys)override{
+	 virtual void updateKeys(const std::string& streamRoomId,
+					const std::vector<privmx::endpoint::stream::Key>& keys)override{
 		_ukcb(streamRoomId, keys);
 	}
 	 WebRtcInterfaceInstance(CreateOfferAndSetLocalDescriptionCallback coasldcb,

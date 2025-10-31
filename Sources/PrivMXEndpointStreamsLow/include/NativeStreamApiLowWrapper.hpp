@@ -15,24 +15,21 @@
 #include "PrivMXUtils.hpp"
 #include "NativeConnectionWrapper.hpp"
 #include "NativeEventApiWrapper.hpp"
+#include "StreamApiLow.hpp"
+#include "Types.hpp"
+#include "Constants.hpp"
+#include "Events.hpp"
+#include "StreamException.hpp"
 
-namespace privmx{
-namespace endpoint{
-namespace stream{
-class StreamApiLow;
-class TurnCredentials;
-class StreamRoom;
-class Stream;
-class Settings;
-class WebRTCInterface;
-class EventType;
-class EventSelectorType;
-}}
 
-using IntWithStringVector = std::vector<std::pair<int64_t, std::string>>;
-using TurnCredentialsVector = std::vector<endpoint::stream::TurnCredentials>;
-using StreamRoomList = endpoint::core::PagingList<endpoint::stream::StreamRoom>;
+namespace privmx {
+
 using StreamVector = std::vector<endpoint::stream::Stream>;
+using StreamSubscriptiopnsVector = std::vector<endpoint::stream::StreamSubscription>;
+
+using StreamRoomList = endpoint::core::PagingList<endpoint::stream::StreamRoom>;
+using TurnCredentialsVector = std::vector<endpoint::stream::TurnCredentials>;
+
 
 using LocalStreamId = int64_t;
 
@@ -74,23 +71,35 @@ public:
 	ResultWithError<std::nullptr_t> deleteStreamRoom(const std::string& streamRoomId);
 	
 	// Stream
-	ResultWithError<int64_t> createStream(const std::string& streamRoomId, int64_t localStreamId, WebRTCInterfaceReference webRtc);
-	
-	ResultWithError<std::nullptr_t> publishStream(int64_t localStreamId);
-	
-	ResultWithError<int64_t> joinStream(const std::string& streamRoomId, const std::vector<int64_t>& streamsId, const endpoint::stream::Settings& settings, int64_t localStreamId, WebRTCInterfaceReference webRtc);
-	
 	ResultWithError<StreamVector> listStreams(const std::string& streamRoomId);
+	ResultWithError<std::nullptr_t> joinStreamRoom(const std::string& streamRoomId, WebRTCInterfaceReference webRtc); // required before createStream and openStream
+	ResultWithError<std::nullptr_t> leaveStreamRoom(const std::string& streamRoomId);
 	
-	ResultWithError<std::nullptr_t> unpublishStream(int64_t localStreamId);
+	ResultWithError<endpoint::stream::StreamHandle> createStream(const std::string& streamRoomId);
+	ResultWithError<endpoint::stream::RemoteStreamId> publishStream(const endpoint::stream::StreamHandle& streamHandle);
+	ResultWithError<std::nullptr_t> unpublishStream(const endpoint::stream::StreamHandle& streamHandle);
 	
-	ResultWithError<std::nullptr_t> leaveStream(int64_t localStreamId);
+	ResultWithError<nullptr_t> subscribeToRemoteStreams(const std::string& streamRoomId,
+													  const StreamSubscriptiopnsVector& subscriptions,
+													  const endpoint::stream::Settings& options);
+	ResultWithError<nullptr_t> modifyRemoteStreamsSubscriptions(const std::string& streamRoomId,
+																const StreamSubscriptiopnsVector& subscriptionsToAdd,
+																const StreamSubscriptiopnsVector& subscriptionsToRemove,
+																const endpoint::stream::Settings& options);
+	ResultWithError<nullptr_t> unsubscribeFromRemoteStreams(const std::string& streamRoomId,
+														  const StreamSubscriptiopnsVector& subscriptionsToRemove);
+	
+	ResultWithError<std::nullptr_t> trickle(const int64_t sesionId,
+											const std::string& candidateAsJson);
+	ResultWithError<std::nullptr_t> acceptOfferOnReconfigure(const int64_t sessionId,
+															 const endpoint::stream::SdpWithTypeModel& sdp);
 	
 	ResultWithError<SubscriptionIdVector> subscribeFor(const SubscriptionQueryVector& subscriptionQueries);
 	ResultWithError<std::nullptr_t> unsubscribeFrom(const SubscriptionQueryVector& subscriptionIds);
-	
 	ResultWithError<SubscriptionQuery> buildSubscriptionQuery(endpoint::stream::EventType eventType, endpoint::stream::EventSelectorType selectorType, const std::string& selectorId);
 	
+	ResultWithError<std::nullptr_t> keyManagement(const std::string& streamRoomId,
+												  bool disable);
 
 	
 private:
@@ -125,28 +134,38 @@ class StreamApiLowEventHandler{
 	static ResultWithError<endpoint::stream::StreamUnpublishedEvent> extractStreamUnpublishedEvent(const endpoint::core::EventHolder& eventHolder);
 	static ResultWithError<bool> isStreamLeftEvent(const endpoint::core::EventHolder& eventHolder);
 	static ResultWithError<endpoint::stream::StreamLeftEvent> extractStreamLeftEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<bool> isStreamAvailablePublishersEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<endpoint::stream::StreamAvailablePublishersEvent> extractStreamAvailablePublishersEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<bool> isPublishersStreamsUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<endpoint::stream::PublishersStreamsUpdatedEvent> extractPublishersStreamsUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
 };
 
 static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::StreamRoomCreatedEvent& event){
-	return _get_subids_from(event);
+	return endpoint::wrapper::_get_subIds_from_event(event);
 }
 static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::StreamRoomUpdatedEvent& event){
-	return _get_subids_from(event);
+	return endpoint::wrapper::_get_subIds_from_event(event);
 }
 static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::StreamRoomDeletedEvent& event){
-	return _get_subids_from(event);
+	return endpoint::wrapper::_get_subIds_from_event(event);
 }
 static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::StreamPublishedEvent& event){
-	return _get_subids_from(event);
+	return endpoint::wrapper::_get_subIds_from_event(event);
 }
 static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::StreamJoinedEvent& event){
-	return _get_subids_from(event);
+	return endpoint::wrapper::_get_subIds_from_event(event);
 }
 static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::StreamUnpublishedEvent& event){
-	return _get_subids_from(event);
+	return endpoint::wrapper::_get_subIds_from_event(event);
 }
 static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::StreamLeftEvent& event){
-	return _get_subids_from(event);
+	return endpoint::wrapper::_get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::StreamAvailablePublishersEvent& event){
+	return endpoint::wrapper::_get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::PublishersStreamsUpdatedEvent& event){
+	return endpoint::wrapper::_get_subIds_from_event(event);
 }
 
 }//privmx

@@ -41,7 +41,7 @@ ResultWithError<NativeStreamApiLowWrapper> NativeStreamApiLowWrapper::create(con
 	}
 
 NativeStreamApiLowWrapper::NativeStreamApiLowWrapper(const NativeConnectionWrapper &connection, NativeEventApiWrapper &eventApi){
-	api = std::make_shared<stream::StreamApiLow>(stream::StreamApiLow::create(connection,eventApi));
+	api = std::make_shared<stream::StreamApiLow>(stream::StreamApiLow::create(*(connection.api),*eventApi.api));
 }
 
 ResultWithError<std::string> NativeStreamApiLowWrapper::createStreamRoom(const std::string& contextId,
@@ -80,7 +80,7 @@ ResultWithError<std::string> NativeStreamApiLowWrapper::createStreamRoom(const s
 	}
 	return res;}
 
-ResultWithError<std::nullopt_t> NativeStreamApiLowWrapper::updateStreamRoom(const std::string& streamRoomId,
+ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::updateStreamRoom(const std::string& streamRoomId,
 												 const UserWithPubKeyVector& users,
 												 const UserWithPubKeyVector& managers,
 												 const endpoint::core::Buffer& publicMeta,
@@ -90,9 +90,9 @@ ResultWithError<std::nullopt_t> NativeStreamApiLowWrapper::updateStreamRoom(cons
 												 const bool forceGenerateNewKey,
 												 const OptionalContainerPolicy& policies
 																			){
-	ResultWithError<std::nullopt_t> res;
+	ResultWithError<std::nullptr_t> res;
 	try{
-		res.result = getApi()->updateStreamRoom(streamRoomId,
+		 getApi()->updateStreamRoom(streamRoomId,
 												 users,
 												 managers,
 												publicMeta,
@@ -172,10 +172,10 @@ ResultWithError<endpoint::stream::StreamRoom> NativeStreamApiLowWrapper::getStre
 	}
 	return res;}
 
-ResultWithError<std::nullopt_t> NativeStreamApiLowWrapper::deleteStreamRoom(const std::string& streamRoomId){
-	ResultWithError<std::nullopt_t> res;
+ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::deleteStreamRoom(const std::string& streamRoomId){
+	ResultWithError<std::nullptr_t> res;
 	try{
-		res.result = getApi()->deleteStreamRoom(streamRoomId);
+		getApi()->deleteStreamRoom(streamRoomId);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -196,12 +196,10 @@ ResultWithError<std::nullopt_t> NativeStreamApiLowWrapper::deleteStreamRoom(cons
 	}
 	return res;}
 // Stream
-ResultWithError<int64_t> NativeStreamApiLowWrapper::createStream(const std::string& streamRoomId, int64_t localStreamId, WebRTCInterfaceReference webRtc){
-	ResultWithError<int64_t> res;
+ResultWithError<stream::StreamHandle> NativeStreamApiLowWrapper::createStream(const std::string& streamRoomId){
+	ResultWithError<stream::StreamHandle> res;
 	try{
-		res.result = getApi()->createStream(streamRoomId,
-											localStreamId,
-											webRtc);
+		getApi()->createStream(streamRoomId);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -222,10 +220,10 @@ ResultWithError<int64_t> NativeStreamApiLowWrapper::createStream(const std::stri
 	}
 	return res;}
 
-ResultWithError<std::nullopt_t> NativeStreamApiLowWrapper::publishStream(int64_t localStreamId){
-	ResultWithError<std::nullopt_t> res;
+ResultWithError<stream::RemoteStreamId> NativeStreamApiLowWrapper::publishStream(const stream::StreamHandle& streamHandle){
+	ResultWithError<stream::RemoteStreamId> res;
 	try{
-		res.result = getApi()->publishStream(localStreamId);
+		res.result = getApi()->publishStream(streamHandle);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -246,18 +244,43 @@ ResultWithError<std::nullopt_t> NativeStreamApiLowWrapper::publishStream(int64_t
 	}
 	return res;}
 
-ResultWithError<int64_t> NativeStreamApiLowWrapper::joinStream(const std::string& streamRoomId,
-															   const std::vector<int64_t>& streamsId,
-															   const endpoint::stream::Settings& settings,
-															   int64_t localStreamId,
-															   WebRTCInterfaceReference webRtc){
-	ResultWithError<int64_t> res;
+ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::subscribeToRemoteStreams(const std::string& streamRoomId,
+																			 const StreamSubscriptiopnsVector& subscriptions,
+																			 const endpoint::stream::Settings& settings){
+	ResultWithError<std::nullptr_t> res;
 	try{
-		res.result = getApi()->joinStream(streamRoomId,
-										  streamsId,
-										  settings,
-										  localStreamId,
-										  webRtc);
+		getApi()->subscribeToRemoteStreams(streamRoomId,
+										   subscriptions,
+										   settings);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;}
+ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::modifyRemoteStreamsSubscriptions(const std::string& streamRoomId,
+																			 const StreamSubscriptiopnsVector& subscriptionsToAdd,
+																			 const StreamSubscriptiopnsVector& subscriptionsToRemove,
+																			 const endpoint::stream::Settings& options){
+	ResultWithError<std::nullptr_t> res;
+	try{
+		getApi()->modifyRemoteStreamsSubscriptions(streamRoomId,
+										   subscriptionsToAdd,
+										   subscriptionsToRemove,
+										   options);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -302,10 +325,10 @@ ResultWithError<StreamVector> NativeStreamApiLowWrapper::listStreams(const std::
 	}
 	return res;}
 
-ResultWithError<std::nullopt_t> NativeStreamApiLowWrapper::unpublishStream(int64_t localStreamId){
-	ResultWithError<std::nullopt_t> res;
+ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::unpublishStream(const stream::StreamHandle& streamHandle){
+	ResultWithError<std::nullptr_t> res;
 	try{
-		res.result = getApi()->unpublishStream(localStreamId);
+		getApi()->unpublishStream(streamHandle);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -326,10 +349,12 @@ ResultWithError<std::nullopt_t> NativeStreamApiLowWrapper::unpublishStream(int64
 	}
 	return res;}
 
-ResultWithError<std::nullopt_t> NativeStreamApiLowWrapper::leaveStream(int64_t localStreamId){
-	ResultWithError<std::nullopt_t> res;
+ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::unsubscribeFromRemoteStreams(const std::string& streamRoomId,
+																						const StreamSubscriptiopnsVector& subscriptionsToRemove){
+	ResultWithError<std::nullptr_t> res;
 	try{
-		res.result = getApi()->leaveStream(localStreamId);
+		getApi()->unsubscribeFromRemoteStreams(streamRoomId,
+											   subscriptionsToRemove);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -373,10 +398,10 @@ ResultWithError<SubscriptionIdVector> NativeStreamApiLowWrapper::subscribeFor(co
 		};
 	}
 	return res;}
-ResultWithError<std::nullopt_t> NativeStreamApiLowWrapper::unsubscribeFrom(const SubscriptionQueryVector& subscriptionIds){
-	ResultWithError<std::nullopt_t> res;
+ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::unsubscribeFrom(const SubscriptionQueryVector& subscriptionIds){
+	ResultWithError<std::nullptr_t> res;
 	try{
-		res.result = getApi()->unsubscribeFrom(const SubscriptionQueryVector& subscriptionIds);
+		getApi()->unsubscribeFrom(subscriptionIds);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -425,10 +450,10 @@ ResultWithError<SubscriptionQuery> NativeStreamApiLowWrapper::buildSubscriptionQ
 	}
 	return res;}
 
-ResultWithError<std::nullopt_t> NativeStreamApiLowWrapper::keyManagement(bool disable){
-	ResultWithError<std::nullopt_t> res;
+ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::keyManagement(const std::string& streamRoomId, bool disable){
+	ResultWithError<std::nullptr_t> res;
 	try{
-		res.result = getApi()->keyManagement(disable);
+		getApi()->keyManagement(streamRoomId,disable);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -448,87 +473,78 @@ ResultWithError<std::nullopt_t> NativeStreamApiLowWrapper::keyManagement(bool di
 		};
 	}
 	return res;}
-ResultWithError<std::nullopt_t> NativeStreamApiLowWrapper::reconfigureStream(int64_t localStreamId,
-																			 const std::string& optionsJSON){
-	ResultWithError<std::nullopt_t> res;
-	try{
-		res.result = getApi()->reconfigureStream(localStreamId,
-												 optionsJSON);
-	}catch(core::Exception& err){
-		res.error = {
-			.name = err.getName(),
-			.code = err.getCode(),
-			.description = err.getDescription(),
-			.message = err.what()
-		};
-	}catch (std::exception & err) {
-		res.error ={
-			.name = "std::Exception",
-			.message = err.what()
-		};
-	}catch (...) {
-		res.error ={
-			.name = "Unknown Exception",
-			.message = "Failed to work"
-		};
-	}
-	return res;
-}
 
-ResultWithError<bool> EventHandler::isStreamRoomCreatedEvent(const core::EventHolder& eventHolder){
+
+ResultWithError<bool> StreamApiLowEventHandler::isStreamRoomCreatedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
 	return res;
 }
-ResultWithError<stream::StreamRoomCreatedEvent> EventHandler::extractStreamRoomCreatedEvent(const core::EventHolder& eventHolder){
+ResultWithError<stream::StreamRoomCreatedEvent> StreamApiLowEventHandler::extractStreamRoomCreatedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<stream::StreamRoomCreatedEvent> res;
 	return res;
 }
-ResultWithError<bool> EventHandler::isStreamRoomUpdatedEvent(const core::EventHolder& eventHolder){
+ResultWithError<bool> StreamApiLowEventHandler::isStreamRoomUpdatedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
 	return res;
 }
-ResultWithError<stream::StreamRoomUpdatedEvent> EventHandler::extractStreamRoomUpdatedEvent(const core::EventHolder& eventHolder){
+ResultWithError<stream::StreamRoomUpdatedEvent> StreamApiLowEventHandler::extractStreamRoomUpdatedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<stream::StreamRoomUpdatedEvent> res;
 	return res;
 }
-ResultWithError<bool> EventHandler::isStreamRoomDeletedEvent(const core::EventHolder& eventHolder){
+ResultWithError<bool> StreamApiLowEventHandler::isStreamRoomDeletedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
 	return res;
 }
-ResultWithError<stream::StreamRoomDeletedEvent> EventHandler::extractStreamRoomDeletedEvent(const core::EventHolder& eventHolder){
+ResultWithError<stream::StreamRoomDeletedEvent> StreamApiLowEventHandler::extractStreamRoomDeletedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<stream::StreamRoomDeletedEvent> res;
 	return res;
 }
-ResultWithError<bool> EventHandler::isStreamPublishedEvent(const core::EventHolder& eventHolder){
+ResultWithError<bool> StreamApiLowEventHandler::isStreamPublishedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
 	return res;
 }
-ResultWithError<stream::StreamPublishedEvent> EventHandler::extractStreamPublishedEvent(const core::EventHolder& eventHolder){
+ResultWithError<stream::StreamPublishedEvent> StreamApiLowEventHandler::extractStreamPublishedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<stream::StreamPublishedEvent> res;
 	return res;
 }
-ResultWithError<bool> EventHandler::isStreamJoinedEvent(const core::EventHolder& eventHolder){
+ResultWithError<bool> StreamApiLowEventHandler::isStreamJoinedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
 	return res;
 }
-ResultWithError<stream::StreamJoinedEvent> EventHandler::extractStreamJoinedEvent(const core::EventHolder& eventHolder){
+ResultWithError<stream::StreamJoinedEvent> StreamApiLowEventHandler::extractStreamJoinedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<stream::StreamJoinedEvent> res;
 	return res;
 }
-ResultWithError<bool> EventHandler::isStreamUnpublishedEvent(const core::EventHolder& eventHolder){
+ResultWithError<bool> StreamApiLowEventHandler::isStreamUnpublishedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
 	return res;
 }
-ResultWithError<stream::StreamUnpublishedEvent> EventHandler::extractStreamUnpublishedEvent(const core::EventHolder& eventHolder){
+ResultWithError<stream::StreamUnpublishedEvent> StreamApiLowEventHandler::extractStreamUnpublishedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<stream::StreamUnpublishedEvent> res;
 	return res;
 }
-ResultWithError<bool> EventHandler::isStreamLeftEvent(const core::EventHolder& eventHolder){
+ResultWithError<bool> StreamApiLowEventHandler::isStreamLeftEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
 	return res;
 }
-ResultWithError<stream::StreamLeftEvent> EventHandler::extractStreamLeftEvent(const endpoint::core::EventHolder& eventHolder){
+ResultWithError<stream::StreamLeftEvent> StreamApiLowEventHandler::extractStreamLeftEvent(const endpoint::core::EventHolder& eventHolder){
 	ResultWithError<stream::StreamLeftEvent> res;
+	return res;
+}
+ResultWithError<bool> StreamApiLowEventHandler::isStreamAvailablePublishersEvent(const core::EventHolder& eventHolder){
+	ResultWithError<bool> res;
+	return res;
+}
+ResultWithError<stream::StreamAvailablePublishersEvent> StreamApiLowEventHandler::extractStreamAvailablePublishersEvent(const endpoint::core::EventHolder& eventHolder){
+	ResultWithError<stream::StreamAvailablePublishersEvent> res;
+	return res;
+}
+ResultWithError<bool> StreamApiLowEventHandler::isPublishersStreamsUpdatedEvent(const core::EventHolder& eventHolder){
+	ResultWithError<bool> res;
+	return res;
+}
+ResultWithError<stream::PublishersStreamsUpdatedEvent> StreamApiLowEventHandler::extractPublishersStreamsUpdatedEvent(const endpoint::core::EventHolder& eventHolder){
+	ResultWithError<stream::PublishersStreamsUpdatedEvent> res;
 	return res;
 }
 

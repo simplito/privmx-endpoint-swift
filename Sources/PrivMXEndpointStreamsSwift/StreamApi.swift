@@ -15,8 +15,8 @@ import Foundation
 import WebRTC
 import PrivMXEndpointStreamsLow
 
-public class StreamApi: @unchecked Sendable{
-//Enums
+public actor StreamApi: @unchecked Sendable{
+/*
 	private var api: privmx.NativeStreamApiLowWrapper
 	private var webRtcInstance: privmx.WebRtcInterfaceInstance
 	private var peerConnectionFactory: RTCPeerConnectionFactory
@@ -27,13 +27,10 @@ public class StreamApi: @unchecked Sendable{
 	
 	private var isStreamOnline: Bool = false
 	
-	private var frameCryptorOptions: privmx.webrtc.FrameCryptorOptions
+	private var frameCryptorOptions: Bool
 	private var configuration: WebRTC.RTCConfiguration
 	private var constraints: WebRTC.RTCMediaConstraints
-	
-	private var rtcAudioDeviceModule = WebRTC.AVCaptureDevice
 
-	
 	package init(
 		api: privmx.NativeStreamApiLowWrapper,
 		webRtcInstance: privmx.WebRtcInterfaceInstance,
@@ -42,11 +39,11 @@ public class StreamApi: @unchecked Sendable{
 		connectedListenerId: Int,
 		disconnectedListenerId: Int,
 		isStreamOnline: Bool,
-		frameCryptorOptions: privmx.webrtc.FrameCryptorOptions,
+		frameCryptorOptions: Bool,
 		configuration: WebRTC.RTCConfiguration,
 		constraints: WebRTC.RTCMediaConstraints
 	) {
-		self.api = api
+		//self.api = api
 		self.webRtcInstance = webRtcInstance
 		self.peerConnectionFactory = peerConnectionFactory
 		self.notificationListenerId = notificationListenerId
@@ -62,9 +59,9 @@ public class StreamApi: @unchecked Sendable{
 		connection: Connection,
 		eventApi: inout EventApi
 	) throws -> StreamApi{
-		let res = privmx.NativeStreamApiLowWrapper.create(connection.api, &eventApi.api)
+		//let res = privmx.NativeStreamApiLowWrapper.create(connection.api, &eventApi.api)
 		let peerConnectionFactory = RTCPeerConnectionFactory()
-		guard var api = res.result.value else {throw PrivMXEndpointError.otherFailure(privmx.InternalError())}
+		//guard var api = res.result.value else {throw PrivMXEndpointError.otherFailure(privmx.InternalError())}
 		let creds = api.getTurnCredentials()
 		RTCInitializeSSL()
 	}
@@ -240,14 +237,14 @@ public class StreamApi: @unchecked Sendable{
 		
 	}
 	public func addTrack(
-		_ track: privmx.endpoint.stream.Track,
+		_ track: privmx.endpoint.stream.RemoteTrackId,
 		to streamId:Int64
 	) throws -> Void{
 		
 	}
 	
 	public func removeTrack(
-		_ track:Track,
+		//_ track:Track,
 		from streamId: Int64
 	) throws -> Void{
 	}
@@ -266,7 +263,7 @@ public class StreamApi: @unchecked Sendable{
 	public func openStream(
 		streamId: Int64,
 		_ streamRoomId: String,
-		settings: privmx.endpoint.stream.StreamOptions,
+		settings: privmx.endpoint.stream.StreamSettings,
 		localStreamId: Int64
 	) throws -> Int64 {
 	}
@@ -278,14 +275,14 @@ public class StreamApi: @unchecked Sendable{
 		localStreamId: Int64
 	) throws -> Int64 {
 		
-		var siv = privmx.StreamIdVector()
-		siv.reserve(streamsId.count)
-		for i in siv{
-			siv.push_back(i)
-		}
+		//var siv = privmx.StreamIdVector()
+		//siv.reserve(streamsId.count)
+		//for i in siv{
+		//	siv.push_back(i)
+		//}
 		let res = api.joinStream(
 			std.string(streamRoomId),
-			siv,
+			//siv,
 			settings,
 			localStreamId,
 			webRtcInstance)
@@ -302,7 +299,7 @@ public class StreamApi: @unchecked Sendable{
 	}
 	
 	
-	public func listStreams(
+	/*public func listStreams(
 		in streamRoomId: String
 	) throws -> privmx.StreamVector {
 		let res = api.listStreams(std.string(streamRoomId))
@@ -317,7 +314,7 @@ public class StreamApi: @unchecked Sendable{
 		}
 		return result
 	}
-	
+	*/
 	
 	public func unpublishStream(
 		localStreamId: Int64
@@ -459,19 +456,20 @@ public class StreamApi: @unchecked Sendable{
 public extension EventHandler{
 	
 	
-	public static func isStreamRoomCreatedEvent(
+	static func isStreamRoomCreatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> Bool {
-		let res = privmx.StreamApiLowEventHandler.isStreamRoomCreatedEvent()
-		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
-		}
-		guard let result = res.result.value else {
-			var err = privmx.InternalError()
-			err.name = "Value error"
-			err.description = "Unexpectedly recived nil result"
-			throw PrivMXEndpointError.failedQueryingEventHolder(err)
-		}
-		return result
+		//let res = privmx.StreamApiLowEventHandler.()
+		//guard res.error.value == nil else {
+		//	throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
+		//}
+		//guard let result = res.result.value else {
+		//	var err = privmx.InternalError()
+		//	err.name = "Value error"
+		//	err.description = "Unexpectedly recived nil result"
+		//	throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		//}
+		return false//result
 	}
+ */
 }
