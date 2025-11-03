@@ -14,7 +14,8 @@
 namespace privmx {
 using namespace endpoint;
 
-ResultWithError<NativeStreamApiLowWrapper> NativeStreamApiLowWrapper::create(const NativeConnectionWrapper &connection, NativeEventApiWrapper &eventApi){
+ResultWithError<NativeStreamApiLowWrapper> NativeStreamApiLowWrapper::create(const NativeConnectionWrapper &connection,
+																			 NativeEventApiWrapper &eventApi){
 	ResultWithError<NativeStreamApiLowWrapper> res;
 	try{
 		res.result = NativeStreamApiLowWrapper(connection, eventApi);
@@ -40,16 +41,19 @@ ResultWithError<NativeStreamApiLowWrapper> NativeStreamApiLowWrapper::create(con
 	return res;
 	}
 
-NativeStreamApiLowWrapper::NativeStreamApiLowWrapper(const NativeConnectionWrapper &connection, NativeEventApiWrapper &eventApi){
-	api = std::make_shared<stream::StreamApiLow>(stream::StreamApiLow::create(*(connection.api),*eventApi.api));
+NativeStreamApiLowWrapper::NativeStreamApiLowWrapper(const NativeConnectionWrapper &connection,
+													 NativeEventApiWrapper &eventApi){
+	api = std::make_shared<stream::StreamApiLow>(stream::StreamApiLow::create(*(connection.api),
+																			  *eventApi.api)
+												 );
 }
 
 ResultWithError<std::string> NativeStreamApiLowWrapper::createStreamRoom(const std::string& contextId,
-											  const UserWithPubKeyVector& users,
-											  const UserWithPubKeyVector& managers,
-											  const endpoint::core::Buffer& publicMeta,
-											  const endpoint::core::Buffer& privateMeta,
-											  const OptionalContainerPolicy& policies
+																		 const UserWithPubKeyVector& users,
+																		 const UserWithPubKeyVector& managers,
+																		 const endpoint::core::Buffer& publicMeta,
+																		 const endpoint::core::Buffer& privateMeta,
+																		 const OptionalContainerPolicy& policies
 																		 ){
 	ResultWithError<std::string> res;
 	try{
@@ -93,15 +97,15 @@ ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::updateStreamRoom(cons
 	ResultWithError<std::nullptr_t> res;
 	try{
 		 getApi()->updateStreamRoom(streamRoomId,
-												 users,
-												 managers,
-												publicMeta,
-												privateMeta,
-												version,
-												force,
-												forceGenerateNewKey,
-												policies
-												);
+									users,
+									managers,
+									publicMeta,
+									privateMeta,
+									version,
+									force,
+									forceGenerateNewKey,
+									policies
+									);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -196,6 +200,80 @@ ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::deleteStreamRoom(cons
 	}
 	return res;}
 // Stream
+ResultWithError<StreamVector> NativeStreamApiLowWrapper::listStreams(const std::string& streamRoomId){
+	ResultWithError<StreamVector> res;
+	try{
+		res.result = getApi()->listStreams(streamRoomId);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;}
+
+ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::joinStreamRoom(const std::string &streamRoomId,
+																		WebRTCInterfaceReference webRtc){
+	ResultWithError<std::nullptr_t> res;
+	try{
+		getApi()->joinStreamRoom(streamRoomId, webRtc);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;}
+
+ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::leaveStreamRoom(const std::string &streamRoomId){
+	ResultWithError<std::nullptr_t> res;
+	try{
+		getApi()->leaveStreamRoom(streamRoomId);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;}
+
+
 ResultWithError<stream::StreamHandle> NativeStreamApiLowWrapper::createStream(const std::string& streamRoomId){
 	ResultWithError<stream::StreamHandle> res;
 	try{
@@ -224,6 +302,30 @@ ResultWithError<stream::RemoteStreamId> NativeStreamApiLowWrapper::publishStream
 	ResultWithError<stream::RemoteStreamId> res;
 	try{
 		res.result = getApi()->publishStream(streamHandle);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;}
+
+ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::unpublishStream(const stream::StreamHandle& streamHandle){
+	ResultWithError<std::nullptr_t> res;
+	try{
+		getApi()->unpublishStream(streamHandle);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -300,55 +402,6 @@ ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::modifyRemoteStreamsSu
 		};
 	}
 	return res;}
-
-ResultWithError<StreamVector> NativeStreamApiLowWrapper::listStreams(const std::string& streamRoomId){
-	ResultWithError<StreamVector> res;
-	try{
-		res.result = getApi()->listStreams(streamRoomId);
-	}catch(core::Exception& err){
-		res.error = {
-			.name = err.getName(),
-			.code = err.getCode(),
-			.description = err.getDescription(),
-			.message = err.what()
-		};
-	}catch (std::exception & err) {
-		res.error ={
-			.name = "std::Exception",
-			.message = err.what()
-		};
-	}catch (...) {
-		res.error ={
-			.name = "Unknown Exception",
-			.message = "Failed to work"
-		};
-	}
-	return res;}
-
-ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::unpublishStream(const stream::StreamHandle& streamHandle){
-	ResultWithError<std::nullptr_t> res;
-	try{
-		getApi()->unpublishStream(streamHandle);
-	}catch(core::Exception& err){
-		res.error = {
-			.name = err.getName(),
-			.code = err.getCode(),
-			.description = err.getDescription(),
-			.message = err.what()
-		};
-	}catch (std::exception & err) {
-		res.error ={
-			.name = "std::Exception",
-			.message = err.what()
-		};
-	}catch (...) {
-		res.error ={
-			.name = "Unknown Exception",
-			.message = "Failed to work"
-		};
-	}
-	return res;}
-
 ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::unsubscribeFromRemoteStreams(const std::string& streamRoomId,
 																						const StreamSubscriptiopnsVector& subscriptionsToRemove){
 	ResultWithError<std::nullptr_t> res;
@@ -374,6 +427,58 @@ ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::unsubscribeFromRemote
 		};
 	}
 	return res;}
+
+ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::trickle(const int64_t sesionId,
+																   const std::string &candidateAsJson){
+	ResultWithError<std::nullptr_t> res;
+	try{
+		getApi()->trickle(sesionId,
+						  candidateAsJson);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;}
+
+ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::acceptOfferOnReconfigure(const int64_t sessionId,
+																					const endpoint::stream::SdpWithTypeModel &sdp){
+	ResultWithError<std::nullptr_t> res;
+	try{
+		getApi()->acceptOfferOnReconfigure(sessionId, sdp);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;}
+
 
 ResultWithError<SubscriptionIdVector> NativeStreamApiLowWrapper::subscribeFor(const SubscriptionQueryVector& subscriptionQueries){
 	ResultWithError<SubscriptionIdVector> res;
