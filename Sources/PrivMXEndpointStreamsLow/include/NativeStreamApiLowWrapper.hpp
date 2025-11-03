@@ -120,6 +120,7 @@ private:
 };
 
 class StreamApiLowEventHandler{
+public:
 	static ResultWithError<bool> isStreamRoomCreatedEvent(const endpoint::core::EventHolder& eventHolder);
 	static ResultWithError<endpoint::stream::StreamRoomCreatedEvent> extractStreamRoomCreatedEvent(const endpoint::core::EventHolder& eventHolder);
 	static ResultWithError<bool> isStreamRoomUpdatedEvent(const endpoint::core::EventHolder& eventHolder);

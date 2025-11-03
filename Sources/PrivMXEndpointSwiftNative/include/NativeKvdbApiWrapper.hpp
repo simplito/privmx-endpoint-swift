@@ -76,7 +76,7 @@ private:
 	
 	std::shared_ptr<endpoint::kvdb::KvdbApi> api;
 	
-	std::shared_ptr<endpoint::kvdb::KvdbApi> getapi(){
+	std::shared_ptr<endpoint::kvdb::KvdbApi> getApi(){
 		if (!api) throw NullApiException();
 		return api;
 	}
