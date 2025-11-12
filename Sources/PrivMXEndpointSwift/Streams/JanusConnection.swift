@@ -9,6 +9,12 @@
 // limitations under the License.
 //
 
-#include "WebRtcInterfaceInstance.hpp"
+#if Streams
+import Foundation
+import WebRTC
+import PrivMXEndpointStreamsLow
 
-
+class JanusConnection{
+	
+}
+#endif

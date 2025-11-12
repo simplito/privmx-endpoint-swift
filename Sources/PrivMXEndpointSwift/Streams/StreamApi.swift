@@ -9,55 +9,43 @@
 // limitations under the License.
 //
 
-import PrivMXEndpointSwift
+#if Streams
 import PrivMXEndpointSwiftNative
+import PrivMXEndpointStreamsLow
 import Foundation
 import WebRTC
-import PrivMXEndpointStreamsLow
 
 
 public actor StreamApi: @unchecked Sendable{
-// MARK: Fields
+	// MARK: Fields
 	private var api: privmx.NativeStreamApiLowWrapper
-	private var webRtcInstance: privmx.WebRtcInterfaceInstance
 	private var peerConnectionFactory: RTCPeerConnectionFactory
-	
-	private var notificationListenerId : Int
-	private var connectedListenerId : Int
-	private var disconnectedListenerId : Int
-	
-	private var isStreamOnline: Bool = false
-	
-	private var frameCryptorOptions: Bool
-	private var configuration: WebRTC.RTCConfiguration
-	private var constraints: WebRTC.RTCMediaConstraints = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
+	private var webRtcInstance: privmx.WebRtcInterfaceInstance
 
-	package init(
+	
+	//private var notificationListenerId : Int
+	//private var connectedListenerId : Int
+	//private var disconnectedListenerId : Int
+	//
+	//private var isStreamOnline: Bool = false
+	//
+	//private var frameCryptorOptions: Bool
+	//private var configuration: WebRTC.RTCConfiguration
+	//private var constraints: WebRTC.RTCMediaConstraints = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
+	init(
 		api: privmx.NativeStreamApiLowWrapper,
 		webRtcInstance: privmx.WebRtcInterfaceInstance,
 		peerConnectionFactory: RTCPeerConnectionFactory,
-		notificationListenerId: Int,
-		connectedListenerId: Int,
-		disconnectedListenerId: Int,
-		frameCryptorOptions: Bool,
-		configuration: WebRTC.RTCConfiguration,
-		constraints: WebRTC.RTCMediaConstraints
 	) {
 		self.api = api
 		self.webRtcInstance = webRtcInstance
 		self.peerConnectionFactory = peerConnectionFactory
-		self.notificationListenerId = notificationListenerId
-		self.connectedListenerId = connectedListenerId
-		self.disconnectedListenerId = disconnectedListenerId
-		self.frameCryptorOptions = frameCryptorOptions
-		self.configuration = configuration
-		self.constraints = constraints
 	}
-	
+	 
 	 static func create(
 		connection: Connection,
 		eventApi: inout EventApi
-	) throws -> StreamApi{
+	) async throws -> StreamApi{
 		let res = privmx.NativeStreamApiLowWrapper.create(connection.api, &eventApi.api)
 		let peerConnectionFactory = RTCPeerConnectionFactory()
 		guard var api = res.result.value
@@ -66,23 +54,25 @@ public actor StreamApi: @unchecked Sendable{
 		}
 		let creds = api.getTurnCredentials()
 		RTCInitializeSSL()
-		
-		return StreamApi(
+		return Self(
 			api: api,
 			webRtcInstance: privmx.WebRtcInterfaceInstance.init(
-				{ _ in return ""},
+				{ roomId in
+					return ""
+				},
 				{ _, _, _ in return ""},
 				{ _, _, _ in},
 				{ _, _, _ in},
 				{ _, _ in},
 				{ _ in}),
-			peerConnectionFactory: <#T##RTCPeerConnectionFactory#>,
-			notificationListenerId: <#T##Int#>,
-			connectedListenerId: <#T##Int#>,
-			disconnectedListenerId: <#T##Int#>,
-			frameCryptorOptions: <#T##Bool#>,
-			configuration: <#T##RTCConfiguration#>,
-			constraints: <#T##RTCMediaConstraints#>)
+			peerConnectionFactory: peerConnectionFactory,
+			//notificationListenerId: Int(),
+			//connectedListenerId: Int(),
+			//disconnectedListenerId: Int(),
+			//frameCryptorOptions: Bool(),
+			//configuration: RTCConfiguration(),
+			//constraints: RTCMediaConstraints()
+		)
 	}
 	
 // MARK: - Rooms
@@ -152,7 +142,7 @@ public actor StreamApi: @unchecked Sendable{
 		for m in managers{
 			mv.push_back(consuming: m)
 		}
-		var op: privmx.OptionalContainerPolicy
+		var op = privmx.OptionalContainerPolicy()
 		if let policies{
 			op = privmx.makeOptional(policies)
 		}
@@ -271,6 +261,7 @@ public actor StreamApi: @unchecked Sendable{
 		settings: privmx.endpoint.stream.StreamSettings,
 		localStreamId: Int64
 	) throws -> Int64 {
+		return 1
 	}
 	
 		public func subscribeToRemoteStreams(
@@ -515,3 +506,4 @@ public extension EventHandler{
 		return result
 	}
 }
+#endif // Streams

@@ -9,6 +9,12 @@
 // limitations under the License.
 //
 
-#include "WebRtcInterfaceInstance.hpp"
+#if Streams
+import Foundation
+import PrivMXEndpointStreamsLow
 
-
+final class PeerConnectionManager {
+	private var _createPeerCOnnection : ((String) -> PeerConnection)?
+	
+}
+#endif
