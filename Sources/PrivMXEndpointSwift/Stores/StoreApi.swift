@@ -468,15 +468,15 @@ public class StoreApi{
 		}
 	}
 	
-	/// Synchronize file handle data with newest data on serwer.
+	/// Synchronize file handle data with newest data on server.
 	///
-	/// - Parameter handle: Store File handle to sync
+	/// - Parameter fileHandle: Store File handle to sync
 	///
 	/// - Throws: if the operation fails.
 	public func syncFile(
-		handle: privmx.StoreFileHandle
+		fileHandle: privmx.StoreFileHandle
 	) throws -> Void {
-		let res = api.syncFile(handle)
+		let res = api.syncFile(fileHandle)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSyncingFile(res.error.value!)
 		}
