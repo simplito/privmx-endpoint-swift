@@ -16,13 +16,7 @@ namespace privmx {
 
 class NativeKvdbApiWrapper {
 public:
-	/**
-	 * Creates an instance of 'KvdbApi'.
-	 *
-	 * @param connection instance of 'Connection'
-	 *
-	 * @return KvdbApi object
-	 */
+	
 	static ResultWithError<NativeKvdbApiWrapper> create(NativeConnectionWrapper& connection);
 	
 	ResultWithError<std::string> createKvdb(const std::string& contextId,
@@ -64,11 +58,18 @@ public:
 	ResultWithError<StringBoolMap> deleteEntries(const std::string& kvdbId,
 												const StringVector& keys);
 	
-	ResultWithError<std::nullptr_t> subscribeForKvdbEvents();
-	ResultWithError<std::nullptr_t> unsubscribeFromKvdbEvents();
-	ResultWithError<std::nullptr_t> subscribeForEntryEvents(std::string kvdbId);
-	ResultWithError<std::nullptr_t> unsubscribeFromEntryEvents(std::string kvdbId);
+	ResultWithError<SubscriptionIdVector> subscribeFor(const SubscriptionQueryVector& subscriptionQueries);
+
 	
+	ResultWithError<std::nullptr_t> unsubscribeFrom(const SubscriptionIdVector& subscriptionIds);
+	
+	ResultWithError<SubscriptionQuery> buildSubscriptionQuery(endpoint::kvdb::EventType eventType,
+															  endpoint::kvdb::EventSelectorType selectorType,
+															  const std::string& selectorId);
+	ResultWithError<SubscriptionQuery> buildSubscriptionQueryForSelectedEntry(endpoint::kvdb::EventType eventType,
+																			  const std::string& kvdbId,
+																			  const std::string& kvdbEntryKey);
+
 private:
 	NativeKvdbApiWrapper(NativeConnectionWrapper& connection);
 	NativeKvdbApiWrapper() = default;

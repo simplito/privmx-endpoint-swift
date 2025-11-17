@@ -542,10 +542,10 @@ ResultWithError<std::string> NativeInboxApiWrapper::closeFile(const InboxFileHan
 	return res;
 }
 
-ResultWithError<nullptr_t> NativeInboxApiWrapper::subscribeForInboxEvents(){
-	ResultWithError<nullptr_t> res;
+ResultWithError<SubscriptionIdVector> NativeInboxApiWrapper::subscribeFor(const SubscriptionQueryVector& subscriptionQueries){
+	ResultWithError<SubscriptionIdVector> res;
 	try {
-		getapi()->subscribeForInboxEvents();
+		res.result = getapi()->subscribeFor(subscriptionQueries);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -568,10 +568,10 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::subscribeForInboxEvents(){
 	return res;
 }
 
-ResultWithError<nullptr_t> NativeInboxApiWrapper::unsubscribeFromInboxEvents(){
-	ResultWithError<nullptr_t> res;
+ResultWithError<std::nullptr_t> NativeInboxApiWrapper::unsubscribeFrom(const SubscriptionIdVector& subscriptionIds){
+	ResultWithError<std::nullptr_t> res;
 	try {
-		getapi()->unsubscribeFromInboxEvents();
+		getapi()->unsubscribeFrom(subscriptionIds);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -594,36 +594,12 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::unsubscribeFromInboxEvents(){
 	return res;
 }
 
-ResultWithError<nullptr_t> NativeInboxApiWrapper::subscribeForEntryEvents(const std::string& inboxId){
-	ResultWithError<nullptr_t> res;
+ResultWithError<SubscriptionQuery> NativeInboxApiWrapper::buildSubscriptionQuery(endpoint::inbox::EventType eventType,
+																				  endpoint::inbox::EventSelectorType selectorType,
+																				  const std::string& selectorId){
+	ResultWithError<SubscriptionQuery> res;
 	try {
-		getapi()->subscribeForEntryEvents(inboxId);
-		}catch(core::Exception& err){
-		res.error = {
-			.name = err.getName(),
-			.code = err.getCode(),
-			.scope = err.getScope(),
-			.description = err.getDescription(),
-			.message = err.what()
-		};
-	}catch (std::exception & err) {
-		res.error ={
-			.name = "std::Exception",
-			.message = err.what()
-		};
-	}catch (...) {
-		res.error ={
-			.name = "Unknown Exception",
-			.message = "Failed to work"
-		};
-	}
-	return res;
-}
-
-ResultWithError<nullptr_t> NativeInboxApiWrapper::unsubscribeFromEntryEvents(const std::string& inboxId){
-	ResultWithError<nullptr_t> res;
-	try {
-		getapi()->unsubscribeFromEntryEvents(inboxId);
+		res.result = getapi()->buildSubscriptionQuery(eventType, selectorType, selectorId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),

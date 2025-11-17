@@ -89,7 +89,7 @@ using StringVector = std::vector<std::string>;
 using FileVector = std::vector<endpoint::store::File>;
 using OptionalString = std::optional<std::string>;
 using UserWithPubKeyVector = std::vector<endpoint::core::UserWithPubKey>;
-using UserInfoVector = std::vector<endpoint::core::UserInfo>;
+using UserInfoList = endpoint::core::PagingList<endpoint::core::UserInfo>;
 
 using KvdbKey = std::string;
 
@@ -115,6 +115,10 @@ using KvdbEntryList = endpoint::core::PagingList<endpoint::kvdb::KvdbEntry>;
 using BoolVector = std::vector<bool>;
 using StringBoolMap = std::map<std::string,bool>;
 using VerificationRequestVector = std::vector<endpoint::core::VerificationRequest>;
+
+using SubscriptionQuery = std::string;
+using SubscriptionQueryVector = std::vector<SubscriptionQuery>;
+using SubscriptionIdVector = std::vector<std::string>;
 
 using OptionalCUnsignedInt = std::optional<uint32_t>;
 
@@ -606,6 +610,122 @@ static ResultWithError<std::nullptr_t> _call_Utils_rtrim(std::string& data) noex
 		};
 	}
 	return res;
+}
+
+static privmx::SubscriptionIdVector _get_subIds_from_event(const privmx::endpoint::core::Event& event){
+	auto res = event.subscriptions;
+	return res;
+}
+	
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::thread::ThreadCreatedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::thread::ThreadUpdatedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::thread::ThreadStatsChangedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::thread::ThreadDeletedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::thread::ThreadNewMessageEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::thread::ThreadMessageUpdatedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::thread::ThreadMessageDeletedEvent& event){
+	return _get_subIds_from_event(event);
+}
+
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::store::StoreCreatedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::store::StoreUpdatedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::store::StoreStatsChangedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::store::StoreDeletedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::store::StoreFileCreatedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::store::StoreFileUpdatedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::store::StoreFileDeletedEvent& event){
+	return _get_subIds_from_event(event);
+}
+
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::inbox::InboxCreatedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::inbox::InboxUpdatedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::inbox::InboxDeletedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::inbox::InboxEntryCreatedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::inbox::InboxEntryDeletedEvent& event){
+	return _get_subIds_from_event(event);
+}
+
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::kvdb::KvdbCreatedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::kvdb::KvdbUpdatedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::kvdb::KvdbStatsChangedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::kvdb::KvdbDeletedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::kvdb::KvdbNewEntryEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::kvdb::KvdbEntryUpdatedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::kvdb::KvdbEntryDeletedEvent& event){
+	return _get_subIds_from_event(event);
+}
+
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::event::ContextCustomEvent& event){
+	return _get_subIds_from_event(event);
+}
+
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::core::LibBreakEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::core::LibPlatformDisconnectedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::core::LibDisconnectedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::core::LibConnectedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::core::ContextUserAddedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::core::ContextUserRemovedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::core::ContextUsersStatusChangedEvent& event){
+	return _get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::core::CollectionChangedEvent& event){
+	return _get_subIds_from_event(event);
 }
 
 }

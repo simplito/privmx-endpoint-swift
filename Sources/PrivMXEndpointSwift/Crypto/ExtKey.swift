@@ -23,7 +23,9 @@ public class ExtKey{
 	}
 
 	/// Creates ExtKey from given seed.
+	///
 	/// - Parameter seed: the seed used to generate Key
+	///
 	/// - Returns: `ExtKey` object
 	public static func fromSeed(
 		seed: privmx.endpoint.core.Buffer
@@ -42,7 +44,9 @@ public class ExtKey{
 	}
 	
 	/// Decodes ExtKey from Base58 format.
-	/// - Parameter base58:the ExtKey in Base58
+	///
+	/// - Parameter base58: the ExtKey in Base58
+	///
 	/// - Returns: `ExtKey` object
 	public static func fromBase58(
 		base58: std.string
@@ -61,6 +65,7 @@ public class ExtKey{
 	}
 	
 	/// Generates a new ExtKey.
+	///
 	/// - Returns: `ExtKey` object
 	public static func generateRandom(
 	) throws -> ExtKey {
@@ -78,7 +83,9 @@ public class ExtKey{
 	}
 	
 	/// Generates child ExtKey from a current ExtKey using BIP32.
+	///
 	/// - Parameter index: number from 0 to 2^31-1
+	///
 	/// - Returns: `ExtKey` object
 	public func derive(
 		index:UInt32
@@ -97,7 +104,9 @@ public class ExtKey{
 	}
 
 	/// Generates hardened child ExtKey from a current ExtKey using BIP32.
+	///
 	/// - Parameter index: number from 0 to 2^31-1
+	///
 	/// - Returns: `ExtKey` object
 	public func deriveHardened(
 		index:UInt32
@@ -116,6 +125,7 @@ public class ExtKey{
 	}
 	
 	/// Converts ExtKey to Base58 string.
+	///
 	/// - Returns: `ExtKey` in Base58 format
 	public func getPrivatePartAsBase58(
 	) throws -> std.string {
@@ -133,6 +143,7 @@ public class ExtKey{
 	}
 	
 	/// Converts the public part of ExtKey to Base58 string.
+	///
 	/// - Returns: `ExtKey` in Base58 format
 	public func getPublicPartAsBase58(
 	) throws -> std.string {
@@ -150,6 +161,7 @@ public class ExtKey{
 	}
 	
 	/// Extracts ECC PrivateKey.
+	///
 	/// - Returns: ECC key in WIF format
 	public func getPrivateKey(
 	) throws -> std.string {
@@ -167,6 +179,7 @@ public class ExtKey{
 	}
 
 	/// Extracts ECC PublicKey.
+	///
 	/// - Returns: ECC key in BASE58DER format
 	public func getPublicKey(
 	) throws -> std.string {
@@ -184,6 +197,7 @@ public class ExtKey{
 	}
 	
 	/// Extracts ECC PublicKey Address.
+	///
 	/// - Returns: ECC Address in BASE58 format
 	public func getPublicKeyAsBase58Address(
 	) throws -> std.string {
@@ -201,6 +215,7 @@ public class ExtKey{
 	}
 	
 	/// Extracts raw ECC PrivateKey.
+	///
 	/// - Returns: ECC PrivateKey
 	public func getPrivateEncKey(
 	) throws -> privmx.endpoint.core.Buffer {
@@ -218,6 +233,7 @@ public class ExtKey{
 	}
 	
 	/// Gets the chain code of Extended Key.
+	///
 	/// - Returns: Raw chain code
 	public func getChainCode(
 	) throws -> privmx.endpoint.core.Buffer {
@@ -235,8 +251,10 @@ public class ExtKey{
 	}
 	
 	///  Validates a signature of a message.
+	///
 	/// - Parameter  message: data used on validation
 	/// - Parameter  signature: signature of data to verify
+	///
 	/// - Returns:  message validation result
 	public func verifyCompactSignatureWithHash(
 		message: privmx.endpoint.core.Buffer,
@@ -258,6 +276,7 @@ public class ExtKey{
 	}
 	
 	/// Checks if ExtKey is Private.
+	/// 
 	/// - Returns: returns true if ExtKey is private
 	public func isPrivate(
 	) throws -> Bool {

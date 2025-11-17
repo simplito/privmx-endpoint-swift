@@ -393,14 +393,15 @@ ResultWithError<StringBoolMap> NativeKvdbApiWrapper::deleteEntries(const std::st
 	return res;
 }
 
-ResultWithError<nullptr_t> NativeKvdbApiWrapper::subscribeForKvdbEvents(){
-	ResultWithError res;
-	try{
-		getapi()->subscribeForKvdbEvents();
-	}catch(core::Exception& err){
+ResultWithError<SubscriptionIdVector> NativeKvdbApiWrapper::subscribeFor(const SubscriptionQueryVector& subscriptionQueries){
+	ResultWithError<SubscriptionIdVector> res;
+	try {
+		res.result = getapi()->subscribeFor(subscriptionQueries);
+		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -418,14 +419,15 @@ ResultWithError<nullptr_t> NativeKvdbApiWrapper::subscribeForKvdbEvents(){
 	return res;
 }
 
-ResultWithError<nullptr_t> NativeKvdbApiWrapper::unsubscribeFromKvdbEvents(){
-	ResultWithError res;
-	try{
-		getapi()->unsubscribeFromKvdbEvents();
-	}catch(core::Exception& err){
+ResultWithError<std::nullptr_t> NativeKvdbApiWrapper::unsubscribeFrom(const SubscriptionIdVector& subscriptionIds){
+	ResultWithError<std::nullptr_t> res;
+	try {
+		getapi()->unsubscribeFrom(subscriptionIds);
+		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -443,14 +445,17 @@ ResultWithError<nullptr_t> NativeKvdbApiWrapper::unsubscribeFromKvdbEvents(){
 	return res;
 }
 
-ResultWithError<nullptr_t> NativeKvdbApiWrapper::subscribeForEntryEvents(std::string kvdbId){
-	auto res = ResultWithError();
-	try{
-		getapi()->subscribeForEntryEvents(kvdbId);
-	}catch(core::Exception& err){
+ResultWithError<SubscriptionQuery> NativeKvdbApiWrapper::buildSubscriptionQuery(endpoint::kvdb::EventType eventType,
+																				  endpoint::kvdb::EventSelectorType selectorType,
+																				  const std::string& selectorId){
+	ResultWithError<SubscriptionQuery> res;
+	try {
+		res.result = getapi()->buildSubscriptionQuery(eventType, selectorType, selectorId);
+		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -468,14 +473,17 @@ ResultWithError<nullptr_t> NativeKvdbApiWrapper::subscribeForEntryEvents(std::st
 	return res;
 }
 
-ResultWithError<nullptr_t> NativeKvdbApiWrapper::unsubscribeFromEntryEvents(std::string kvdbId){
-	ResultWithError res;
-	try{
-		getapi()->unsubscribeFromEntryEvents(kvdbId);
-	}catch(core::Exception& err){
+ResultWithError<SubscriptionQuery> NativeKvdbApiWrapper::buildSubscriptionQueryForSelectedEntry(endpoint::kvdb::EventType eventType,
+																				  const std::string& kvdbId,
+																				  const std::string& kvdbEntryKey){
+	ResultWithError<SubscriptionQuery> res;
+	try {
+		res.result = getapi()->buildSubscriptionQueryForSelectedEntry(eventType, kvdbId, kvdbEntryKey);
+		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
 			.code = err.getCode(),
+			.scope = err.getScope(),
 			.description = err.getDescription(),
 			.message = err.what()
 		};
@@ -492,6 +500,7 @@ ResultWithError<nullptr_t> NativeKvdbApiWrapper::unsubscribeFromEntryEvents(std:
 	}
 	return res;
 }
+
 
 ResultWithError<bool> KvdbEventHandler::isKvdbCreatedEvent(const endpoint::core::EventHolder &eventHolder){
 	ResultWithError<bool> res;

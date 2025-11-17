@@ -11,6 +11,7 @@
 
 import PrivMXEndpointSwiftNative
 
+/// 'EventApi' is a class representing Endpoint's API for context custom events.
 public class EventApi{
 	internal var api : privmx.NativeEventApiWrapper
 	
@@ -20,15 +21,13 @@ public class EventApi{
 		self.api = api
 	}
 	
-	/// Creates a new instance of `EventApi` from a `Connection` object.
+	/// Creates an instance of 'EventApi'.
 	///
-	/// This method initializes the `EventApi` instance, enabling CustomEvent-related operations over the specified connection.
-	///
-	/// - Parameter connection: The connection object to be used for interacting with Custom Events.
+	/// - Parameter connection: instance of 'Connection'
 	///
 	/// - Throws: `PrivMXEndpointError.failedInstantiatingEventApi` if an error occurs during the initialization.
 	///
-	/// - Returns: A newly created `EventApi` instance.
+	/// - Returns: `EventApi` object
 	public static func create(
 		connection: inout Connection
 	) throws -> EventApi {
@@ -58,7 +57,6 @@ public class EventApi{
 	/// - Parameter users: event's data
 	///
 	/// - Throws: `PrivMXEndpointError.failedEmittingCustomEvent` if listing the messages fails.
-	///
 	public func emitEvent(
 		contextId: std.string,
 		users: privmx.UserWithPubKeyVector,
@@ -75,38 +73,66 @@ public class EventApi{
 		}
 	}
 	
-	/// Subscribe for the custom events on the given channel.
+	
+	/// Subscribe for the custom events on the given subscription query.
 	///
-	/// - Parameter contextId: ID of the Context
-	/// - Parameter channelName: name of the Channel
+	/// - Parameter subscriptionQueries: list of queries
 	///
-	/// - Throws: `PrivMXEndpointError.failedSubscribingForEvents` if subscribing to custom events fails.
-	public func subscribeForCustomEvents(
-		contextId: std.string,
-		channelName:std.string
-	) throws -> Void {
-		let res = api.subscribeForCustomEvents(contextId,
-											   channelName)
+	/// - Throws: When subscribing for events fails.
+	///
+	/// - Returns: list of subscriptionIds in maching order to subscriptionQueries.
+	public func subscribeFor(
+		subscriptionQueries: privmx.SubscriptionQueryVector
+	) throws -> privmx.SubscriptionIdVector {
+		let res = api.subscribeFor(subscriptionQueries)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedSubscribingForCustomEvents(res.error.value!)
+			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedSubscribingForEvents(err)
+		}
+		return result
+	}
+	
+	/// Unsubscribe from events for the given subscriptionId.
+	///
+	/// - Parameter subscriptionIds: list of subscriptionId
+	///
+	/// - Throws: When unsubscribing fails.
+	public func unsubscribeFrom(
+		subscriptionIds: privmx.SubscriptionIdVector
+	) throws -> Void {
+		let res = api.unsubscribeFrom(subscriptionIds)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
 		}
 	}
 	
-	/// Unsubscribe from the custom events on the given channel.
+	/// Generate subscription Query for the Custom events.
 	///
-	/// - Parameter contextId: ID of the Context
 	/// - Parameter channelName: name of the Channel
+	/// - Parameter selectorType: selector of scope on which you listen for events
+	/// - Parameter selectorId: ID of the selector
 	///
-	/// - Throws: `PrivMXEndpointError.failedSubscribingForEvents` if subscribing to message events fails.
-	public func unsubscribeFromCustomEvents(
-		contextId: std.string,
-		channelName: std.string
-	) throws -> Void {
-		let res = api.unsubscribeFromCustomEvents(contextId,
-												  channelName)
+	/// - Throws: When building the subscription Query fails.
+	public func buildSubscriptionQuery(
+		channelName: std.string,
+		selectorType: privmx.endpoint.event.EventSelectorType,
+		selectorId: std.string
+	) throws -> privmx.SubscriptionQuery {
+		let res = api.buildSubscriptionQuery(channelName, selectorType, selectorId)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedUnsubscribingFromCustomEvents(res.error.value!)
+			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(res.error.value!)
 		}
-		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(err)
+		}
+		return result
 	}
 }

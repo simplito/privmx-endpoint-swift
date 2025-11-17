@@ -14,22 +14,20 @@ import Cxx
 import CxxStdlib
 import PrivMXEndpointSwiftNative
 
-/// Swift wrapper for `privmx.NativeStoreApiWrapper`, providing functionality to manage Stores and files within PrivMX platform.
+/// 'StoreApi' is a class representing Endpoint's API for Stores and their files.
 public class StoreApi{
 	
 	/// An instance of the wrapped C++ class.
     internal var api: privmx.NativeStoreApiWrapper
 	
-	/// Creates a new instance of `StoreApi` from a connection object.
-    ///
-    /// This method initializes the `StoreApi` instance, enabling Store-related operations over the specified connection.
-    ///
-    /// - Parameter connection: The connection object used for Store operations.
-    ///
-    /// - Throws: `PrivMXEndpointError.failedInstantiatingStoreApi` if the initialization fails.
-    ///
-    /// - Returns: A newly created `StoreApi` instance.
-   public static func create(
+	/// Creates an instance of 'StoreApi'Gets a list of Stores in given Context.
+	///
+	/// - Parameter connection: instance of 'ConnectionID of the Context to get the Stores from
+	///
+	/// - Throws: `PrivMXEndpointError.failedInstantiatingStoreApi` if the initialization fails.
+	///
+	/// - Returns: StoreApi struct with list query parameters
+	public static func create(
 		connection: inout Connection
 	) throws -> StoreApi {
 		let res = privmx.NativeStoreApiWrapper.create(&connection.api)
@@ -52,15 +50,14 @@ public class StoreApi{
 		self.api = api
 	}
 	
-	/// Lists all Stores the user has access to within a specified Context.
+	/// struct containing list of Stores
     ///
-    /// - Parameters:
-    ///   - contextId: The Context from which the Stores should be listed.
-    ///   - pagingQuery: A `PagingQuery` object to filter and paginate the results.
+    /// - Parameter contextId: Gets a list of Stores in given Context.
+    /// - Parameter pagingQuery: ID of the Context to get the Stores from
     ///
     /// - Throws: `PrivMXEndpointError.failedListingStores` if listing Stores fails.
     ///
-    /// - Returns: A `privmx.StoreList` instance containing the list of Stores.
+    /// - Returns: struct with list query parameters
     public func listStores(
 		contextId: std.string,
 		pagingQuery: privmx.endpoint.core.PagingQuery
@@ -86,13 +83,13 @@ public class StoreApi{
 		try listStores(contextId: contextId, pagingQuery: query)
 	}
 	
-	/// Retrieves detailed information about a specified Store.
+	/// Gets a single Store by given Store ID.
     ///
-    /// - Parameter storeId: The unique identifier of the Store to retrieve.
+    /// - Parameter storeId: ID of the Store to get
     ///
     /// - Throws: `PrivMXEndpointError.failedGettingStore` if fetching the Store details fails.
     ///
-    /// - Returns: A `privmx.endpoint.store.Store` instance containing Store details.
+    /// - Returns: struct containing information about the Store
     public func getStore(
 		storeId: std.string
 	) throws -> privmx.endpoint.store.Store{
@@ -110,23 +107,19 @@ public class StoreApi{
 		return result
 	}
 	
-	/// Creates a new Store within a specified Context.
+	/// Creates a new Store in given Context.
     ///
-    /// This method creates a new Store with specified users and managers. Note that managers must be added as users to gain access to the Store.
-	///
-	/// If `policies` argument is set to `nil`, the default policies will be applied.
-    ///
-    /// - Parameters:
-    ///   - contextId: The Context in which the Store should be created.
-    ///   - users: A vector of users who will have access to the Store.
-    ///   - managers: A vector of managers responsible for the Store.
-    ///   - publicMeta: Public metadata for the Store, which will not be encrypted.
-    ///   - privateMeta: Private metadata for the Store, which will be encrypted.
-	///   - policies: A set of policies for the Container.
+    /// - Parameter contextId: ID of the Context to create the Store in
+    /// - Parameter users: vector of UserWithPubKey structs which indicates who will have access to the created Store
+    /// - Parameter managers: vector of UserWithPubKey structs which indicates who will have access (and management rights) to the
+	/// created store
+    /// - Parameter publicMeta: public (unencrypted) metadata
+    /// - Parameter privateMeta: private (encrypted) metadata
+	/// - Parameter policies: Store's policies
     ///
     /// - Throws: `PrivMXEndpointError.failedCreatingStore` if Store creation fails.
     ///
-    /// - Returns: The ID of the newly created Store as a `std.string`.
+    /// - Returns: created Store ID
     public func createStore(
 		contextId: std.string,
 		users: privmx.UserWithPubKeyVector,
@@ -160,21 +153,16 @@ public class StoreApi{
 	}
 	
 	/// Updates an existing Store.
-    ///
-    /// The provided values will override the existing ones. You can also force regeneration of the Store's key if needed.
 	///
-	/// If `policies` argument is set to `nil`, the default policies will be applied.
-    ///
-    /// - Parameters:
-    ///   - storeId: The unique identifier of the Store to be updated.
-    ///   - version: The current version of the Store for consistency checking.
-    ///   - users: A vector of users who will have access to the Store.
-    ///   - managers: A vector of managers responsible for the Store.
-    ///   - publicMeta: New public metadata for the Store, which will not be encrypted.
-    ///   - privateMeta: New private metadata for the Store, which will be encrypted.
-    ///   - force: Whether to force the update, bypassing version control.
-    ///   - forceGenerateNewKey: Whether to generate a new key for the Store.
-	///   - policies: New set of policies for the Container.
+    /// - Parameter storeId: ID of the Store to update
+    /// - Parameter version: vector of UserWithPubKey structs which indicates who will have access to the created Store
+    /// - Parameter users: vector of UserWithPubKey structs which indicates who will have access (and management rights) to the
+    /// - Parameter managers: public (unencrypted) metadata
+    /// - Parameter publicMeta: private (encrypted) metadata
+    /// - Parameter privateMeta: current version of the updated Store
+    /// - Parameter force: force update (without checking version)
+    /// - Parameter forceGenerateNewKey: force to regenerate a key for the Store
+	/// - Parameter policies: Store's policies
     ///
     /// - Throws: `PrivMXEndpointError.failedUpdatingStore` if updating the Store fails.
     public func updateStore(
@@ -208,9 +196,9 @@ public class StoreApi{
 		}
 	}
 	
-	 /// Deletes a specified Store.
+	/// Deletes a Store by given Store ID.
     ///
-    /// - Parameter storeId: The unique identifier of the Store to delete.
+    /// - Parameter storeId: ID of the Store to delete
     ///
     /// - Throws: `PrivMXEndpointError.failedDeletingStore` if deleting the Store fails.
     public func deleteStore(
@@ -223,13 +211,13 @@ public class StoreApi{
 		}
 	}
 	
-	/// Retrieves detailed information about a specified file.
+	/// Gets a single file by the given file ID.
     ///
-    /// - Parameter fileId: The unique identifier of the file to retrieve.
+    /// - Parameter fileId: ID of the file to get
     ///
     /// - Throws: `PrivMXEndpointError.failedGettingFile` if fetching the file details fails.
     ///
-    /// - Returns: A `privmx.endpoint.store.File` instance representing the file details.
+    /// - Returns: struct containing information about the file
     public func getFile(
 		fileId: std.string
 	) throws -> privmx.endpoint.store.File{
@@ -247,17 +235,14 @@ public class StoreApi{
 		return result
 	}
 	
-	/// Lists all files in a specified Store.
+	/// Gets a list of files in given Store.
     ///
-    /// This method retrieves metadata about files in the Store. To download files, use the `openFile()` and `readFile()` methods.
-    ///
-    /// - Parameters:
-    ///   - storeId: The Store from which to list files.
-    ///   - pagingQuery: A `PagingQuery` object to filter and paginate the results.
+    /// - Parameter storeId: ID of the Store to get files from
+    /// - Parameter pagingQuery: struct with list query parameters
     ///
     /// - Throws: `PrivMXEndpointError.failedListingFiles` if listing the files fails.
     ///
-    /// - Returns: A `privmx.FileList` instance containing the list of files.
+    /// - Returns: struct containing list of files
     public func listFiles(
 		storeId: std.string,
 		pagingQuery: privmx.endpoint.core.PagingQuery
@@ -283,26 +268,25 @@ public class StoreApi{
 		try listFiles(storeId: storeId, pagingQuery: query)
 	}
 	
-	/// Creates a new file handle for writing in a Store.
+	/// Creates a new file in a Store.
     ///
-    /// Use `writeToFile()` to upload data to this handle and `closeFile()` to finalize the process.
-    ///
-    /// - Parameters:
-    ///   - storeId: The Store in which the file should be created.
-    ///   - publicMeta: Public metadata for the file.
-    ///   - privateMeta: Private metadata for the file.
-    ///   - size: The size of the file in bytes.
+    /// - Parameter storeId: ID of the Store to create the file in
+    /// - Parameter publicMeta: public file metadata
+    /// - Parameter privateMeta: private file metadata
+    /// - Parameter size: size of the file
+    /// - Parameter randomWriteSupport: enable random write support for file
     ///
     /// - Throws: `PrivMXEndpointError.failedCreatingFile` if creating the file handle fails.
     ///
-    /// - Returns: A `privmx.StoreFileHandle` for writing to the file.
+    /// - Returns: handle to write data
     public func createFile(
 		storeId: std.string,
 		publicMeta:privmx.endpoint.core.Buffer,
 		privateMeta:privmx.endpoint.core.Buffer,
-		size: Int64
+		size: Int64,
+		randomWriteSupport: Bool = false
 	) throws -> privmx.StoreFileHandle{
-		let res = api.createFile(storeId,publicMeta,privateMeta,size)
+		let res = api.createFile(storeId,publicMeta,privateMeta,size,randomWriteSupport)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedCreatingFile(res.error.value!)
 		}
@@ -315,11 +299,10 @@ public class StoreApi{
 		return result
 	}
 	
-	/// Moves the read cursor within an open file.
+	/// Moves read cursor.
     ///
-    /// - Parameters:
-    ///   - handle: The handle to the open file.
-    ///   - position: The new position of the read cursor in bytes.
+    /// - Parameter handle: handle to write file data
+    /// - Parameter position: new cursor position
     ///
     /// - Throws: `PrivMXEndpointError.failedSeekingInFile` if moving the cursor fails.
     public func seekInFile(
@@ -332,19 +315,16 @@ public class StoreApi{
 		}
 	}
 	
-	/// Updates an existing file within a Store.
+	/// Update an existing file in a Store.
     ///
-    /// This method creates a new handle for updating the file's content and metadata. Use `writeToFile()` to upload data and `closeFile()` to finalize the update.
-    ///
-    /// - Parameters:
-    ///   - fileId: The unique identifier of the file to be updated.
-    ///   - publicMeta: New public metadata for the file.
-    ///   - privateMeta: New private metadata for the file.
-    ///   - size: The size of the updated file in bytes.
+    /// - Parameter fileId: ID of the file to update
+    /// - Parameter publicMeta: public file metadata
+    /// - Parameter privateMeta: private file metadata
+    /// - Parameter size: size of the file
     ///
     /// - Throws: `PrivMXEndpointError.failedUpdatingFile` if updating the file fails.
     ///
-    /// - Returns: A `privmx.StoreFileHandle` for writing to the updated file.
+    /// - Returns: handle to write file data
    public func updateFile(
 		fileId: std.string,
 		publicMeta:privmx.endpoint.core.Buffer,
@@ -364,11 +344,11 @@ public class StoreApi{
 		return result
 	}
 	
-	/// Updates the metadata of an existing File.
-	/// - Parameters:
-	///   - fileId: id of a File to be updated
-	///   - publicMeta: new public metadata
-	///   - privateMeta: new private metadata
+	/// Update metadata of an existing file in a Store.
+	///
+	/// - Parameter fileId: ID of the file to update
+	/// - Parameter publicMeta: public file metadata
+	/// - Parameter privateMeta: private file metadata
 	///
 	/// - Throws: When an error occurs during updating metadata.
 	public func updateFileMeta(
@@ -382,15 +362,13 @@ public class StoreApi{
 		}
 	}
 	
-	/// Closes an open file handle.
+	/// Closes the file handle.
     ///
-    /// This method finalizes a file operation, such as writing or updating.
-    ///
-    /// - Parameter handle: The handle to the open file.
+    /// - Parameter handle: handle to read/write file data
     ///
     /// - Throws: `PrivMXEndpointError.failedClosingFile` if closing the file handle fails.
     ///
-    /// - Returns: The ID of the closed file as a `std.string`.
+    /// - Returns: ID of closed file
    public func closeFile(
 		handle: privmx.StoreFileHandle
 	) throws -> std.string {
@@ -407,13 +385,13 @@ public class StoreApi{
 		return result
 	}
 	
-	/// Opens a file for reading from the Store.
+	/// Opens a file to read.
     ///
-    /// - Parameter fileId: The unique identifier of the file to be opened.
+    /// - Parameter fileId: ID of the file to read
     ///
     /// - Throws: `PrivMXEndpointError.failedOpeningFile` if opening the file fails.
     ///
-    /// - Returns: A `privmx.StoreFileHandle` for reading the file.
+    /// - Returns: handle to read file data
    public func openFile(
 		fileId: std.string
 	) throws -> privmx.StoreFileHandle {
@@ -431,15 +409,15 @@ public class StoreApi{
 	}
 	
 	
-	/// Reads data from an open file.
+	/// Reads file data.
+	/// Single read call moves the files's cursor position by declared length or set it at the end of the file.
     ///
-    /// - Parameters:
-    ///   - handle: The handle to the open file.
-    ///   - length: The number of bytes to read.
+    /// - Parameter handle: handle to write file data
+    /// - Parameter length: size of data to read
     ///
     /// - Throws: `PrivMXEndpointError.failedReadingFromFile` if reading from the file fails.
     ///
-    /// - Returns: A buffer containing the read data.
+    /// - Returns: buffer with file data chunk
     public func readFromFile(
 		handle: privmx.StoreFileHandle,
 		length: Int64
@@ -457,27 +435,28 @@ public class StoreApi{
 		return result
 	}
 	
-	/// Writes a chunk of data to an open file on the platform.
+	/// Writes a file data.
     ///
-    /// - Parameters:
-    ///   - handle: The handle to the open file.
-    ///   - dataChunk: The chunk of data to be written to the file.
+    /// - Parameter handle: handle to write file data
+    /// - Parameter dataChunk: file data chunk
+    /// - Parameter truncate: truncate the file from: current pos + dataChunk size
     ///
     /// - Throws: `PrivMXEndpointError.failedWritingToFile` if writing to the file fails.
     public func writeToFile(
 		handle: privmx.StoreFileHandle,
-		dataChunk: privmx.endpoint.core.Buffer
+		dataChunk: privmx.endpoint.core.Buffer,
+		truncate: Bool = false
 	) throws -> Void{
 		
-		let res = api.writeToFile(handle,dataChunk)
+		let res = api.writeToFile(handle,dataChunk,truncate)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedWritingToFile(res.error.value!)
 		}
 	}
 	
-	/// Deletes a specified file from the Store.
+	/// Deletes a file by given ID.
     ///
-    /// - Parameter fileId: The unique identifier of the file to delete.
+    /// - Parameter fileId: ID of the file to delete
     ///
     /// - Throws: `PrivMXEndpointError.failedDeletingFile` if deleting the file fails.
     public func deleteFile(
@@ -489,53 +468,81 @@ public class StoreApi{
 		}
 	}
 	
-	/// Subscribes to Store-related events.
-    ///
-    /// - Throws: `PrivMXEndpointError.failedSubscribingForEvents` if subscribing to Store events fails.
-    public func subscribeForStoreEvents(
+	/// Synchronize file handle data with newest data on server.
+	///
+	/// - Parameter fileHandle: Store File handle to sync
+	///
+	/// - Throws: if the operation fails.
+	public func syncFile(
+		fileHandle: privmx.StoreFileHandle
 	) throws -> Void {
-		let res = api.subscribeForStoreEvents()
+		let res = api.syncFile(fileHandle)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
+			throw PrivMXEndpointError.failedSyncingFile(res.error.value!)
 		}
 	}
 	
-	/// Unsubscribes from Store-related events.
-    ///
-    /// - Throws: `PrivMXEndpointError.failedUnsubscribingFromEvents` if unsubscribing from Store events fails.
-    public func unsubscribeFromStoreEvents(
+	/// Subscribe for the Store events on the given subscription query.
+	///
+	/// - Parameter subscriptionQueries: list of queries
+	///
+	/// - Throws: When subscribing for events fails.
+	///
+	/// - Returns: list of subscriptionIds in maching order to subscriptionQueries
+	public func subscribeFor(
+		subscriptionQueries: privmx.SubscriptionQueryVector
+	) throws -> privmx.SubscriptionIdVector {
+		let res = api.subscribeFor(subscriptionQueries)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedSubscribingForEvents(err)
+		}
+		return result
+	}
+	
+	/// Unsubscribe from events for the given subscriptionId.
+	///
+	/// - Parameter subscriptionIds: list of subscriptionId
+	///
+	/// - Throws: When unsubscribing fails.
+	public func unsubscribeFrom(
+		subscriptionIds: privmx.SubscriptionIdVector
 	) throws -> Void {
-		let res = api.unsubscribeFromStoreEvents()
+		let res = api.unsubscribeFrom(subscriptionIds)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
 		}
 	}
 	
-	/// Subscribes to file-related events within a specified Store.
-    ///
-    /// - Parameter storeId: The unique identifier of the Store to subscribe to file events for.
-    ///
-    /// - Throws: `PrivMXEndpointError.failedSubscribingForEvents` if subscribing to file events fails.
-   public func subscribeForFileEvents(
-		storeId: std.string
-	) throws -> Void {
-		let res = api.subscribeForFileEvents(storeId)
+	/// Generate subscription Query for the Store events.
+	///
+	/// - Parameter eventType: type of event which you listen for
+	/// - Parameter selectorType: scope on which you listen for events
+	/// - Parameter selectorId: ID of the selector
+	///
+	/// - Throws: When building the subscription Query fails.
+	///
+	/// - Returns: a properly formatted event subscription request.
+	public func buildSubscriptionQuery(
+	eventType: privmx.endpoint.store.EventType,
+	selectorType: privmx.endpoint.store.EventSelectorType,
+	selectorId: std.string
+	) throws -> privmx.SubscriptionQuery {
+		let res = api.buildSubscriptionQuery(eventType, selectorType, selectorId)
 		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
+			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(res.error.value!)
 		}
-	}
-	
-	/// Unsubscribes from file-related events within a specified Store.
-    ///
-    /// - Parameter storeId: The unique identifier of the Store to unsubscribe from file events for.
-    ///
-    /// - Throws: `PrivMXEndpointError.failedUnsubscribingFromEvents` if unsubscribing from file events fails.
-    public func unsubscribeFromFileEvents(
-		storeId: std.string
-	) throws -> Void {
-		let res = api.unsubscribeFromFileEvents(storeId)
-		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(err)
 		}
+		return result
 	}
 }

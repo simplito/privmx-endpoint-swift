@@ -24,11 +24,15 @@ public:
 											  const UserWithPubKeyVector& users,
 											  const std::string& channelName,
 											  const endpoint::core::Buffer& eventData);
-	ResultWithError<nullptr_t> subscribeForCustomEvents(const std::string& contextId,
-														const std::string& channelName);
-	ResultWithError<nullptr_t> unsubscribeFromCustomEvents(const std::string& contextId,
-														   const std::string& channelName);
 	
+	ResultWithError<SubscriptionIdVector> subscribeFor(const SubscriptionQueryVector& subscriptionQueries);
+
+	ResultWithError<std::nullptr_t> unsubscribeFrom(const SubscriptionIdVector& subscriptionIds);
+	
+	ResultWithError<SubscriptionQuery> buildSubscriptionQuery(const std::string& channelName,
+															  endpoint::event::EventSelectorType selectorType,
+															  const std::string& selectorId);
+
 	
 private:
 	std::shared_ptr<endpoint::event::EventApi> getapi(){

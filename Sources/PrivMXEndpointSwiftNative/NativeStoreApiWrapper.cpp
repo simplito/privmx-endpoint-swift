@@ -232,10 +232,11 @@ ResultWithError<FileList> NativeStoreApiWrapper::listFiles(const std::string& st
 ResultWithError<StoreFileHandle> NativeStoreApiWrapper::createFile(const std::string &storeId,
 																 const core::Buffer& publicMeta,
 																 const core::Buffer& privateMeta,
-																 int64_t size){
+																 int64_t size,
+																   bool randomWriteSupport){
 	ResultWithError<StoreFileHandle> res;
 	try{
-		res.result = getapi()->createFile(storeId, publicMeta, privateMeta, size);
+		res.result = getapi()->createFile(storeId, publicMeta, privateMeta, size,randomWriteSupport);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -369,10 +370,11 @@ ResultWithError<core::Buffer> NativeStoreApiWrapper::readFromFile(StoreFileHandl
 }
 
 ResultWithError<std::nullptr_t> NativeStoreApiWrapper::writeToFile(StoreFileHandle handle,
-																   const core::Buffer& dataChunk){
+																   const core::Buffer& dataChunk,
+																   bool truncate){
 	ResultWithError<std::nullptr_t> res;
 	try{
-		getapi()->writeToFile(handle, dataChunk);
+		getapi()->writeToFile(handle, dataChunk,truncate);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -500,10 +502,10 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::deleteStore(const std::st
 	return res;
 }
 
-ResultWithError<nullptr_t> NativeStoreApiWrapper::subscribeForStoreEvents(){
+ResultWithError<std::nullptr_t> NativeStoreApiWrapper::syncFile(const StoreFileHandle handle){
 	ResultWithError<std::nullptr_t> res;
 	try {
-		getapi()->subscribeForStoreEvents();
+		getapi()->syncFile(handle);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -525,10 +527,11 @@ ResultWithError<nullptr_t> NativeStoreApiWrapper::subscribeForStoreEvents(){
 	}
 	return res;
 }
-ResultWithError<nullptr_t> NativeStoreApiWrapper::unsubscribeFromStoreEvents(){
-	ResultWithError<std::nullptr_t> res;
+
+ResultWithError<SubscriptionIdVector> NativeStoreApiWrapper::subscribeFor(const SubscriptionQueryVector& subscriptionQueries){
+	ResultWithError<SubscriptionIdVector> res;
 	try {
-		getapi()->unsubscribeFromStoreEvents();
+		res.result = getapi()->subscribeFor(subscriptionQueries);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -550,10 +553,11 @@ ResultWithError<nullptr_t> NativeStoreApiWrapper::unsubscribeFromStoreEvents(){
 	}
 	return res;
 }
-ResultWithError<nullptr_t> NativeStoreApiWrapper::subscribeForFileEvents(const std::string& storeId){
+
+ResultWithError<std::nullptr_t> NativeStoreApiWrapper::unsubscribeFrom(const SubscriptionIdVector& subscriptionIds){
 	ResultWithError<std::nullptr_t> res;
 	try {
-		getapi()->subscribeForFileEvents(storeId);
+		getapi()->unsubscribeFrom(subscriptionIds);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -575,10 +579,13 @@ ResultWithError<nullptr_t> NativeStoreApiWrapper::subscribeForFileEvents(const s
 	}
 	return res;
 }
-ResultWithError<nullptr_t> NativeStoreApiWrapper::unsubscribeFromFileEvents(const std::string& storeId){
-	ResultWithError<std::nullptr_t> res;
+
+ResultWithError<SubscriptionQuery> NativeStoreApiWrapper::buildSubscriptionQuery(endpoint::store::EventType eventType,
+																				  endpoint::store::EventSelectorType selectorType,
+																				  const std::string& selectorId){
+	ResultWithError<SubscriptionQuery> res;
 	try {
-		getapi()->unsubscribeFromFileEvents(storeId);
+		res.result = getapi()->buildSubscriptionQuery(eventType, selectorType, selectorId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -600,6 +607,7 @@ ResultWithError<nullptr_t> NativeStoreApiWrapper::unsubscribeFromFileEvents(cons
 	}
 	return res;
 }
+
 
 ResultWithError<bool> StoreEventHandler::isStoreCreatedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;

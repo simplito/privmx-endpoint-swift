@@ -15,6 +15,8 @@ import Cxx
 import CxxStdlib
 import PrivMXEndpointSwiftNative
 
+/// 'Connection' represents and manages the current connection between the Endpoint and the Bridge server.
+///
 /// Swift wrapper for `privmx.NativeConnectionWrapper`, used to establish and manage secure connections with PrivMX platform.
 public class Connection{
 	
@@ -37,17 +39,16 @@ public class Connection{
 	/// An instance of the wrapped C++ class.
 	internal var api: privmx.NativeConnectionWrapper
 	
-	/// Creates a new connection instance to PrivMX platform using a private key.
+	/// Connects to the PrivMX Bridge server.
 	///
-	/// The path to the certificates must be set beforehand using `setCertsPath()`. This connection is used to interact with secured operations such as Inboxes, Threads, and Stores.
-	///
-	/// - Parameter userPrivKey: The user's private key in WIF format, required for authentication.
-	/// - Parameter solutionId: The ID of the Solution that the connection targets.
-	/// - Parameter bridgeUrl: The URL of PrivMX platform endpoint.
+	/// - Parameter userPrivKey: user's private key
+	/// - Parameter solutionId: ID of the Solution
+	/// - Parameter bridgeUrl: Bridge Server URL
+	/// - Parameter verificationOptions: PrivMX Bridge server instance verification options using a PKI server
 	///
 	/// - Throws: `PrivMXEndpointError.failedConnecting` if establishing the connection fails.
 	///
-	/// - Returns: A `Connection` instance that can be used for further operations.
+	/// - Returns: Connection object
 	public static func connect(
 		userPrivKey: std.string,
 		solutionId: std.string,
@@ -104,17 +105,17 @@ public class Connection{
 		return Connection(api:result.pointee)
 	}
 	
-	/// Creates a new public connection to PrivMX platform.
+	/// Connects to the PrivMX Bridge Server as a guest user.
     ///
     /// The path to the certificates must be set beforehand using `setCertsPath()`. This type of connection is primarily used for public operations, such as inbound Inbox traffic, where authentication is not required.
     ///
-    /// - Parameter solutionId: The ID of the Solution that the connection targets.
-    /// - Parameter bridgeUrl: The URL of PrivMX platform endpoint.
-    /// - Parameter verificationOptions: Options used to verify if Bridge on given url is the one you expect.
-	/// 
+    /// - Parameter solutionId: ID of the Solution
+    /// - Parameter bridgeUrl: Bridge Server URL
+    /// - Parameter verificationOptions: PrivMX Bridge server instance verification options using a PKI server
+	///
     /// - Throws: `PrivMXEndpointError.failedConnecting` if establishing the connection fails.
     ///
-    /// - Returns: A public `Connection` instance that can be used for non-authenticated operations.
+    /// - Returns: Connection object
     public static func connectPublic(
 		solutionId: std.string,
 		bridgeUrl: std.string,
@@ -166,13 +167,11 @@ public class Connection{
 		return Connection(api:result.pointee)
 	}
 	
-	/// Retrieves the unique ID of the connection.
-    ///
-    /// Each connection instance has a unique identifier that can be used to track and manage multiple connections.
+	/// Gets the ID of the current connection.
     ///
     /// - Throws: `PrivMXEndpointError.failedGettingConnectionId` if retrieving the connection ID fails.
     ///
-    /// - Returns: The unique ID of the current connection as an `Int64`.
+    /// - Returns: ID of the connection
     public func getConnectionId(
 	) throws -> Int64 {
 		let res = api.getConnectionId()
@@ -194,9 +193,7 @@ public class Connection{
 		self.api = api
 	}
 	
-	/// Disconnects the current connection to PrivMX platform.
-    ///
-    /// Once disconnected, the `Connection` instance, along with any associated API instances like `StoreApi` or `ThreadApi`, becomes unusable. It is important to call this method when the connection is no longer needed to free up resources.
+	///Disconnects from the PrivMX Bridge server.
     ///
     /// - Throws: `PrivMXEndpointError.failedDisconnecting` if the disconnection process fails.
     public func disconnect(
@@ -207,15 +204,15 @@ public class Connection{
 		}
 	}
 	
-	/// Lists all Contexts available to the currently connected user.
+	/// Gets a list of Contexts available for the user.
     ///
     /// Contexts represent different environments or groups to which the user has access. This method returns a list of these Contexts.
     ///
-    /// - Parameter query: A `PagingQuery` object that specifies the filtering and pagination options for the query.
+    /// - Parameter query: struct with list query parameters
     ///
     /// - Throws: `PrivMXEndpointError.failedListingContexts` if listing the Contexts fails.
     ///
-    /// - Returns: A `ContextList` structure containing the total number of Contexts and a list of the retrieved Contexts.
+    /// - Returns: struct containing a list of Contexts
     public func listContexts(
 		query: privmx.endpoint.core.PagingQuery
 	)throws -> privmx.ContextList{
@@ -232,17 +229,18 @@ public class Connection{
 		return result
 	}
 	
-	/// Retrieves a list of Users from a particular Context.
+	/// Gets a list of users with their status and the last status change.
 	///
-	/// - parameter contextId: Id of the Context.
+	/// - parameter contextId: ID of the Context
 	///
 	/// - throws: When the operation fails.
 	///
-	/// - returns: a list of UserInfo objects.
-	public func getContextUsers(
-		contextId: std.string
-	) throws -> privmx.UserInfoVector {
-		let res = api.getContextUsers(contextId)
+	/// - returns: List of users with their status and the last status change
+	public func listContextUsers(
+		contextId: std.string,
+		query: privmx.endpoint.core.PagingQuery
+	) throws -> privmx.UserInfoList {
+		let res = api.listContextUsers(contextId,query)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGettingContextUsers(res.error.value!)
 		}
@@ -272,5 +270,65 @@ public class Connection{
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSettingUserVerifier(res.error.value!)
 		}
+	}
+	
+	/// Subscribe for the Context events on the given subscription query.
+	///
+	/// - Parameter subscriptionQueries: List of queries
+	///
+	/// - Throws: When subscribing for events fails.
+	///
+	/// - Returns: List of subscriptionIds in matching order to subscriptionQueries
+	public func subscribeFor(
+		subscriptionQueries: privmx.SubscriptionQueryVector
+	) throws -> privmx.SubscriptionIdVector {
+		let res = api.subscribeFor(subscriptionQueries)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedSubscribingForEvents(err)
+		}
+		return result
+	}
+	
+	/// Unsubscribe from events for the given subscriptionId.
+	///
+	/// - Parameter subscriptionIds: List of subscriptionId
+	///
+	/// - Throws: When unsubscribing fails.
+	public func unsubscribeFrom(
+		subscriptionIds: privmx.SubscriptionIdVector
+	) throws -> Void {
+		let res = api.unsubscribeFrom(subscriptionIds)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
+		}
+	}
+	
+	/// Generate subscription Query for the Context events.
+	///
+	/// - Parameter eventType: type of event which you listen for
+	/// - Parameter selectorType: scope on which you listen for events
+	/// - Parameter selectorId: ID of the selector
+	public func buildSubscriptionQuery(
+		eventType: privmx.endpoint.core.EventType,
+		selectorType: privmx.endpoint.core.EventSelectorType,
+		selectorId: std.string
+	) throws -> std.string {
+		let res = api.buildSubscriptionQuery(eventType,selectorType,selectorId)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(err)
+		}
+		return result
 	}
 }
