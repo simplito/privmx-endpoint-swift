@@ -9,6 +9,7 @@
 // limitations under the License.
 //
 
+#if Streams
 import Foundation
 import WebRTC
 import PrivMXEndpointStreamsLow
@@ -24,3 +25,4 @@ struct VideoTrackInfo{
 	var sender: RTCRtpSender
 	var frameCryptor: PMXFrameCryptorTransformer
 }
+#endif // Streams

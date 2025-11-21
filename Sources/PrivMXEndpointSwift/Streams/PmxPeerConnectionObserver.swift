@@ -14,7 +14,7 @@ import Foundation
 import WebRTC
 import Synchronization
 
-public class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate, @unchecked Sendable{
+public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate, @unchecked Sendable{
 	
 	
 	private var onConnectionSignalingStateChanged: ((RTCPeerConnection,RTCSignalingState)->Void)?
@@ -26,8 +26,8 @@ public class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate, @unch
 	private var onIceCandidateErrorEvent:((RTCPeerConnection,RTCIceCandidateErrorEvent)->Void)?
 	private var onIceConnectionStateChanged:((RTCPeerConnection,RTCIceConnectionState)->Void)?
 	private var onIceGatheringStateChanged:((RTCPeerConnection,RTCIceGatheringState)->Void)?
-	private var onIceCandindateGenerated:((RTCPeerConnection,RTCIceCandidate)->Void)?
-	private var onIceCandindatesRemoved:((RTCPeerConnection,[RTCIceCandidate])->Void)?
+	private var onIceCandidateGenerated:((RTCPeerConnection,RTCIceCandidate)->Void)?
+	private var onIceCandidatesRemoved:((RTCPeerConnection,[RTCIceCandidate])->Void)?
 	
 	private var onDataChannelOpened:((RTCPeerConnection,RTCDataChannel)->Void)?
 	private var onStartedReceiving:((RTCPeerConnection,RTCRtpTransceiver)->Void)?
@@ -81,15 +81,15 @@ public class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate, @unch
 	){
 		onIceGatheringStateChanged = cb
 	}
-	public func setIceCandindateGeneratedCallback(
+	public func setIceCandidateGeneratedCallback(
 		_ cb :(@Sendable (RTCPeerConnection,RTCIceCandidate)->Void)?
 	){
-		onIceCandindateGenerated = cb
+		onIceCandidateGenerated = cb
 	}
-	public func setIceCandindatesRemovedCallback(
+	public func setIceCandidatesRemovedCallback(
 		_ cb :(@Sendable (RTCPeerConnection,[RTCIceCandidate])->Void)?
 	){
-		onIceCandindatesRemoved = cb
+		onIceCandidatesRemoved = cb
 	}
 	
 	public func setDataChannelOpenedCallback(
@@ -171,14 +171,14 @@ public class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate, @unch
 		_ peerConnection: RTCPeerConnection,
 		didGenerate candidate: RTCIceCandidate
 	) {
-		onIceCandindateGenerated?(peerConnection,candidate)
+		onIceCandidateGenerated?(peerConnection,candidate)
 	}
 	
 	public func peerConnection(
 		_ peerConnection: RTCPeerConnection,
 		didRemove candidates: [RTCIceCandidate]
 	) {
-		onIceCandindatesRemoved?(peerConnection,candidates)
+		onIceCandidatesRemoved?(peerConnection,candidates)
 	}
 	
 	public func peerConnection(

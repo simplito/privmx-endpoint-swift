@@ -12,16 +12,34 @@
 import PrivMXEndpointSwiftNative
 import PrivMXEndpointStreamsLow
 import WebRTC
+import os.lock
 
-public class PeerConnection{
-	let rtcPeerConnection: RTCPeerConnection
-	let rtcPeerConnectionObserver: PmxPeerConnectionObserver
+public enum ConnectionType:Sendable{
+	case Subscriber
+	case Publisher
+}
+
+public class PeerConnection: @unchecked Sendable{
+	enum State{
+		case idle
+		case working
+	}
+	var rtcPeerConnection: RTCPeerConnection
+	var rtcPeerConnectionObserver: PmxPeerConnectionObserver
+	var audioTracks : [String:AudioTrackInfo] = [:]
+	var videoTracks : [String:VideoTrackInfo] = [:]
+	var trackMutex = OSAllocatedUnfairLock<State>(initialState: State.idle)
+	var keys : PMXKeyStore
 	
-	init(rtcPeerConnection: RTCPeerConnection, rtcPeerConnectionObserver: PmxPeerConnectionObserver) {
+	init(rtcPeerConnection: RTCPeerConnection,
+		 rtcPeerConnectionObserver: PmxPeerConnectionObserver,
+		 keys: PMXKeyStore
+	) {
 		self.rtcPeerConnection = rtcPeerConnection
 		self.rtcPeerConnectionObserver = rtcPeerConnectionObserver
+		self.keys = keys
 	}
 	
 }
 
-#endif
+#endif // Streams
