@@ -21,6 +21,7 @@ public actor StreamApi: @unchecked Sendable{
 	private var api: privmx.NativeStreamApiLowWrapper
 	private var peerConnectionFactory: RTCPeerConnectionFactory
 	private var webRtcInstance: privmx.WebRtcInterfaceInstance
+	
 
 	
 	//private var notificationListenerId : Int
@@ -410,9 +411,9 @@ public actor StreamApi: @unchecked Sendable{
 	}
 }
 
+
 public extension EventHandler{
-	
-	
+
 	static func isStreamRoomCreatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> Bool {

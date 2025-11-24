@@ -28,6 +28,19 @@ typedef void(*UpdateSessionIdCallback)(const std::string&,const int64_t, const s
 typedef void(*CloseCallback)(const std::string&);
 typedef void(*UpdateKeysCallback)(const std::string&,const KeyVector&);
 
+typedef int(*ConvertToRGBAImpl)(uint8_t*,int,int,int);
+
+class FrameImpl : public endpoint::stream::Frame{
+	ConvertToRGBAImpl cb;
+public:
+	
+	FrameImpl(ConvertToRGBAImpl _imp) : cb(_imp) {}
+	
+	int ConvertToRGBA(uint8_t* dst_argb, int dst_stride_argb,int dest_width, int dest_height) override{
+		return cb(dst_argb,dst_stride_argb,dest_width,dest_height);
+	}
+};
+
 class WebRtcInterfaceInstance: public privmx::endpoint::stream::WebRTCInterface{
 public:
 	virtual std::string createOfferAndSetLocalDescription(const std::string& streamRoomId) override {
@@ -79,6 +92,7 @@ private:
 	
 };
 
+using SharedWebRTCInterfaceInstance = std::shared_ptr<WebRtcInterfaceInstance>;
 }
 #endif // !_WebRtcInterfaceInstance_
 

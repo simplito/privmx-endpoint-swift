@@ -14,7 +14,52 @@ import Foundation
 import WebRTC
 import Synchronization
 
+
 public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate, @unchecked Sendable{
+	private var streamRoomId: String
+	private var currentKeys = PMXKeyStore()
+	
+	private var onFrameCallback: (Int64, Int64) -> Void
+	
+	init(
+		streamRoomId: String,
+		currentKeys: PMXKeyStore = PMXKeyStore(),
+		onConnectionSignalingStateChanged: ((RTCPeerConnection, RTCSignalingState) -> Void)? = nil,
+		onConnectionPeerStateChanged: ((RTCPeerConnection, RTCPeerConnectionState) -> Void)? = nil,
+		onStreamAdded: ((RTCPeerConnection, RTCMediaStream) -> Void)? = nil,
+		onStreamRemoved: ((RTCPeerConnection, RTCMediaStream) -> Void)? = nil,
+		onShouldRenegotiate: ((RTCPeerConnection) -> Void)? = nil,
+		onIceCandidateErrorEvent: ((RTCPeerConnection, RTCIceCandidateErrorEvent) -> Void)? = nil,
+		onIceConnectionStateChanged: ((RTCPeerConnection, RTCIceConnectionState) -> Void)? = nil,
+		onIceGatheringStateChanged: ((RTCPeerConnection, RTCIceGatheringState) -> Void)? = nil,
+		onIceCandidateGenerated: ((RTCPeerConnection, RTCIceCandidate) -> Void)? = nil,
+		onIceCandidatesRemoved: ((RTCPeerConnection, [RTCIceCandidate]) -> Void)? = nil,
+		onDataChannelOpened: ((RTCPeerConnection, RTCDataChannel) -> Void)? = nil,
+		onStartedReceiving: ((RTCPeerConnection, RTCRtpTransceiver) -> Void)? = nil,
+		onStoppedReceiving: ((RTCPeerConnection, RTCRtpReceiver) -> Void)? = nil,
+		onTracksAdded: ((RTCPeerConnection, RTCRtpReceiver, [RTCMediaStream]) -> Void)? = nil,
+		onTracksRemoved: ((RTCPeerConnection, RTCRtpReceiver) -> Void)? = nil,
+		onLocalCandidateChanged: ((RTCPeerConnection, RTCIceCandidate, RTCIceCandidate, Int32, String) -> Void)? = nil
+	) {
+		self.streamRoomId = streamRoomId
+		self.currentKeys = currentKeys
+		self.onConnectionSignalingStateChanged = onConnectionSignalingStateChanged
+		self.onConnectionPeerStateChanged = onConnectionPeerStateChanged
+		self.onStreamAdded = onStreamAdded
+		self.onStreamRemoved = onStreamRemoved
+		self.onShouldRenegotiate = onShouldRenegotiate
+		self.onIceCandidateErrorEvent = onIceCandidateErrorEvent
+		self.onIceConnectionStateChanged = onIceConnectionStateChanged
+		self.onIceGatheringStateChanged = onIceGatheringStateChanged
+		self.onIceCandidateGenerated = onIceCandidateGenerated
+		self.onIceCandidatesRemoved = onIceCandidatesRemoved
+		self.onDataChannelOpened = onDataChannelOpened
+		self.onStartedReceiving = onStartedReceiving
+		self.onStoppedReceiving = onStoppedReceiving
+		self.onTracksAdded = onTracksAdded
+		self.onTracksRemoved = onTracksRemoved
+		self.onLocalCandidateChanged = onLocalCandidateChanged
+	}
 	
 	
 	private var onConnectionSignalingStateChanged: ((RTCPeerConnection,RTCSignalingState)->Void)?
