@@ -15,12 +15,12 @@ import WebRTC
 import PrivMXEndpointStreamsLow
 
 public final class JanusConnection: @unchecked Sendable{
-	var peerConnection : PeerConnection
+	var peerConnection : RTCPeerConnection
 	var sessionId: Int64
 	var hasSubscriptions : Bool
 	
 	init(
-		peerConnection: PeerConnection,
+		peerConnection: RTCPeerConnection,
 		sessionId: Int64,
 		hasSubscriptions: Bool
 	) {

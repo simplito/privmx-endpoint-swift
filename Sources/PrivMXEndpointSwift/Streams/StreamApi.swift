@@ -16,64 +16,36 @@ import Foundation
 import WebRTC
 
 
-public actor StreamApi: @unchecked Sendable{
+public class StreamApi: @unchecked Sendable{
 	// MARK: Fields
 	private var api: privmx.NativeStreamApiLowWrapper
-	private var peerConnectionFactory: RTCPeerConnectionFactory
-	private var webRtcInstance: privmx.WebRtcInterfaceInstance
+	private var rtcClient: WebRTCClient
 	
-
-	
-	//private var notificationListenerId : Int
-	//private var connectedListenerId : Int
-	//private var disconnectedListenerId : Int
-	//
-	//private var isStreamOnline: Bool = false
-	//
-	//private var frameCryptorOptions: Bool
-	//private var configuration: WebRTC.RTCConfiguration
-	//private var constraints: WebRTC.RTCMediaConstraints = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
-	init(
+	required init(
 		api: privmx.NativeStreamApiLowWrapper,
-		webRtcInstance: privmx.WebRtcInterfaceInstance,
-		peerConnectionFactory: RTCPeerConnectionFactory,
+		rtcClient: WebRTCClient
 	) {
 		self.api = api
-		self.webRtcInstance = webRtcInstance
-		self.peerConnectionFactory = peerConnectionFactory
+		self.rtcClient = rtcClient
+		
+		self.rtcClient.bindTrickleImpl(){ sessionId, candidate in
+			self.api.trickle(sessionId, std.string(candidate))}
 	}
 	 
 	 static func create(
 		connection: Connection,
 		eventApi: inout EventApi
 	) async throws -> StreamApi{
-		let res = privmx.NativeStreamApiLowWrapper.create(connection.api, &eventApi.api)
-		let peerConnectionFactory = RTCPeerConnectionFactory()
-		guard var api = res.result.value
+		let low = privmx.NativeStreamApiLowWrapper.create(connection.api, &eventApi.api)
+		guard var api = low.result.value
 		else {
 			throw PrivMXEndpointError.otherFailure(privmx.InternalError())
 		}
-		let creds = api.getTurnCredentials()
-		RTCInitializeSSL()
+		
 		return Self(
 			api: api,
-			webRtcInstance: privmx.WebRtcInterfaceInstance.init(
-				{ roomId in
-					return ""
-				},
-				{ _, _, _ in return ""},
-				{ _, _, _ in},
-				{ _, _, _ in},
-				{ _, _ in},
-				{ _ in}),
-			peerConnectionFactory: peerConnectionFactory,
-			//notificationListenerId: Int(),
-			//connectedListenerId: Int(),
-			//disconnectedListenerId: Int(),
-			//frameCryptorOptions: Bool(),
-			//configuration: RTCConfiguration(),
-			//constraints: RTCMediaConstraints()
-		)
+			rtcClient: WebRTCClient()
+			)
 	}
 	
 // MARK: - Rooms
@@ -88,13 +60,13 @@ public actor StreamApi: @unchecked Sendable{
 		var uv = privmx.UserWithPubKeyVector()
 		uv.reserve(users.count)
 		for u in users{
-			uv.push_back(consuming: u)
+			uv.push_back(u)
 		}
 		
 		var mv = privmx.UserWithPubKeyVector()
 		mv.reserve(managers.count)
 		for m in managers{
-			mv.push_back(consuming: m)
+			mv.push_back(m)
 		}
 		var op = privmx.OptionalContainerPolicy()
 		if let policies{
@@ -285,7 +257,7 @@ public actor StreamApi: @unchecked Sendable{
 	}
 	
 	
-	/*public func listStreams(
+	public func listStreams(
 		in streamRoomId: String
 	) throws -> privmx.StreamVector {
 		let res = api.listStreams(std.string(streamRoomId))
@@ -300,7 +272,6 @@ public actor StreamApi: @unchecked Sendable{
 		}
 		return result
 	}
-	*/
 	
 	public func unpublishStream(
 		localStreamId: Int64
@@ -507,4 +478,28 @@ public extension EventHandler{
 		return result
 	}
 }
+
+import os.lock
+public final class Mutex<T>:Sendable{
+	init(value: T.Type) {
+		self._value = value
+	}
+	let lock = OSAllocatedUnfairLock()
+	nonisolated(unsafe) var _value : T.Type
+	
+	var value: T.Type {
+		get {
+			_value
+			
+		}
+		set {
+			lock.lock()
+			_value = newValue
+			lock.unlock()
+		}
+	}
+	
+}
+
+
 #endif // Streams

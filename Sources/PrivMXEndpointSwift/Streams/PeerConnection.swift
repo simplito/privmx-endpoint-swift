@@ -37,6 +37,7 @@ public class PeerConnection: @unchecked Sendable{
 	) {
 		self.rtcPeerConnection = rtcPeerConnection
 		self.rtcPeerConnectionObserver = rtcPeerConnectionObserver
+		self.rtcPeerConnection.delegate = self.rtcPeerConnectionObserver
 		self.keys = keys
 	}
 	

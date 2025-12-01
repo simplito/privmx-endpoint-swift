@@ -12,17 +12,49 @@
 #if Streams
 import Foundation
 import WebRTC
+//import PrivMXEndpointStreamsLow
 import Synchronization
+import os.lock
 
 
 public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate, @unchecked Sendable{
 	private var streamRoomId: String
 	private var currentKeys = PMXKeyStore()
+	private var peerConnectionFactory : RTCPeerConnectionFactory
 	
-	private var onFrameCallback: (Int64, Int64) -> Void
+	enum State{
+		case reading,writing
+		case idle
+	}
+	nonisolated(unsafe) private var _cryptors : [String : PMXFrameCryptorTransformer] = [:]
+	private let mutex = OSAllocatedUnfairLock(initialState: State.idle)
+	private var cryptors : [String : PMXFrameCryptorTransformer]{
+		set(val) {
+			mutex.withLockUnchecked{
+				state in
+				state = .writing
+				 _cryptors = val
+				state = .idle
+			}
+		}
+		get {
+			mutex.withLockUnchecked{
+				state in
+				defer{
+					state = .idle
+				}
+				state = .reading
+				return _cryptors
+			}
+			
+		}
+	}
+	
+	private var onFrameCallback:((Int64, Int64) -> Void)?
 	
 	init(
 		streamRoomId: String,
+		peerConnectionFactory: RTCPeerConnectionFactory,
 		currentKeys: PMXKeyStore = PMXKeyStore(),
 		onConnectionSignalingStateChanged: ((RTCPeerConnection, RTCSignalingState) -> Void)? = nil,
 		onConnectionPeerStateChanged: ((RTCPeerConnection, RTCPeerConnectionState) -> Void)? = nil,
@@ -41,6 +73,8 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		onTracksRemoved: ((RTCPeerConnection, RTCRtpReceiver) -> Void)? = nil,
 		onLocalCandidateChanged: ((RTCPeerConnection, RTCIceCandidate, RTCIceCandidate, Int32, String) -> Void)? = nil
 	) {
+		self.peerConnectionFactory = peerConnectionFactory
+		
 		self.streamRoomId = streamRoomId
 		self.currentKeys = currentKeys
 		self.onConnectionSignalingStateChanged = onConnectionSignalingStateChanged
@@ -83,6 +117,14 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 	private var onTracksRemoved:((RTCPeerConnection, RTCRtpReceiver) -> Void)?
 	
 	private var onLocalCandidateChanged:((RTCPeerConnection,RTCIceCandidate,RTCIceCandidate,Int32,String)->Void)?
+	
+	private var onVideoTrack: ((String) -> Void)?
+	
+	public func setOnVideoTrackCallback(
+		_ cb: ((String) -> Void)?
+	) {
+		onVideoTrack = cb
+	}
 	
 	public func setConnectionSignalingStateChangedCallback(
 		_ cb: (@Sendable (RTCPeerConnection,RTCSignalingState)->Void)?
@@ -246,6 +288,13 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		streams mediaStreams: [RTCMediaStream]
 	) {
 		onTracksAdded?(peerConnection,rtpReceiver,mediaStreams)
+		if let track = rtpReceiver.track {
+			_cryptors[track.trackId] = PMXFrameCryptorTransformer(for: rtpReceiver, with: peerConnectionFactory, pmxKeyStore: currentKeys)
+			if track.kind == "video" {
+				onVideoTrack?("\(streamRoomId)-\(track.trackId)")
+			}
+		}
+		
 	}
 	
 	public func peerConnection(

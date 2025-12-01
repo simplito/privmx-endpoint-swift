@@ -16,14 +16,16 @@ import WebRTC
 import os.lock
 
 public final class PeerConnectionManager: Sendable {
+	
+	private let _createPeerConnection : (@Sendable (String) -> RTCPeerConnection)
+	nonisolated(unsafe) var _onTrickle : (@Sendable (Int64,String) throws -> Void)
+	nonisolated(unsafe) private var _connections : [String : [ConnectionType:JanusConnection]] = [:]
+	
 	enum State{
 		case reading,writing
 		case idle
 	}
 	private let mutex = OSAllocatedUnfairLock(initialState: State.idle)
-	private let _createPeerConnection : (@Sendable (String) -> PeerConnection)
-	private let _onTrickle : (@Sendable (Int64,String) throws -> Void)
-	nonisolated(unsafe) private var _connections : [String : [ConnectionType:JanusConnection]] = [:]
 	nonisolated private var connections : [String : [ConnectionType:JanusConnection]]{
 		set(val) {
 			mutex.withLockUnchecked{
@@ -47,8 +49,8 @@ public final class PeerConnectionManager: Sendable {
 	}
 	
 	init(
-		_createPeerConnection: @Sendable @escaping (String) -> PeerConnection,
-		_onTrickle: (@Sendable @escaping (Int64,String) throws -> Void)
+		_createPeerConnection: @Sendable @escaping (String) -> RTCPeerConnection,
+		_onTrickle: @escaping (@Sendable (Int64,String) throws -> Void)
 	) {
 		self._createPeerConnection = _createPeerConnection
 		self._onTrickle = _onTrickle
@@ -72,14 +74,18 @@ public final class PeerConnectionManager: Sendable {
 		let pc = _createPeerConnection(streamRoomId)
 		
 		
-		pc.rtcPeerConnectionObserver.setIceCandidateGeneratedCallback({
+		(pc.delegate as? PmxPeerConnectionObserver)?.setIceCandidateGeneratedCallback({
 			peerConnection,candidate in
 			
 			let roomConnections = self.connections[streamRoomId] ?? [:]
 			let roomConnection = roomConnections[type]
 			if !candidate.sdp.isEmpty,let sessionId = roomConnection?.sessionId, sessionId > -1{
 				var iceCandidate = candidate.sdp
-				try? self._onTrickle(sessionId,iceCandidate)
+				do{
+					try self._onTrickle(sessionId,iceCandidate)
+				}catch{
+					print("Failed to trickle candidate", error)
+				}
 			}
 		})
 		
