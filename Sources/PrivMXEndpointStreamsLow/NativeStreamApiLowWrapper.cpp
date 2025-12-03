@@ -200,8 +200,8 @@ ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::deleteStreamRoom(cons
 	}
 	return res;}
 // Stream
-ResultWithError<StreamVector> NativeStreamApiLowWrapper::listStreams(const std::string& streamRoomId){
-	ResultWithError<StreamVector> res;
+ResultWithError<StreamInfoVector> NativeStreamApiLowWrapper::listStreams(const std::string& streamRoomId){
+	ResultWithError<StreamInfoVector> res;
 	try{
 		res.result = getApi()->listStreams(streamRoomId);
 	}catch(core::Exception& err){
@@ -298,8 +298,8 @@ ResultWithError<stream::StreamHandle> NativeStreamApiLowWrapper::createStream(co
 	}
 	return res;}
 
-ResultWithError<stream::RemoteStreamId> NativeStreamApiLowWrapper::publishStream(const stream::StreamHandle& streamHandle){
-	ResultWithError<stream::RemoteStreamId> res;
+ResultWithError<stream::StreamPublishResult> NativeStreamApiLowWrapper::publishStream(const stream::StreamHandle& streamHandle){
+	ResultWithError<stream::StreamPublishResult> res;
 	try{
 		res.result = getApi()->publishStream(streamHandle);
 	}catch(core::Exception& err){
@@ -636,20 +636,20 @@ ResultWithError<stream::StreamLeftEvent> StreamApiLowEventHandler::extractStream
 	ResultWithError<stream::StreamLeftEvent> res;
 	return res;
 }
-ResultWithError<bool> StreamApiLowEventHandler::isStreamAvailablePublishersEvent(const core::EventHolder& eventHolder){
+ResultWithError<bool> StreamApiLowEventHandler::isStreamNewStreamsEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
 	return res;
 }
-ResultWithError<stream::StreamAvailablePublishersEvent> StreamApiLowEventHandler::extractStreamAvailablePublishersEvent(const endpoint::core::EventHolder& eventHolder){
-	ResultWithError<stream::StreamAvailablePublishersEvent> res;
+ResultWithError<stream::StreamNewStreamsEvent> StreamApiLowEventHandler::extractStreamNewStreamsEvent(const endpoint::core::EventHolder& eventHolder){
+	ResultWithError<stream::StreamNewStreamsEvent> res;
 	return res;
 }
-ResultWithError<bool> StreamApiLowEventHandler::isPublishersStreamsUpdatedEvent(const core::EventHolder& eventHolder){
+ResultWithError<bool> StreamApiLowEventHandler::isStreamsUpdatedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
 	return res;
 }
-ResultWithError<stream::PublishersStreamsUpdatedEvent> StreamApiLowEventHandler::extractPublishersStreamsUpdatedEvent(const endpoint::core::EventHolder& eventHolder){
-	ResultWithError<stream::PublishersStreamsUpdatedEvent> res;
+ResultWithError<stream::StreamsUpdatedEvent> StreamApiLowEventHandler::extractStreamsUpdatedEvent(const endpoint::core::EventHolder& eventHolder){
+	ResultWithError<stream::StreamsUpdatedEvent> res;
 	return res;
 }
 

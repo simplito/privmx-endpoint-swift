@@ -12,7 +12,7 @@
 import PrivMXEndpointSwiftNative
 import PrivMXEndpointStreamsLow
 import WebRTC
-import os.lock
+
 
 public enum ConnectionType:Sendable{
 	case Subscriber
@@ -20,15 +20,10 @@ public enum ConnectionType:Sendable{
 }
 
 public class PeerConnection: @unchecked Sendable{
-	enum State{
-		case idle
-		case working
-	}
 	var rtcPeerConnection: RTCPeerConnection
 	var rtcPeerConnectionObserver: PmxPeerConnectionObserver
-	var audioTracks : [String:AudioTrackInfo] = [:]
-	var videoTracks : [String:VideoTrackInfo] = [:]
-	var trackMutex = OSAllocatedUnfairLock<State>(initialState: State.idle)
+	var audioTracks = MutexGuarded<[String:AudioTrackInfo]>([:])
+	var videoTracks = MutexGuarded<[String:VideoTrackInfo]>([:])
 	var keys : PMXKeyStore
 	
 	init(rtcPeerConnection: RTCPeerConnection,

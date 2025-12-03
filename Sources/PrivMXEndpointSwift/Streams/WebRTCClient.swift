@@ -15,9 +15,22 @@ import PrivMXEndpointStreamsLow
 import Foundation
 import WebRTC
 
-final class WebRTCClient: Sendable{
-	private let peerConnectionManager: PeerConnectionManager
-	private let webRtcInstance: privmx.WebRtcInterfaceInstance
+struct InitOptions: @unchecked Sendable{
+	var signalingServer: String
+	var appServer: String
+	var mediaServer: String
+	var turnUrls: [URL]?
+	var iceTransportPolicy: RTCIceTransportPolicy
+	var encKey: String?
+}
+
+final class WebRTCClient: @unchecked Sendable{
+	let peerConnectionManager: PeerConnectionManager
+	let webRtcInstance: privmx.WebRtcInterfaceInstance
+	
+	var turnCredntials: [privmx.endpoint.stream.TurnCredentials] = []
+	var clientId: String?
+	var initOptions: InitOptions
 	
 	nonisolated(unsafe) var peerConnectionFactory = RTCPeerConnectionFactory()
 	
@@ -25,6 +38,21 @@ final class WebRTCClient: Sendable{
 		_ trickleImpl:@escaping @Sendable (Int64,String)->Void
 	) {
 		peerConnectionManager._onTrickle = trickleImpl
+	}
+	
+	func bindCreatePeerConnectionImpl(
+	) {
+		peerConnectionManager._createPeerConnection = { streamRoomId in
+			var observer = PmxPeerConnectionObserver(
+				streamRoomId: streamRoomId,
+				peerConnectionFactory: self.peerConnectionFactory)
+			return self.peerConnectionFactory.peerConnection(
+				with: RTCConfiguration(),
+				constraints: RTCMediaConstraints.init(
+					mandatoryConstraints: [:],
+					optionalConstraints: nil),
+				delegate: observer)
+		}
 	}
 	
 	init(){
@@ -51,24 +79,7 @@ final class WebRTCClient: Sendable{
 			{ streamRoomId in//Close
 				//TODO: Impl c
 			})
-		self.peerConnectionManager = PeerConnectionManager(
-			_createPeerConnection: { streamRoomId in
-				var observer = PmxPeerConnectionObserver(
-					streamRoomId: streamRoomId,
-					peerConnectionFactory: self.peerConnectionFactory)
-				if var pc = self.peerConnectionFactory.peerConnection(
-					with: RTCConfiguration(),
-					constraints: RTCMediaConstraints.init(
-						mandatoryConstraints: [:],
-						optionalConstraints: nil),
-					delegate: observer){
-					return RTCPeerConnection(
-						rtcPeerConnection:pc,
-						rtcPeerConnectionObserver: observer,
-						keys: PMXKeyStore())
-				},
-				_onTrickle: T##(Int64, String) throws -> Void)
-			})
+		self.peerConnectionManager = PeerConnectionManager()
 	}
 }
 #endif

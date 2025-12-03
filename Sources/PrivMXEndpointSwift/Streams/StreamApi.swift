@@ -15,11 +15,14 @@ import PrivMXEndpointStreamsLow
 import Foundation
 import WebRTC
 
-
 public class StreamApi: @unchecked Sendable{
 	// MARK: Fields
 	private var api: privmx.NativeStreamApiLowWrapper
 	private var rtcClient: WebRTCClient
+	
+	private var streams = [privmx.endpoint.stream.StreamHandle:privmx.endpoint.stream.Stream]()
+	private var streamTracks = [String:StreamTrackInfo]()
+	private var dataChannels = [String:RTCDataChannel]()
 	
 	required init(
 		api: privmx.NativeStreamApiLowWrapper,
@@ -30,9 +33,11 @@ public class StreamApi: @unchecked Sendable{
 		
 		self.rtcClient.bindTrickleImpl(){ sessionId, candidate in
 			self.api.trickle(sessionId, std.string(candidate))}
+		self.rtcClient.bindCreatePeerConnectionImpl()
 	}
-	 
-	 static func create(
+	
+	/// Creates the API instance
+	static func create(
 		connection: Connection,
 		eventApi: inout EventApi
 	) async throws -> StreamApi{
@@ -49,6 +54,9 @@ public class StreamApi: @unchecked Sendable{
 	}
 	
 // MARK: - Rooms
+	
+	/// Creates a StreamRoom on the Bridge
+	/// - Returns: StreamRoomId
 	public func createStreamRoom(
 		in contextId: String,
 		for users: [privmx.endpoint.core.UserWithPubKey],
@@ -76,8 +84,8 @@ public class StreamApi: @unchecked Sendable{
 			std.string(contextId),
 			uv,
 			mv,
-			privmx.endpoint.core.Buffer(/*from:Data*/),
-			privmx.endpoint.core.Buffer(/*from:Data*/),
+			publicMeta.asBuffer(),
+			privateMeta.asBuffer(),
 			op)
 		guard res.error.value == nil
 		else {
@@ -124,8 +132,8 @@ public class StreamApi: @unchecked Sendable{
 			std.string(streamRoomId),
 			uv,
 			mv,
-			privmx.endpoint.core.Buffer(/*publicMeta*/),
-			privmx.endpoint.core.Buffer(/*privateMeta*/),
+			publicMeta.asBuffer(),
+			privateMeta.asBuffer(),
 			version,
 			force,
 			forceGenerateNewKey,
@@ -155,6 +163,7 @@ public class StreamApi: @unchecked Sendable{
 		return result
 	}
 	
+	/// Gets a single StreamRoom by it's ID
 	public func getStreamRoom(
 		_ streamRoomId: String
 	) throws -> privmx.endpoint.stream.StreamRoom {
@@ -181,11 +190,9 @@ public class StreamApi: @unchecked Sendable{
 	}
 	
 // MARK: - STREAMS
-	public func createStream(
-		in streamRoomId: String,
-		localStreamId: Int64,
-		webRtc: privmx.WebRTCInterfaceReference
-	) throws -> Int64 {
+	public func createStreamIn(
+		_ streamRoomId: String
+	) throws -> privmx.endpoint.stream.StreamHandle {
 		let res = api.createStream(std.string(streamRoomId))
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.otherFailure(res.error.value!)
@@ -196,6 +203,11 @@ public class StreamApi: @unchecked Sendable{
 			err.description = "Unexpectedly recived nil result"
 			throw PrivMXEndpointError.otherFailure(err)
 		}
+		
+		self.streams[result] = privmx.endpoint.stream.Stream(
+			streamId: result,
+			userId: "self")
+		
 		return result
 	}
 	
@@ -205,14 +217,14 @@ public class StreamApi: @unchecked Sendable{
 		
 	}
 	public func addTrack(
-		_ track: privmx.endpoint.stream.RemoteTrackId,
+		_ track: privmx.endpoint.stream.MediaDevice,
 		to streamId:Int64
 	) throws -> Void{
 		
 	}
 	
 	public func removeTrack(
-		_ track:privmx.endpoint.stream.RemoteTrackId,
+		_ track:privmx.endpoint.stream.MediaDevice,
 		from streamId: Int64
 	) throws -> Void{
 	}
@@ -259,7 +271,7 @@ public class StreamApi: @unchecked Sendable{
 	
 	public func listStreams(
 		in streamRoomId: String
-	) throws -> privmx.StreamVector {
+	) throws -> privmx.StreamInfoVector {
 		let res = api.listStreams(std.string(streamRoomId))
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.otherFailure(res.error.value!)
@@ -298,25 +310,26 @@ public class StreamApi: @unchecked Sendable{
 		}
 	}
 	
-	public func keyManagement(
+	func keyManagement(
 		_ disable: Bool
 	) throws -> Void{
 	
 	}
 	
 	public func dropBrokenFrames(
+		in roomId:Bool,
 		_ enable: Bool
-	) throws -> Void{
-	
-	}
-
-	public func reconfigureStream(
-		localStreamId: Int64,
-		optionsJSON : String = "{}"
 	) throws -> Void{
 		
 	}
+
+	//public func reconfigureStream(
+	//	localStreamId: Int64,
+	//	optionsJSON : String = "{}"
+	//) throws -> Void{}
+	
 	// MARK: EVENTS
+	
 	/// Subscribe for the Store events on the given subscription query.
 	///
 	/// - Parameter subscriptionQueries: list of queries
@@ -478,28 +491,5 @@ public extension EventHandler{
 		return result
 	}
 }
-
-import os.lock
-public final class Mutex<T>:Sendable{
-	init(value: T.Type) {
-		self._value = value
-	}
-	let lock = OSAllocatedUnfairLock()
-	nonisolated(unsafe) var _value : T.Type
-	
-	var value: T.Type {
-		get {
-			_value
-			
-		}
-		set {
-			lock.lock()
-			_value = newValue
-			lock.unlock()
-		}
-	}
-	
-}
-
 
 #endif // Streams

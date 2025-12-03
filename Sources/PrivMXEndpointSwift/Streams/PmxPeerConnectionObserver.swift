@@ -12,9 +12,8 @@
 #if Streams
 import Foundation
 import WebRTC
-//import PrivMXEndpointStreamsLow
+import PrivMXEndpointStreamsLow
 import Synchronization
-import os.lock
 
 
 public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate, @unchecked Sendable{
@@ -22,33 +21,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 	private var currentKeys = PMXKeyStore()
 	private var peerConnectionFactory : RTCPeerConnectionFactory
 	
-	enum State{
-		case reading,writing
-		case idle
-	}
-	nonisolated(unsafe) private var _cryptors : [String : PMXFrameCryptorTransformer] = [:]
-	private let mutex = OSAllocatedUnfairLock(initialState: State.idle)
-	private var cryptors : [String : PMXFrameCryptorTransformer]{
-		set(val) {
-			mutex.withLockUnchecked{
-				state in
-				state = .writing
-				 _cryptors = val
-				state = .idle
-			}
-		}
-		get {
-			mutex.withLockUnchecked{
-				state in
-				defer{
-					state = .idle
-				}
-				state = .reading
-				return _cryptors
-			}
-			
-		}
-	}
+	private var cryptors = MutexGuarded<[String : PMXFrameCryptorTransformer]>([:])
 	
 	private var onFrameCallback:((Int64, Int64) -> Void)?
 	
@@ -289,12 +262,11 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 	) {
 		onTracksAdded?(peerConnection,rtpReceiver,mediaStreams)
 		if let track = rtpReceiver.track {
-			_cryptors[track.trackId] = PMXFrameCryptorTransformer(for: rtpReceiver, with: peerConnectionFactory, pmxKeyStore: currentKeys)
+			cryptors.value[track.trackId] = PMXFrameCryptorTransformer(for: rtpReceiver, with: peerConnectionFactory, pmxKeyStore: currentKeys)
 			if track.kind == "video" {
 				onVideoTrack?("\(streamRoomId)-\(track.trackId)")
 			}
 		}
-		
 	}
 	
 	public func peerConnection(

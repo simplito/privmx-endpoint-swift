@@ -24,7 +24,7 @@
 
 namespace privmx {
 
-using StreamVector = std::vector<endpoint::stream::Stream>;
+using StreamInfoVector = std::vector<endpoint::stream::StreamInfo>;
 using StreamSubscriptiopnsVector = std::vector<endpoint::stream::StreamSubscription>;
 
 using StreamRoomList = endpoint::core::PagingList<endpoint::stream::StreamRoom>;
@@ -71,12 +71,12 @@ public:
 	ResultWithError<std::nullptr_t> deleteStreamRoom(const std::string& streamRoomId);
 	
 	// Stream
-	ResultWithError<StreamVector> listStreams(const std::string& streamRoomId);
+	ResultWithError<StreamInfoVector> listStreams(const std::string& streamRoomId);
 	ResultWithError<std::nullptr_t> joinStreamRoom(const std::string& streamRoomId, WebRTCInterfaceReference webRtc); // required before createStream and openStream
 	ResultWithError<std::nullptr_t> leaveStreamRoom(const std::string& streamRoomId);
 	
 	ResultWithError<endpoint::stream::StreamHandle> createStream(const std::string& streamRoomId);
-	ResultWithError<endpoint::stream::RemoteStreamId> publishStream(const endpoint::stream::StreamHandle& streamHandle);
+	ResultWithError<endpoint::stream::StreamPublishResult> publishStream(const endpoint::stream::StreamHandle& streamHandle);
 	ResultWithError<std::nullptr_t> unpublishStream(const endpoint::stream::StreamHandle& streamHandle);
 	
 	ResultWithError<nullptr_t> subscribeToRemoteStreams(const std::string& streamRoomId,
@@ -135,10 +135,11 @@ public:
 	static ResultWithError<endpoint::stream::StreamUnpublishedEvent> extractStreamUnpublishedEvent(const endpoint::core::EventHolder& eventHolder);
 	static ResultWithError<bool> isStreamLeftEvent(const endpoint::core::EventHolder& eventHolder);
 	static ResultWithError<endpoint::stream::StreamLeftEvent> extractStreamLeftEvent(const endpoint::core::EventHolder& eventHolder);
-	static ResultWithError<bool> isStreamAvailablePublishersEvent(const endpoint::core::EventHolder& eventHolder);
-	static ResultWithError<endpoint::stream::StreamAvailablePublishersEvent> extractStreamAvailablePublishersEvent(const endpoint::core::EventHolder& eventHolder);
-	static ResultWithError<bool> isPublishersStreamsUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
-	static ResultWithError<endpoint::stream::PublishersStreamsUpdatedEvent> extractPublishersStreamsUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<bool> isStreamNewStreamsEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<endpoint::stream::StreamNewStreamsEvent> extractStreamNewStreamsEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<bool> isStreamsUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<endpoint::stream::StreamsUpdatedEvent> extractStreamsUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
+	
 };
 
 static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::StreamRoomCreatedEvent& event){
@@ -162,10 +163,10 @@ static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::str
 static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::StreamLeftEvent& event){
 	return endpoint::wrapper::_get_subIds_from_event(event);
 }
-static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::StreamAvailablePublishersEvent& event){
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::StreamNewStreamsEvent& event){
 	return endpoint::wrapper::_get_subIds_from_event(event);
 }
-static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::PublishersStreamsUpdatedEvent& event){
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::StreamsUpdatedEvent& event){
 	return endpoint::wrapper::_get_subIds_from_event(event);
 }
 
