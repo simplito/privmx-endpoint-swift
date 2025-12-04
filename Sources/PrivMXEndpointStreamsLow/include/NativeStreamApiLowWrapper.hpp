@@ -77,6 +77,7 @@ public:
 	
 	ResultWithError<endpoint::stream::StreamHandle> createStream(const std::string& streamRoomId);
 	ResultWithError<endpoint::stream::StreamPublishResult> publishStream(const endpoint::stream::StreamHandle& streamHandle);
+	ResultWithError<endpoint::stream::StreamPublishResult> updateStream(const endpoint::stream::StreamHandle& streamHandle);
 	ResultWithError<std::nullptr_t> unpublishStream(const endpoint::stream::StreamHandle& streamHandle);
 	
 	ResultWithError<nullptr_t> subscribeToRemoteStreams(const std::string& streamRoomId,

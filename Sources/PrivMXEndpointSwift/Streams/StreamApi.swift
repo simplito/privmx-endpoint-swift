@@ -20,7 +20,7 @@ public class StreamApi: @unchecked Sendable{
 	private var api: privmx.NativeStreamApiLowWrapper
 	private var rtcClient: WebRTCClient
 	
-	private var streams = [privmx.endpoint.stream.StreamHandle:privmx.endpoint.stream.Stream]()
+	private var streams = [privmx.endpoint.stream.StreamHandle:StreamData]()
 	private var streamTracks = [String:StreamTrackInfo]()
 	private var dataChannels = [String:RTCDataChannel]()
 	
@@ -204,9 +204,7 @@ public class StreamApi: @unchecked Sendable{
 			throw PrivMXEndpointError.otherFailure(err)
 		}
 		
-		self.streams[result] = privmx.endpoint.stream.Stream(
-			streamId: result,
-			userId: "self")
+		self.streams[result] = StreamData(roomId: streamRoomId)
 		
 		return result
 	}
@@ -218,15 +216,63 @@ public class StreamApi: @unchecked Sendable{
 	}
 	public func addTrack(
 		_ track: privmx.endpoint.stream.MediaDevice,
-		to streamId:Int64
+		to streamHandle:privmx.endpoint.stream.StreamHandle
 	) throws -> Void{
+		guard let str = streams[streamHandle]
+		else {
+			throw PrivMXEndpointError.otherFailure(privmx.InternalError(
+				name: "No such stream",
+				message: "",
+				description: "",
+				code: nil, scope: nil))
+		}
+		
+		for entry in streamTracks{
+			if nil != entry.value.track?.trackId
+				&& entry.value.track!.trackId == String(track.id){
+				throw PrivMXEndpointError.otherFailure(privmx.InternalError(
+					name: "Track already exists",
+					message: "",
+					description: "",
+					code: nil, scope: nil))
+			}
+		}
+		let sTrackId = UUID().uuidString
+		var sTrack : StreamTrackInfo
+		if track.type == privmx.endpoint.stream.Audio{
+			
+			
+			sTrack = StreamTrackInfo(
+				id: sTrackId,
+				streamHandle: streamHandle,
+				track: rtcClient.peerConnectionFactory.audioTrack(withTrackId: sTrackId),
+				published: false)
+			rtcClient.addAudioTrack()
+		} else if track.type == privmx.endpoint.stream.Video{
+			sTrack = StreamTrackInfo(
+				id: sTrackId,
+				streamHandle: streamHandle,
+				track: rtcClient.peerConnectionFactory.videoTrack(with: rtcClient.peerConnectionFactory.videoSource(), trackId: sTrackId),
+				published: false)
+			rtcClient.addVideoTrack()
+		} else if track.type == privmx.endpoint.stream.Desktop{
+			sTrack = StreamTrackInfo(
+				id: sTrackId,
+				streamHandle: streamHandle,
+				track: rtcClient.peerConnectionFactory.videoTrack(with: rtcClient.peerConnectionFactory.videoSource(forScreenCast: true), trackId: sTrackId),
+				published: false)
+			
+			rtcClient.addDesktopTrack()
+		}
+		
 		
 	}
 	
 	public func removeTrack(
 		_ track:privmx.endpoint.stream.MediaDevice,
-		from streamId: Int64
+		from streamHandle: privmx.endpoint.stream.StreamHandle
 	) throws -> Void{
+		//TODO: removing tracks
 	}
 		
 	

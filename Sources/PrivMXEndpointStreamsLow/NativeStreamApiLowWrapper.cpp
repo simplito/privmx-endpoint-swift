@@ -320,7 +320,33 @@ ResultWithError<stream::StreamPublishResult> NativeStreamApiLowWrapper::publishS
 			.message = "Failed to work"
 		};
 	}
-	return res;}
+	return res;
+}
+
+ResultWithError<stream::StreamPublishResult> NativeStreamApiLowWrapper::updateStream(const stream::StreamHandle& streamHandle){
+	ResultWithError<stream::StreamPublishResult> res;
+	try{
+		res.result = getApi()->updateStream(streamHandle);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
 
 ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::unpublishStream(const stream::StreamHandle& streamHandle){
 	ResultWithError<std::nullptr_t> res;

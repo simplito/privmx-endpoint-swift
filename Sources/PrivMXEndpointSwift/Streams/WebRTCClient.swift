@@ -30,7 +30,7 @@ final class WebRTCClient: @unchecked Sendable{
 	
 	var turnCredntials: [privmx.endpoint.stream.TurnCredentials] = []
 	var clientId: String?
-	var initOptions: InitOptions
+	//var initOptions: InitOptions
 	
 	nonisolated(unsafe) var peerConnectionFactory = RTCPeerConnectionFactory()
 	
@@ -81,5 +81,9 @@ final class WebRTCClient: @unchecked Sendable{
 			})
 		self.peerConnectionManager = PeerConnectionManager()
 	}
+	
+	func addAudioTrack(){}
+	func addVideoTrack(){}
+	func addDesktopTrack(){}
 }
 #endif

@@ -14,13 +14,22 @@ import PrivMXEndpointSwiftNative
 import PrivMXEndpointStreamsLow
 import WebRTC
 
-final class StreamData:Sendable{
+final class StreamData:@unchecked Sendable{
+	enum Status{
+		case Offline,Online
+	}
 	init(
-		capturers: [Int64:RTCVideoCapturer]
+		roomId: String,
+		capturers: [Int64:RTCVideoCapturer] = [:],
 	){
 		self.capturers = MutexGuarded<[Int64:RTCVideoCapturer]>(capturers)
+		self.status = .Offline
+		self.roomId = roomId
 	}
-	nonisolated(unsafe) var capturers : MutexGuarded<[Int64:RTCVideoCapturer]>
+	var capturers : MutexGuarded<[Int64:RTCVideoCapturer]>
+	var status: Status
+	var roomId : String
+	
 	
 }
 #endif
