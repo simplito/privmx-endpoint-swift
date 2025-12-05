@@ -17,9 +17,10 @@ import Synchronization
 
 
 public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate, @unchecked Sendable{
-	private var streamRoomId: String
-	private var currentKeys = PMXKeyStore()
-	private var peerConnectionFactory : RTCPeerConnectionFactory
+	var streamRoomId: String
+	var currentKeys = PMXKeyStore()
+	var peerConnectionFactory : RTCPeerConnectionFactory
+	weak private var peerConnectionManager: PeerConnectionManager!
 	
 	private var cryptors = MutexGuarded<[String : PMXFrameCryptorTransformer]>([:])
 	
@@ -28,6 +29,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 	init(
 		streamRoomId: String,
 		peerConnectionFactory: RTCPeerConnectionFactory,
+		peerConnectionManager: PeerConnectionManager,
 		currentKeys: PMXKeyStore = PMXKeyStore(),
 		onConnectionSignalingStateChanged: ((RTCPeerConnection, RTCSignalingState) -> Void)? = nil,
 		onConnectionPeerStateChanged: ((RTCPeerConnection, RTCPeerConnectionState) -> Void)? = nil,
@@ -263,8 +265,11 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		onTracksAdded?(peerConnection,rtpReceiver,mediaStreams)
 		if let track = rtpReceiver.track {
 			cryptors.value[track.trackId] = PMXFrameCryptorTransformer(for: rtpReceiver, with: peerConnectionFactory, pmxKeyStore: currentKeys)
-			if track.kind == "video" {
+			if track.kind == kRTCMediaStreamTrackKindVideo {
 				onVideoTrack?("\(streamRoomId)-\(track.trackId)")
+			}
+			else if track.kind == kRTCMediaStreamTrackKindAudio {
+				
 			}
 		}
 	}

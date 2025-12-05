@@ -18,7 +18,7 @@ public final class PeerConnectionManager: Sendable {
 	
 	nonisolated(unsafe) var _createPeerConnection : (@Sendable (String) -> RTCPeerConnection?)?
 	nonisolated(unsafe) var _onTrickle : (@Sendable (Int64,String) throws -> Void)?
-	nonisolated(unsafe) private var connections = MutexGuarded<[String : [ConnectionType:JanusConnection]]>([:])
+	nonisolated(unsafe) var connections = MutexGuarded<[String : [ConnectionType:JanusConnection]]>([:])
 	
 	enum State{
 		case reading,writing

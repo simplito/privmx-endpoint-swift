@@ -19,10 +19,18 @@
 
 namespace privmx{
 
-using KeyVector = std::vector<privmx::endpoint::stream::Key>;
+class ObjcErrorException : std::exception{
+	const char * what() const noexcept override{
+		return "The Api field is null";
+	}
+};
 
-typedef std::string(*CreateOfferAndSetLocalDescriptionCallback)(const std::string&);
-typedef std::string(*CreateAnswerAndSetDescriptionCallback)(const std::string&,const std::string&, const std::string&);
+
+using KeyVector = std::vector<privmx::endpoint::stream::Key>;
+using StringWithError = ResultWithError<std::string>;
+
+typedef StringWithError(*CreateOfferAndSetLocalDescriptionCallback)(const std::string&);
+typedef StringWithError(*CreateAnswerAndSetDescriptionCallback)(const std::string&,const std::string&, const std::string&);
 typedef void(*SetAnswerAndSetRemoteDescriptionCallback)(const std::string&,const std::string&, const std::string&);
 typedef void(*UpdateSessionIdCallback)(const std::string&,const int64_t, const std::string&);
 typedef void(*CloseCallback)(const std::string&);
@@ -31,12 +39,26 @@ typedef void(*UpdateKeysCallback)(const std::string&,const KeyVector&);
 class WebRtcInterfaceInstance: public privmx::endpoint::stream::WebRTCInterface{
 public:
 	virtual std::string createOfferAndSetLocalDescription(const std::string& streamRoomId) override {
-		return _coasldcb(streamRoomId);
+		auto res = _coasldcb(streamRoomId);
+		if (res.error){
+			throw res.error; //TODO better exception(?)
+		} else if (res.result){
+			return res.result.value();
+		} else {
+			throw ObjcErrorException();
+		}
 	}
 	virtual std::string createAnswerAndSetDescriptions(const std::string& streamRoomId,
 											   const std::string& sdp,
 											   const std::string& type)override{
-		return _caasdcb(streamRoomId, sdp, type);
+		auto res = _caasdcb(streamRoomId, sdp, type);
+		if (res.error){
+			throw res.error; //TODO better exception(?)
+		} else if (res.result){
+			return res.result.value();
+		} else {
+			throw ObjcErrorException();
+		}
 	}
 	virtual void setAnswerAndSetRemoteDescription(const std::string& streamRoomId,
 										  const std::string& sdp,
