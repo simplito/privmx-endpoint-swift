@@ -265,6 +265,7 @@ public class StreamApi: @unchecked Sendable{
 			rtcClient.addDesktopTrack()
 		}
 		
+		streamTracks[sTrackId] = sTrack
 		
 	}
 	

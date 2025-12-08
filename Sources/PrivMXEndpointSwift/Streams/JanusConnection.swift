@@ -16,17 +16,20 @@ import PrivMXEndpointStreamsLow
 
 public final class JanusConnection: @unchecked Sendable{
 	var peerConnection : RTCPeerConnection
+	var delegate: PmxPeerConnectionObserver
 	var sessionId: Int64
 	var hasSubscriptions : Bool
 	
 	init(
 		peerConnection: RTCPeerConnection,
 		sessionId: Int64,
+		delegate:PmxPeerConnectionObserver,
 		hasSubscriptions: Bool
 	) {
 		self.peerConnection = peerConnection
 		self.sessionId = sessionId
 		self.hasSubscriptions = hasSubscriptions
+		self.delegate = delegate
 	}
 }
 #endif // Streams

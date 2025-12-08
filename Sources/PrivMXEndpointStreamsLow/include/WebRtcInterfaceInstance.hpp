@@ -16,67 +16,116 @@
 #include "PrivMXUtils.hpp"
 #include "Types.hpp"
 #include "WebRTCInterface.hpp"
+#include <future>
 
 namespace privmx{
 
 class ObjcErrorException : std::exception{
 	const char * what() const noexcept override{
-		return "The Api field is null";
+		
+		return "Objc returned an error";
+	}
+};
+
+class SwiftErrorException: std::exception{
+public:
+	InternalError internalError;
+	
+	SwiftErrorException(const InternalError& error){
+		internalError = error;
+	}
+	
+	const char * what() const noexcept override {
+		return "There were Errors thrown in Swift";
 	}
 };
 
 
 using KeyVector = std::vector<privmx::endpoint::stream::Key>;
 using StringWithError = ResultWithError<std::string>;
+using NullWithError = ResultWithError<std::nullptr_t>;
 
 typedef StringWithError(*CreateOfferAndSetLocalDescriptionCallback)(const std::string&);
 typedef StringWithError(*CreateAnswerAndSetDescriptionCallback)(const std::string&,const std::string&, const std::string&);
-typedef void(*SetAnswerAndSetRemoteDescriptionCallback)(const std::string&,const std::string&, const std::string&);
-typedef void(*UpdateSessionIdCallback)(const std::string&,const int64_t, const std::string&);
-typedef void(*CloseCallback)(const std::string&);
-typedef void(*UpdateKeysCallback)(const std::string&,const KeyVector&);
+typedef NullWithError(*SetAnswerAndSetRemoteDescriptionCallback)(const std::string&,const std::string&, const std::string&);
+typedef NullWithError(*UpdateSessionIdCallback)(const std::string&,const int64_t, const std::string&);
+typedef NullWithError(*CloseCallback)(const std::string&);
+typedef NullWithError(*UpdateKeysCallback)(const std::string&,const KeyVector&);
 
 class WebRtcInterfaceInstance: public privmx::endpoint::stream::WebRTCInterface{
 public:
 	virtual std::string createOfferAndSetLocalDescription(const std::string& streamRoomId) override {
-		auto res = _coasldcb(streamRoomId);
-		if (res.error){
-			throw res.error; //TODO better exception(?)
-		} else if (res.result){
-			return res.result.value();
-		} else {
-			throw ObjcErrorException();
-		}
+		std::future<std::string> fstring = std::async(std::launch::async,[&](){
+			auto res = _coasldcb(streamRoomId);
+			if (res.error){
+				throw res.error; //TODO better exception(?)
+			} else if (res.result){
+				return res.result.value();
+			} else {
+				throw ObjcErrorException();
+			}
+		});
+		return fstring.get();
 	}
 	virtual std::string createAnswerAndSetDescriptions(const std::string& streamRoomId,
 											   const std::string& sdp,
 											   const std::string& type)override{
-		auto res = _caasdcb(streamRoomId, sdp, type);
-		if (res.error){
-			throw res.error; //TODO better exception(?)
-		} else if (res.result){
-			return res.result.value();
-		} else {
-			throw ObjcErrorException();
-		}
+		
+		std::future<std::string> fstring = std::async(std::launch::async,[&](){
+			auto res = _caasdcb(streamRoomId, sdp, type);
+			if (res.error){
+				throw SwiftErrorException(res.error.value()); //TODO better exception(?)
+			} else if (res.result){
+				return res.result.value();
+			} else {
+				throw ObjcErrorException();
+			}
+		});
+		
+		return fstring.get();
 	}
 	virtual void setAnswerAndSetRemoteDescription(const std::string& streamRoomId,
 										  const std::string& sdp,
 										  const std::string& type)override{
-		_saasrdcb(streamRoomId, sdp, type);
+		std::future<void> cb = std::async(std::launch::async,[&](){
+			
+			auto res = _saasrdcb(streamRoomId,sdp,type);
+			if (res.error){
+				throw SwiftErrorException(res.error.value());
+			}
+		});
+		cb.get();
 	}
 	 virtual void updateSessionId(const std::string& streamRoomId,
 						 const int64_t sessionId,
 						 const std::string& connectionType) override{
-		_usicb(streamRoomId, sessionId, connectionType);
+		 std::future<void> cb = std::async(std::launch::async,[&](){
+			 auto res = _usicb(streamRoomId, sessionId, connectionType);
+			 if (res.error){
+				 throw SwiftErrorException(res.error.value());
+			 }
+		 });
+		 cb.get();
 	}
 	virtual void close(const std::string& streamRoomId)override{
-		_ccb(streamRoomId);
+		std::future<void> cb = std::async(std::launch::async,[&](){
+			auto res = _ccb(streamRoomId);
+			if (res.error){
+				throw SwiftErrorException(res.error.value());
+			}
+		});
+		cb.get();
 	}
 	 virtual void updateKeys(const std::string& streamRoomId,
 					const std::vector<privmx::endpoint::stream::Key>& keys)override{
-		_ukcb(streamRoomId, keys);
-	}
+		 std::future<void> cb = std::async(std::launch::async,[&](){
+			 auto res = _ukcb(streamRoomId, keys);
+			 if (res.error){
+				 throw SwiftErrorException(res.error.value());
+			 }
+		 });
+		 cb.get();
+	 }
 	 WebRtcInterfaceInstance(CreateOfferAndSetLocalDescriptionCallback coasldcb,
 							 CreateAnswerAndSetDescriptionCallback caasdcb,
 							 SetAnswerAndSetRemoteDescriptionCallback saasrdcb,

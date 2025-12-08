@@ -19,7 +19,7 @@ import Synchronization
 public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate, @unchecked Sendable{
 	var streamRoomId: String
 	var currentKeys = PMXKeyStore()
-	var peerConnectionFactory : RTCPeerConnectionFactory
+	weak var peerConnectionFactory : RTCPeerConnectionFactory!
 	weak private var peerConnectionManager: PeerConnectionManager!
 	
 	private var cryptors = MutexGuarded<[String : PMXFrameCryptorTransformer]>([:])

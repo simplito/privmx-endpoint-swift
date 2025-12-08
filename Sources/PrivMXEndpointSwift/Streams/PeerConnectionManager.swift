@@ -16,7 +16,7 @@ import WebRTC
 
 public final class PeerConnectionManager: Sendable {
 	
-	nonisolated(unsafe) var _createPeerConnection : (@Sendable (String) -> RTCPeerConnection?)?
+	nonisolated(unsafe) var _createPeerConnection : (@Sendable (String) -> (RTCPeerConnection?,PmxPeerConnectionObserver))?
 	nonisolated(unsafe) var _onTrickle : (@Sendable (Int64,String) throws -> Void)?
 	nonisolated(unsafe) var connections = MutexGuarded<[String : [ConnectionType:JanusConnection]]>([:])
 	
@@ -26,7 +26,7 @@ public final class PeerConnectionManager: Sendable {
 	}
 	
 	init(
-		_createPeerConnection: (@Sendable (String) -> RTCPeerConnection?)? = nil,
+		_createPeerConnection: (@Sendable (String) -> (RTCPeerConnection?,PmxPeerConnectionObserver))? = nil,
 		_onTrickle: (@Sendable (Int64,String) throws -> Void)? = nil
 	) {
 		self._createPeerConnection = _createPeerConnection
@@ -48,7 +48,7 @@ public final class PeerConnectionManager: Sendable {
 			connections.value[streamRoomId] = [:]
 		}
 		
-		guard let pc = _createPeerConnection?(streamRoomId)
+		guard let tuple = _createPeerConnection?(streamRoomId),let pc = tuple.0
 		else {
 			throw PrivMXEndpointError.failedInitializingPeerConnection(privmx.InternalError(
 				name: "PeerConnection wasn't created",
@@ -57,9 +57,13 @@ public final class PeerConnectionManager: Sendable {
 				code: nil,
 				scope: nil))
 		}
+		var jv = JanusConnection(
+			peerConnection: pc,
+			sessionId: sessionId,
+			delegate: tuple.1,
+			hasSubscriptions: false)
 		
-		
-		(pc.delegate as? PmxPeerConnectionObserver)?.setIceCandidateGeneratedCallback({
+		jv.delegate.setIceCandidateGeneratedCallback({
 			peerConnection,candidate in
 			
 			let roomConnections = self.connections.value[streamRoomId] ?? [:]
@@ -73,11 +77,7 @@ public final class PeerConnectionManager: Sendable {
 				}
 			}
 		})
-		
-		connections.value[streamRoomId]![type] = JanusConnection(
-			peerConnection: pc,
-			sessionId: sessionId,
-			hasSubscriptions: false)
+		connections.value[streamRoomId]![type] = jv
 	}
 	
 	public func updateSessionForConnection(
