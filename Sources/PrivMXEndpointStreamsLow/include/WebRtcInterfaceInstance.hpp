@@ -58,7 +58,7 @@ public:
 		std::future<std::string> fstring = std::async(std::launch::async,[&](){
 			auto res = _coasldcb(streamRoomId);
 			if (res.error){
-				throw res.error; //TODO better exception(?)
+				throw SwiftErrorException(res.error.value());
 			} else if (res.result){
 				return res.result.value();
 			} else {
@@ -74,7 +74,7 @@ public:
 		std::future<std::string> fstring = std::async(std::launch::async,[&](){
 			auto res = _caasdcb(streamRoomId, sdp, type);
 			if (res.error){
-				throw SwiftErrorException(res.error.value()); //TODO better exception(?)
+				throw SwiftErrorException(res.error.value());
 			} else if (res.result){
 				return res.result.value();
 			} else {

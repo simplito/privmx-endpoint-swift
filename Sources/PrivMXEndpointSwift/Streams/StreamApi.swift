@@ -16,7 +16,6 @@ import Foundation
 import WebRTC
 
 public class StreamApi: @unchecked Sendable{
-	// MARK: Fields
 	private var api: privmx.NativeStreamApiLowWrapper
 	private var rtcClient: WebRTCClient
 	
@@ -24,7 +23,7 @@ public class StreamApi: @unchecked Sendable{
 	private var streamTracks = [String:StreamTrackInfo]()
 	private var dataChannels = [String:RTCDataChannel]()
 	
-	required init(
+	private init(
 		api: privmx.NativeStreamApiLowWrapper,
 		rtcClient: WebRTCClient
 	) {
@@ -47,7 +46,7 @@ public class StreamApi: @unchecked Sendable{
 			throw PrivMXEndpointError.otherFailure(privmx.InternalError())
 		}
 		
-		return Self(
+		return StreamApi(
 			api: api,
 			rtcClient: WebRTCClient()
 			)
@@ -209,11 +208,11 @@ public class StreamApi: @unchecked Sendable{
 		return result
 	}
 	
-	public func listDevices(
-	) throws -> [RTCIODevice] {
-		RTCAudioDeviceModule().inputDevices
-		
-	}
+	//public func listDevices(
+	//) throws -> [RTCIODevice] {
+	//	RTCAudioDeviceModule().inputDevices
+	//}
+	
 	public func addTrack(
 		_ track: privmx.endpoint.stream.MediaDevice,
 		to streamHandle:privmx.endpoint.stream.StreamHandle
@@ -245,24 +244,30 @@ public class StreamApi: @unchecked Sendable{
 			sTrack = StreamTrackInfo(
 				id: sTrackId,
 				streamHandle: streamHandle,
-				track: rtcClient.peerConnectionFactory.audioTrack(withTrackId: sTrackId),
+				track: rtcClient.peerConnectionFactory.audioTrack(
+					withTrackId: sTrackId),
 				published: false)
-			rtcClient.addAudioTrack()
+			rtcClient.addAudioTrack(sTrack)
 		} else if track.type == privmx.endpoint.stream.Video{
 			sTrack = StreamTrackInfo(
 				id: sTrackId,
 				streamHandle: streamHandle,
-				track: rtcClient.peerConnectionFactory.videoTrack(with: rtcClient.peerConnectionFactory.videoSource(), trackId: sTrackId),
+				track: rtcClient.peerConnectionFactory.videoTrack(
+					with: rtcClient.peerConnectionFactory.videoSource(),
+					trackId: sTrackId),
 				published: false)
-			rtcClient.addVideoTrack()
+			rtcClient.addVideoTrack(sTrack)
 		} else if track.type == privmx.endpoint.stream.Desktop{
 			sTrack = StreamTrackInfo(
 				id: sTrackId,
 				streamHandle: streamHandle,
-				track: rtcClient.peerConnectionFactory.videoTrack(with: rtcClient.peerConnectionFactory.videoSource(forScreenCast: true), trackId: sTrackId),
+				track: rtcClient.peerConnectionFactory.videoTrack(
+					with: rtcClient.peerConnectionFactory.videoSource(
+						forScreenCast: true),
+					trackId: sTrackId),
 				published: false)
 			
-			rtcClient.addDesktopTrack()
+			rtcClient.addDesktopTrack(sTrack)
 		}
 		
 		streamTracks[sTrackId] = sTrack
@@ -273,7 +278,7 @@ public class StreamApi: @unchecked Sendable{
 		_ track:privmx.endpoint.stream.MediaDevice,
 		from streamHandle: privmx.endpoint.stream.StreamHandle
 	) throws -> Void{
-		//TODO: removing tracks
+		//streams[streamHandle]?.capturers.value.
 	}
 		
 	

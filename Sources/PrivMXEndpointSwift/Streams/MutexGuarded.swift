@@ -8,14 +8,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
+#if Streams
 import os.lock
 
 public final class MutexGuarded<T>:Sendable{
 	init(_ value: T) {
 		self._value = value
 	}
-	let lock = OSAllocatedUnfairLock()
+	private let lock = OSAllocatedUnfairLock()
 	nonisolated(unsafe) private var _value : T
 	
 	public var value: T {
@@ -33,3 +33,4 @@ public final class MutexGuarded<T>:Sendable{
 	}
 	
 }
+#endif

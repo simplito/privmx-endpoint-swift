@@ -13,7 +13,7 @@
 import PrivMXEndpointSwiftNative
 import PrivMXEndpointStreamsLow
 import Foundation
-@preconcurrency import WebRTC
+import WebRTC
 
 struct InitOptions: @unchecked Sendable{
 	var signalingServer: String

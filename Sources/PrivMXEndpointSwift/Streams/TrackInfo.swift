@@ -14,15 +14,37 @@ import Foundation
 import WebRTC
 import PrivMXEndpointStreamsLow
 
-struct AudioTrackInfo{
+class AudioTrackInfo{
+	init(track: RTCAudioTrack, sender: RTCRtpSender, frameCryptor: PMXFrameCryptorTransformer) {
+		self.track = track
+		self.sender = sender
+		self.frameCryptor = frameCryptor
+	}
 	var track: RTCAudioTrack
 	var sender: RTCRtpSender
 	var frameCryptor: PMXFrameCryptorTransformer
 }
 
-struct VideoTrackInfo{
+class VideoTrackInfo{
+	init(track: RTCVideoTrack, sender: RTCRtpSender, frameCryptor: PMXFrameCryptorTransformer) {
+		self.track = track
+		self.sender = sender
+		self.frameCryptor = frameCryptor
+	}
 	var track: RTCVideoTrack
 	var sender: RTCRtpSender
 	var frameCryptor: PMXFrameCryptorTransformer
+}
+
+class DesktopTrackInfo{
+	init(track: RTCVideoTrack, sender: RTCRtpSender, frameCryptor: PMXFrameCryptorTransformer) {
+		self.track = track
+		self.sender = sender
+		self.frameCryptor = frameCryptor
+	}
+	var track : RTCVideoTrack
+	var sender: RTCRtpSender
+	var frameCryptor: PMXFrameCryptorTransformer
+	
 }
 #endif // Streams

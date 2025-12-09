@@ -19,14 +19,14 @@ import Synchronization
 public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate, @unchecked Sendable{
 	var streamRoomId: String
 	var currentKeys = PMXKeyStore()
-	weak var peerConnectionFactory : RTCPeerConnectionFactory!
-	weak private var peerConnectionManager: PeerConnectionManager!
+	weak var peerConnectionFactory : RTCPeerConnectionFactory?
+	weak private var peerConnectionManager: PeerConnectionManager?
 	
 	private var cryptors = MutexGuarded<[String : PMXFrameCryptorTransformer]>([:])
 	
 	private var onFrameCallback:((Int64, Int64) -> Void)?
 	
-	init(
+	public init(
 		streamRoomId: String,
 		peerConnectionFactory: RTCPeerConnectionFactory,
 		peerConnectionManager: PeerConnectionManager,
@@ -188,6 +188,8 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		onLocalCandidateChanged = cb
 	}
 	
+	//MARK: - Delegate Methods
+	
 	public func peerConnection(
 		_ peerConnection: RTCPeerConnection,
 		didChange stateChanged: RTCSignalingState
@@ -263,7 +265,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		streams mediaStreams: [RTCMediaStream]
 	) {
 		onTracksAdded?(peerConnection,rtpReceiver,mediaStreams)
-		if let track = rtpReceiver.track {
+		if let track = rtpReceiver.track, var peerConnectionFactory {
 			cryptors.value[track.trackId] = PMXFrameCryptorTransformer(for: rtpReceiver, with: peerConnectionFactory, pmxKeyStore: currentKeys)
 			if track.kind == kRTCMediaStreamTrackKindVideo {
 				onVideoTrack?("\(streamRoomId)-\(track.trackId)")

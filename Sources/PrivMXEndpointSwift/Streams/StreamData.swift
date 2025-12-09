@@ -20,13 +20,10 @@ final class StreamData:@unchecked Sendable{
 	}
 	init(
 		roomId: String,
-		capturers: [Int64:RTCVideoCapturer] = [:],
 	){
-		self.capturers = MutexGuarded<[Int64:RTCVideoCapturer]>(capturers)
 		self.status = .Offline
 		self.roomId = roomId
 	}
-	var capturers : MutexGuarded<[Int64:RTCVideoCapturer]>
 	var status: Status
 	var roomId : String
 	
