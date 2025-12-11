@@ -15,12 +15,12 @@
 #include "PrivMXUtils.hpp"
 #include "NativeConnectionWrapper.hpp"
 #include "NativeEventApiWrapper.hpp"
-#include "StreamApiLow.hpp"
-#include "Types.hpp"
-#include "Constants.hpp"
-#include "Events.hpp"
-#include "StreamException.hpp"
-
+#include "privmx/endpoint/stream/StreamApiLow.hpp"
+#include "privmx/endpoint/stream/Types.hpp"
+#include "privmx/endpoint/stream/Constants.hpp"
+#include "privmx/endpoint/stream/Events.hpp"
+#include "privmx/endpoint/stream/StreamException.hpp"
+#include "WebRtcInterfaceInstance.hpp"
 
 namespace privmx {
 
@@ -170,6 +170,34 @@ static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::str
 static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::StreamsUpdatedEvent& event){
 	return endpoint::wrapper::_get_subIds_from_event(event);
 }
+
+class WRTCIIHolder{
+public:
+	WebRTCInterfaceReference instance;
+	
+	WRTCIIHolder(CreateOfferAndSetLocalDescriptionCallback coasldcb,
+										 void* coasldcbContext,
+								CreateAnswerAndSetDescriptionCallback caasdcb,
+								void* caasdcbContext,
+								SetAnswerAndSetRemoteDescriptionCallback saasrdcb,
+								void* saasrdcbContext,
+								UpdateSessionIdCallback usicb,
+								void* usicbContext,
+								UpdateKeysCallback ukcb,
+								void* ukcbContext,
+								CloseCallback ccb,
+								void* ccbContext
+								){
+		instance = std::make_shared<WebRtcInterfaceInstance>(
+				WebRtcInterfaceInstance(
+										coasldcb,coasldcbContext,
+										caasdcb,caasdcbContext,
+										saasrdcb,saasrdcbContext,
+										usicb,usicbContext,
+										ukcb, ukcbContext,
+										ccb, ccbContext));
+		}
+};
 
 }//privmx
 

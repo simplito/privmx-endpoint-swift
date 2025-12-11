@@ -36,10 +36,10 @@ public class StreamApi: @unchecked Sendable{
 	}
 	
 	/// Creates the API instance
-	static func create(
+	public static func create(
 		connection: Connection,
 		eventApi: inout EventApi
-	) async throws -> StreamApi{
+	) throws -> StreamApi{
 		let low = privmx.NativeStreamApiLowWrapper.create(connection.api, &eventApi.api)
 		guard var api = low.result.value
 		else {
@@ -48,7 +48,7 @@ public class StreamApi: @unchecked Sendable{
 		
 		return StreamApi(
 			api: api,
-			rtcClient: WebRTCClient()
+			rtcClient: WebRTCClient.create()
 			)
 	}
 	
@@ -188,6 +188,15 @@ public class StreamApi: @unchecked Sendable{
 		}
 	}
 	
+	public func joinStreamRoom(
+		_ streamRoomId:String
+	) throws -> Void {
+		let res = api.joinStreamRoom(
+			std.string(streamRoomId),
+			rtcClient.webRtcInstance!.instance
+			)
+	}
+	
 // MARK: - STREAMS
 	public func createStreamIn(
 		_ streamRoomId: String
@@ -268,6 +277,8 @@ public class StreamApi: @unchecked Sendable{
 				published: false)
 			
 			rtcClient.addDesktopTrack(sTrack)
+		} else {
+			throw PrivMXEndpointError.otherFailure(privmx.InternalError(name: "Unknown Track Type", message: "", description: ""))
 		}
 		
 		streamTracks[sTrackId] = sTrack

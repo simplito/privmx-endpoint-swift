@@ -25,16 +25,16 @@ struct InitOptions: @unchecked Sendable{
 }
 
 final class WebRTCClient: @unchecked Sendable{
-	let peerConnectionManager: PeerConnectionManager
-	let webRtcInstance: privmx.WebRtcInterfaceInstance
+	nonisolated(unsafe)let peerConnectionManager: PeerConnectionManager
+	nonisolated(unsafe)var webRtcInstance: privmx.WRTCIIHolder?
 	
-	var turnCredntials: [privmx.endpoint.stream.TurnCredentials] = []
-	var clientId: String?
-	var initOptions: InitOptions?
+	nonisolated(unsafe)var turnCredntials: [privmx.endpoint.stream.TurnCredentials] = []
+	nonisolated(unsafe)var clientId: String?
+	nonisolated(unsafe)var initOptions: InitOptions?
 	
-	var keyStore = PMXKeyStore()
+	nonisolated(unsafe)var keyStore = PMXKeyStore()
 	
-	var lastProcessedAnswer: [String:privmx.endpoint.stream.SdpWithRoomModel]
+	nonisolated(unsafe)var lastProcessedAnswer: [String:privmx.endpoint.stream.SdpWithRoomModel] = [:]
 	
 	nonisolated(unsafe) var peerConnectionFactory = RTCPeerConnectionFactory()
 	
@@ -62,29 +62,32 @@ final class WebRTCClient: @unchecked Sendable{
 		}
 	}
 	
-	init(
-		options:InitOptions? = nil
-	){
-		self.initOptions = options
-		self.webRtcInstance = privmx.WebRtcInterfaceInstance(
-			{ streamRoomId in//CreateOfferAndSetLocalDescription
-				var result: privmx.StringWithError
-				var done = false
+	static func create(
+		with options: InitOptions? = nil
+	) -> WebRTCClient{
+		nonisolated(unsafe)var client = WebRTCClient(options:options)
+		client.webRtcInstance = privmx.WRTCIIHolder(
+			{ streamRoomId, context in//CreateOfferAndSetLocalDescription
+				nonisolated(unsafe)var this = Unmanaged<WebRTCClient>.fromOpaque(context!).takeUnretainedValue()
+				nonisolated(unsafe)var result = privmx.StringWithError()
+				nonisolated(unsafe)var done = false
 				Task.detached(){
-					if let pc = try? self.peerConnectionManager.getConnectionWithSession(streamRoomId: String(streamRoomId), connectionType: .Publisher).peerConnection{
+					@Sendable in
+					if let pc = try? this.peerConnectionManager.getConnectionWithSession(streamRoomId: String(streamRoomId), connectionType: .Publisher).peerConnection{
 						do{
 						let res = try await pc.offer(for: RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: [:]))
 							result = privmx.StringWithError(
-								result: privmx.makeOptional(std.string(res.sdp)),
-								error: nil)
+								result: std.string(res.sdp),
+								isvalid: true,
+							errname: "",
+							errwhat: "")
 							done=true
 						} catch let err{
 							result = privmx.StringWithError(
-								result: nil,
-								error: privmx.makeOptional(privmx.InternalError(
-									name:"Failed creating SDP",
-									message: "",
-									description: err.localizedDescription)))
+								result: "",
+								isvalid: true,
+								errname: "Failed creating SDP",
+								errwhat: std.string(err.localizedDescription))
 							done = true
 						}
 						
@@ -95,44 +98,46 @@ final class WebRTCClient: @unchecked Sendable{
 				}
 				return result
 			},
-			{ streamRoomId, sdp, type in//CreateAnswerAndSetDescriptions
-				var result: privmx.StringWithError
-				var done = false
+			Unmanaged.passUnretained(client).toOpaque(),
+			{ streamRoomId, sdp, type,context in//CreateAnswerAndSetDescriptions
+				nonisolated(unsafe) var result = privmx.StringWithError()
+				nonisolated(unsafe) var this = Unmanaged<WebRTCClient>.fromOpaque(context!).takeUnretainedValue()
+				nonisolated(unsafe) var done = false
 				Task.detached{
+					@Sendable in
 					defer {done = true}
-					if let pc = try? self.peerConnectionManager.getConnectionWithSession(streamRoomId: String(streamRoomId), connectionType: .Publisher).peerConnection{
+					if let pc = try? this.peerConnectionManager.getConnectionWithSession(streamRoomId: String(streamRoomId), connectionType: .Publisher).peerConnection{
 						do{
 							let desc = try await pc.answer(for: RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: [:]))
 							do{
 								try await pc.setLocalDescription(desc)
 								
 								result = privmx.StringWithError(
-									result: privmx.makeOptional(std.string(desc.sdp)),
-									error: nil)
+									result: std.string(desc.sdp),
+									isvalid: true,
+								errname: "",
+								errwhat: "")
 								
 							}catch let err2{
 								result = privmx.StringWithError(
-									result: nil,
-									error: privmx.makeOptional(privmx.InternalError(
-										name:"Failed setting local desctiption",
-										message: "",
-										description: err2.localizedDescription)))
+									result: "",
+									isvalid: true,
+									errname:"Failed setting local desctiption",
+									errwhat: std.string(err2.localizedDescription))
 							}
 						} catch let err {
 							result = privmx.StringWithError(
-								result: nil,
-								error: privmx.makeOptional(privmx.InternalError(
-									name:"Failed creating answer",
-									message: "",
-									description: err.localizedDescription)))
+								result: "",
+								isvalid: true,
+								errname:"Failed creating answer",
+								errwhat: std.string(err.localizedDescription))
 						}
 					} else {
 						result = privmx.StringWithError(
-							result: nil,
-							error: privmx.makeOptional(privmx.InternalError(
-								name:"could not get a PeerConnection",
-								message: "",
-								description: "")))
+							result: "",
+							isvalid: true,
+							errname:"could not get a PeerConnection",
+								errwhat: "")
 					}
 				}
 				while !done {
@@ -140,13 +145,15 @@ final class WebRTCClient: @unchecked Sendable{
 				}
 				return result
 			},
-			{ streamRoomId, sdp, type in//SetAnswerAndSetRemoteDescription
+			Unmanaged.passUnretained(client).toOpaque(),
+			{ streamRoomId, sdp, type, context in//SetAnswerAndSetRemoteDescription
 				//TODO: Impl saasrd
-				var res = privmx.NullWithError()
-				var done = false
-				Task.detached{
+				nonisolated(unsafe) var this = Unmanaged<WebRTCClient>.fromOpaque(context!).takeUnretainedValue()
+				nonisolated(unsafe) var res = privmx.InternalError()
+				nonisolated(unsafe) var done = false
+				Task.detached{@Sendable in
 					do{
-						var pc = try self.peerConnectionManager.getConnectionWithSession(
+						var pc = try this.peerConnectionManager.getConnectionWithSession(
 							streamRoomId: String(streamRoomId),
 							connectionType: .Publisher).peerConnection
 						let tp:RTCSdpType? = switch type{
@@ -159,16 +166,16 @@ final class WebRTCClient: @unchecked Sendable{
 						if let tp{
 							try await pc.setRemoteDescription(RTCSessionDescription(type: tp, sdp: String(sdp)))
 						} else {
-							res.error = privmx.makeOptional(privmx.InternalError(
+							res = privmx.InternalError(
 								name: "Unknown type",
 								message: "",
-								description: "got \(type) but couldn't map it to RTCSdpType"))
+								description: "got \(type) but couldn't map it to RTCSdpType")
 						}
 					}catch let err{
-						res.error = privmx.makeOptional(privmx.InternalError(
+						res = privmx.InternalError(
 							name: "Error Updating Session",
 							message: "",
-							description: err.localizedDescription))
+							description: err.localizedDescription)
 					}
 					done = true
 				}
@@ -177,68 +184,105 @@ final class WebRTCClient: @unchecked Sendable{
 				}
 				return res
 			},
-			{ streamRoomId, sessionId, connectiontype in//UpdateSessionId
-				var res = privmx.NullWithError()
+			Unmanaged.passUnretained(client).toOpaque(),
+			{ streamRoomId, sessionId, connectiontype,context in//UpdateSessionId
+				var res = privmx.InternalError()
+				var this = Unmanaged<WebRTCClient>.fromOpaque(context!).takeUnretainedValue()
 				do{
 					if String(connectiontype) == ConnectionType.Publisher.rawValue{
-						try self.peerConnectionManager.updateSessionForConnection(
+						try this.peerConnectionManager.updateSessionForConnection(
 							streamRoomId: String(streamRoomId),
 							connectionType: .Publisher, sessionId: sessionId)
 					} else if String(connectiontype) == ConnectionType.Subscriber.rawValue {
-						try self.peerConnectionManager.updateSessionForConnection(
+						try this.peerConnectionManager.updateSessionForConnection(
 							streamRoomId: String(streamRoomId),
 							connectionType: .Subscriber, sessionId: sessionId)
 					} else {
-						res.error = privmx.makeOptional(privmx.InternalError(
+						res = privmx.InternalError(
 							name: "Unknown ConnectionType",
-							message: "", description: ""))
+							message: "", description: "")
 					}
 				}catch let err{
-					res.error = privmx.makeOptional(privmx.InternalError(
+					res = privmx.InternalError(
 						name: "Error Updating Session",
 						message: "",
-						description: err.localizedDescription))
+						description: err.localizedDescription)
 				}
 				return res
 			},
-			{ steramRoomId, keys in//UpdateKeys
-				var res = privmx.NullWithError()
+			Unmanaged.passUnretained(client).toOpaque(),
+			{ context in//UpdateKeys
+				var res = privmx.InternalError()
+				print("pong")
+				/*
+				print("!1")
+				var this = Unmanaged<WebRTCClient>.fromOpaque(context!).takeUnretainedValue()
+				print("!2")
 				var nkeys = [PMXKSKey]()
+				var dbug = 0
 				for k in keys{
-					nkeys.append(PMXKSKey.init(native: k))
-				}
-				for c in self.peerConnectionManager.connections.value{
-					for peer in c.value.values{
-						peer.delegate.currentKeys.setKeys(nkeys)
+					print("!3.\(dbug)")
+					let ktype = if k.type == privmx.endpoint.stream.LOCAL{PMXKSKeyType.LOCAL} else {PMXKSKeyType.REMOTE}
+					if let kkey = k.key.getString(){
+						nkeys.append(PMXKSKey.init(
+							keyId: String(k.keyId),
+							key: kkey,
+							type:ktype)
+						)
 					}
+					dbug += 1
 				}
+				for c in this.peerConnectionManager.connections.value[String(streamRoomId)] ?? [:]{
+					c.value.delegate.currentKeys.setKeys(nkeys)
+				}
+				//for c in this.peerConnectionManager.connections.value{
+				//	var dbug = 0
+				//	print("!4.\(dbug)")
+				//	for peer in c.value.values{
+				//		peer.delegate.currentKeys.setKeys(nkeys)
+				//	}
+				//	dbug += 1
+				//}
+				 */
 				return res
 			},
-			{ streamRoomId in//Close
-				var res = privmx.NullWithError()
+			Unmanaged.passUnretained(client).toOpaque(),
+			{ streamRoomId, context in//Close
+				var this = Unmanaged<WebRTCClient>.fromOpaque(context!).takeUnretainedValue()
+				var res = privmx.InternalError()
 				do{
-					try self.peerConnectionManager.getConnectionWithSession(
+					try this.peerConnectionManager.getConnectionWithSession(
 						streamRoomId: String(streamRoomId),
 						connectionType: .Publisher)
 					.peerConnection.close()
 					
-					try self.peerConnectionManager.getConnectionWithSession(
+					try this.peerConnectionManager.getConnectionWithSession(
 						streamRoomId: String(streamRoomId),
 						connectionType: .Subscriber)
 					.peerConnection.close()
 				}catch let err{
-					res.error = privmx.makeOptional(privmx.InternalError(
+					res = privmx.InternalError(
 						name: "Error Updating Session",
 						message: "",
-						description: err.localizedDescription))
+						description: err.localizedDescription)
 				}
 				return res
-			})
+			},
+			Unmanaged.passUnretained(client).toOpaque())
+		return client
+	}
+	
+	private init(
+		options:InitOptions? = nil
+	){
+		self.initOptions = options
 		self.peerConnectionManager = PeerConnectionManager()
+		
 	}
 	
 	func addAudioTrack(_ track: StreamTrackInfo){}
 	func addVideoTrack(_ track: StreamTrackInfo){}
 	func addDesktopTrack(_ track: StreamTrackInfo){}
 }
+
 #endif

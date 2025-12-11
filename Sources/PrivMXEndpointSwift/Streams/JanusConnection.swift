@@ -11,8 +11,8 @@
 
 #if Streams
 import Foundation
-import WebRTC
 import PrivMXEndpointStreamsLow
+import WebRTC
 
 public final class JanusConnection: @unchecked Sendable{
 	var peerConnection : RTCPeerConnection
