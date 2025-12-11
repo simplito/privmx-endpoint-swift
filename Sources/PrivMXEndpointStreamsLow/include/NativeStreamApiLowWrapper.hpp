@@ -176,27 +176,24 @@ public:
 	WebRTCInterfaceReference instance;
 	
 	WRTCIIHolder(CreateOfferAndSetLocalDescriptionCallback coasldcb,
-										 void* coasldcbContext,
 								CreateAnswerAndSetDescriptionCallback caasdcb,
-								void* caasdcbContext,
 								SetAnswerAndSetRemoteDescriptionCallback saasrdcb,
-								void* saasrdcbContext,
 								UpdateSessionIdCallback usicb,
-								void* usicbContext,
 								UpdateKeysCallback ukcb,
-								void* ukcbContext,
 								CloseCallback ccb,
-								void* ccbContext
+								void* context
 								){
 		instance = std::make_shared<WebRtcInterfaceInstance>(
 				WebRtcInterfaceInstance(
-										coasldcb,coasldcbContext,
-										caasdcb,caasdcbContext,
-										saasrdcb,saasrdcbContext,
-										usicb,usicbContext,
-										ukcb, ukcbContext,
-										ccb, ccbContext));
+										coasldcb,context,
+										caasdcb,context,
+										saasrdcb,context,
+										usicb,context,
+										ukcb, context,
+										ccb, context));
 		}
+private:
+	void* context;
 };
 
 }//privmx

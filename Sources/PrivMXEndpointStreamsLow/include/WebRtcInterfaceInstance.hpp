@@ -57,7 +57,7 @@ using KeyVector = std::vector<privmx::endpoint::stream::Key>;
 struct UKCBParam{
 	std::string roomId;
 	KeyVector keys;
-	//void* context;
+	const void* context;
 };
 
 struct StringWithError{
@@ -72,7 +72,7 @@ typedef StringWithError(*CreateAnswerAndSetDescriptionCallback)(const std::strin
 typedef InternalError(*SetAnswerAndSetRemoteDescriptionCallback)(const std::string&,const std::string&, const std::string&, const void*);
 typedef InternalError(*UpdateSessionIdCallback)(const std::string&,const int64_t, const std::string&, const void*);
 typedef InternalError(*CloseCallback)(const std::string&, const void*);
-typedef InternalError(*UpdateKeysCallback)(const int64_t&);//const UKCBParam&);
+typedef std::string(*UpdateKeysCallback)(UKCBParam*);//const UKCBParam&);
 
 
 class WebRtcInterfaceInstance: public privmx::endpoint::stream::WebRTCInterface{
@@ -176,6 +176,11 @@ public:
 	}
 	 virtual void updateKeys(const std::string& streamRoomId,
 							 const std::vector<privmx::endpoint::stream::Key>& keys)override{
+		 auto ctx = UKCBParam{
+			 .keys = keys,
+			 .roomId = streamRoomId,
+			 .context = _ukcbContext
+		 };
 		 std::cout<<"updating Keys... "<<std::endl;
 		 if(_ukcb){
 			 std::future<void> cb = std::async([&](){
@@ -183,16 +188,11 @@ public:
 					 printf("%p", &_ukcb);
 					 std::cout<<"(uK) still has callback and context:"<<_ukcbContext<<std::endl;
 				 }
-			 auto ctx = UKCBParam{
-				 .keys = keys,
-				 .roomId = streamRoomId,
-				// .context = _ukcbContext
-			 };
-				 auto tmp = streamRoomId.size();
-				 auto res = _ukcb(tmp);//ctx);
+				 auto res = _ukcb(&ctx);//ctx);
 				 //if (res.error){
 				//	 throw SwiftErrorException(res.error.value());
 				// }
+				 std::cout<<res<<std::endl;
 			 });
 			 cb.get();
 			 std::cout<<"uK done"<<std::endl;

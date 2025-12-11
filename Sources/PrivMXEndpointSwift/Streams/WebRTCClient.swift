@@ -98,7 +98,6 @@ final class WebRTCClient: @unchecked Sendable{
 				}
 				return result
 			},
-			Unmanaged.passUnretained(client).toOpaque(),
 			{ streamRoomId, sdp, type,context in//CreateAnswerAndSetDescriptions
 				nonisolated(unsafe) var result = privmx.StringWithError()
 				nonisolated(unsafe) var this = Unmanaged<WebRTCClient>.fromOpaque(context!).takeUnretainedValue()
@@ -145,7 +144,6 @@ final class WebRTCClient: @unchecked Sendable{
 				}
 				return result
 			},
-			Unmanaged.passUnretained(client).toOpaque(),
 			{ streamRoomId, sdp, type, context in//SetAnswerAndSetRemoteDescription
 				//TODO: Impl saasrd
 				nonisolated(unsafe) var this = Unmanaged<WebRTCClient>.fromOpaque(context!).takeUnretainedValue()
@@ -184,7 +182,6 @@ final class WebRTCClient: @unchecked Sendable{
 				}
 				return res
 			},
-			Unmanaged.passUnretained(client).toOpaque(),
 			{ streamRoomId, sessionId, connectiontype,context in//UpdateSessionId
 				var res = privmx.InternalError()
 				var this = Unmanaged<WebRTCClient>.fromOpaque(context!).takeUnretainedValue()
@@ -210,17 +207,16 @@ final class WebRTCClient: @unchecked Sendable{
 				}
 				return res
 			},
-			Unmanaged.passUnretained(client).toOpaque(),
 			{ context in//UpdateKeys
 				var res = privmx.InternalError()
 				print("pong")
-				/*
+				
 				print("!1")
-				var this = Unmanaged<WebRTCClient>.fromOpaque(context!).takeUnretainedValue()
+				var this = Unmanaged<WebRTCClient>.fromOpaque(context!.pointee.context).takeUnretainedValue()
 				print("!2")
 				var nkeys = [PMXKSKey]()
 				var dbug = 0
-				for k in keys{
+				for k in context!.pointee.keys{
 					print("!3.\(dbug)")
 					let ktype = if k.type == privmx.endpoint.stream.LOCAL{PMXKSKeyType.LOCAL} else {PMXKSKeyType.REMOTE}
 					if let kkey = k.key.getString(){
@@ -232,7 +228,7 @@ final class WebRTCClient: @unchecked Sendable{
 					}
 					dbug += 1
 				}
-				for c in this.peerConnectionManager.connections.value[String(streamRoomId)] ?? [:]{
+				for c in this.peerConnectionManager.connections[String(context!.pointee.roomId)] ?? [:]{
 					c.value.delegate.currentKeys.setKeys(nkeys)
 				}
 				//for c in this.peerConnectionManager.connections.value{
@@ -243,10 +239,9 @@ final class WebRTCClient: @unchecked Sendable{
 				//	}
 				//	dbug += 1
 				//}
-				 */
-				return res
+				 
+				return "res"
 			},
-			Unmanaged.passUnretained(client).toOpaque(),
 			{ streamRoomId, context in//Close
 				var this = Unmanaged<WebRTCClient>.fromOpaque(context!).takeUnretainedValue()
 				var res = privmx.InternalError()
