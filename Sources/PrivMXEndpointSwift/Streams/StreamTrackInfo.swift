@@ -20,7 +20,7 @@ public struct DataChannelMeta: Hashable{
 
 struct StreamTrackInfo:Hashable,Identifiable{
 	var id: String
-	var streamId:Stream? = nil
+	var streamId:String? = nil
 	var streamHandle: privmx.endpoint.stream.StreamHandle
 	var track: RTCMediaStreamTrack? = nil
 	var dataChannelMeta: DataChannelMeta? = nil

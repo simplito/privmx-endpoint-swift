@@ -33,6 +33,7 @@ final class WebRTCClient: @unchecked Sendable{
 	nonisolated(unsafe)var initOptions: InitOptions?
 	
 	nonisolated(unsafe)var keyStore = PMXKeyStore()
+	nonisolated(unsafe)var constraints = RTCMediaConstraints.init(mandatoryConstraints: [:], optionalConstraints: nil)
 	
 	nonisolated(unsafe)var lastProcessedAnswer: [String:privmx.endpoint.stream.SdpWithRoomModel] = [:]
 	
@@ -67,10 +68,11 @@ final class WebRTCClient: @unchecked Sendable{
 	) -> WebRTCClient{
 		nonisolated(unsafe)var client = WebRTCClient(options:options)
 		client.webRtcInstance = privmx.WRTCIIHolder(
-			{ streamRoomId, context in//CreateOfferAndSetLocalDescription
-				nonisolated(unsafe)var this = Unmanaged<WebRTCClient>.fromOpaque(context!).takeUnretainedValue()
+			{ context in//CreateOfferAndSetLocalDescription
+				nonisolated(unsafe)var this = Unmanaged<WebRTCClient>.fromOpaque(context!.pointee.context).takeUnretainedValue()
 				nonisolated(unsafe)var result = privmx.StringWithError()
 				nonisolated(unsafe)var done = false
+				nonisolated(unsafe) let streamRoomId = context!.pointee.roomId
 				Task.detached(){
 					@Sendable in
 					if let pc = try? this.peerConnectionManager.getConnectionWithSession(streamRoomId: String(streamRoomId), connectionType: .Publisher).peerConnection{
@@ -98,10 +100,13 @@ final class WebRTCClient: @unchecked Sendable{
 				}
 				return result
 			},
-			{ streamRoomId, sdp, type,context in//CreateAnswerAndSetDescriptions
+			{ context in//CreateAnswerAndSetDescriptions
 				nonisolated(unsafe) var result = privmx.StringWithError()
-				nonisolated(unsafe) var this = Unmanaged<WebRTCClient>.fromOpaque(context!).takeUnretainedValue()
+				nonisolated(unsafe) var this = Unmanaged<WebRTCClient>.fromOpaque(context!.pointee.context).takeUnretainedValue()
 				nonisolated(unsafe) var done = false
+				nonisolated(unsafe) let streamRoomId = context!.pointee.roomId,
+										sdp = context!.pointee.sdp,
+										type = context!.pointee.type
 				Task.detached{
 					@Sendable in
 					defer {done = true}
@@ -144,11 +149,14 @@ final class WebRTCClient: @unchecked Sendable{
 				}
 				return result
 			},
-			{ streamRoomId, sdp, type, context in//SetAnswerAndSetRemoteDescription
+			{context in//SetAnswerAndSetRemoteDescription
 				//TODO: Impl saasrd
-				nonisolated(unsafe) var this = Unmanaged<WebRTCClient>.fromOpaque(context!).takeUnretainedValue()
+				nonisolated(unsafe) var this = Unmanaged<WebRTCClient>.fromOpaque(context!.pointee.context).takeUnretainedValue()
 				nonisolated(unsafe) var res = privmx.InternalError()
 				nonisolated(unsafe) var done = false
+				nonisolated(unsafe) let streamRoomId = context!.pointee.roomId,
+										sdp = context!.pointee.sdp,
+										type = context!.pointee.type
 				Task.detached{@Sendable in
 					do{
 						var pc = try this.peerConnectionManager.getConnectionWithSession(
@@ -182,9 +190,12 @@ final class WebRTCClient: @unchecked Sendable{
 				}
 				return res
 			},
-			{ streamRoomId, sessionId, connectiontype,context in//UpdateSessionId
+			{ context in//UpdateSessionId
 				var res = privmx.InternalError()
-				var this = Unmanaged<WebRTCClient>.fromOpaque(context!).takeUnretainedValue()
+				var this = Unmanaged<WebRTCClient>.fromOpaque(context!.pointee.context).takeUnretainedValue()
+				let streamRoomId = context!.pointee.roomId,
+					sessionId = context!.pointee.sessionId,
+					connectiontype = context!.pointee.connectionType
 				do{
 					if String(connectiontype) == ConnectionType.Publisher.rawValue{
 						try this.peerConnectionManager.updateSessionForConnection(
@@ -209,9 +220,6 @@ final class WebRTCClient: @unchecked Sendable{
 			},
 			{ context in//UpdateKeys
 				var res = privmx.InternalError()
-				print("pong")
-				
-				print("!1")
 				var this = Unmanaged<WebRTCClient>.fromOpaque(context!.pointee.context).takeUnretainedValue()
 				print("!2")
 				var nkeys = [PMXKSKey]()
@@ -239,12 +247,12 @@ final class WebRTCClient: @unchecked Sendable{
 				//	}
 				//	dbug += 1
 				//}
-				 
-				return "res"
+				return ""
 			},
-			{ streamRoomId, context in//Close
+			{ context in//Close
 				var this = Unmanaged<WebRTCClient>.fromOpaque(context!).takeUnretainedValue()
 				var res = privmx.InternalError()
+				let streamRoomId = context!.pointee.roomId
 				do{
 					try this.peerConnectionManager.getConnectionWithSession(
 						streamRoomId: String(streamRoomId),
@@ -275,7 +283,18 @@ final class WebRTCClient: @unchecked Sendable{
 		
 	}
 	
-	func addAudioTrack(_ track: StreamTrackInfo){}
+	func addAudioTrack(
+		_ track: inout StreamTrackInfo,
+		in streamRoomId: String
+	){
+		var pc = self.peerConnectionManager.connections[streamRoomId]?[.Publisher]?.peerConnection
+		pc?.add(
+			track.track!,
+			streamIds: [track.streamId!])
+		track.published = true
+		var source = peerConnectionFactory.audioSource(with: constraints)
+		
+	}
 	func addVideoTrack(_ track: StreamTrackInfo){}
 	func addDesktopTrack(_ track: StreamTrackInfo){}
 }

@@ -234,7 +234,7 @@ public class StreamApi: @unchecked Sendable{
 				description: "",
 				code: nil, scope: nil))
 		}
-		
+		print("found stream")
 		for entry in streamTracks{
 			if nil != entry.value.track?.trackId
 				&& entry.value.track!.trackId == String(track.id){
@@ -245,18 +245,19 @@ public class StreamApi: @unchecked Sendable{
 					code: nil, scope: nil))
 			}
 		}
+		print("track is not a duplicate")
 		let sTrackId = UUID().uuidString
 		var sTrack : StreamTrackInfo
 		if track.type == privmx.endpoint.stream.Audio{
-			
-			
 			sTrack = StreamTrackInfo(
 				id: sTrackId,
 				streamHandle: streamHandle,
 				track: rtcClient.peerConnectionFactory.audioTrack(
 					withTrackId: sTrackId),
-				published: false)
-			rtcClient.addAudioTrack(sTrack)
+				published: true)
+			print("adding audio track")
+			rtcClient.addAudioTrack(&sTrack, in: str.roomId)
+			
 		} else if track.type == privmx.endpoint.stream.Video{
 			sTrack = StreamTrackInfo(
 				id: sTrackId,

@@ -277,7 +277,7 @@ ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::leaveStreamRoom(const
 ResultWithError<stream::StreamHandle> NativeStreamApiLowWrapper::createStream(const std::string& streamRoomId){
 	ResultWithError<stream::StreamHandle> res;
 	try{
-		getApi()->createStream(streamRoomId);
+		res.result = getApi()->createStream(streamRoomId);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),

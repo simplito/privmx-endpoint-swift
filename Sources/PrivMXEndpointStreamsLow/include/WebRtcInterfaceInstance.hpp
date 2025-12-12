@@ -60,6 +60,37 @@ struct UKCBParam{
 	const void* context;
 };
 
+struct CCBParam{
+	std::string roomId;
+	const void* context;
+};
+
+struct COASLDCBParam{
+	std::string roomId;
+	const void* context;
+};
+
+struct CAASDCBParam{
+	std::string roomId;
+	std::string sdp;
+	std::string type;
+	const void* context;
+};
+
+struct SAASRDCBParam{
+	std::string roomId;
+	std::string sdp;
+	std::string type;
+	const void* context;
+};
+
+struct USICBParam{
+	std::string roomId;
+	int64_t sessionId;
+	std::string connectionType;
+	const void* context;
+};
+
 struct StringWithError{
 	std::string result;
 	bool isvalid;
@@ -67,11 +98,11 @@ struct StringWithError{
 	std::string errwhat;
 };
 
-typedef StringWithError(*CreateOfferAndSetLocalDescriptionCallback)(const std::string&, const void*);
-typedef StringWithError(*CreateAnswerAndSetDescriptionCallback)(const std::string&,const std::string&, const std::string&, const void*);
-typedef InternalError(*SetAnswerAndSetRemoteDescriptionCallback)(const std::string&,const std::string&, const std::string&, const void*);
-typedef InternalError(*UpdateSessionIdCallback)(const std::string&,const int64_t, const std::string&, const void*);
-typedef InternalError(*CloseCallback)(const std::string&, const void*);
+typedef StringWithError(*CreateOfferAndSetLocalDescriptionCallback)(COASLDCBParam*);
+typedef StringWithError(*CreateAnswerAndSetDescriptionCallback)(CAASDCBParam*);
+typedef InternalError(*SetAnswerAndSetRemoteDescriptionCallback)(SAASRDCBParam*);
+typedef InternalError(*UpdateSessionIdCallback)(USICBParam*);
+typedef InternalError(*CloseCallback)(CCBParam*);
 typedef std::string(*UpdateKeysCallback)(UKCBParam*);//const UKCBParam&);
 
 
@@ -80,8 +111,12 @@ public:
 	virtual std::string createOfferAndSetLocalDescription(const std::string& streamRoomId) override {
 		std::cout<<"creatingOffer and setting Local Description"<<std::endl;
 		if (_coasldcb){
+			COASLDCBParam ctx {
+				.roomId = streamRoomId,
+				.context = _coasldcbContext
+			};
 			std::future<std::string> fstring = std::async(std::launch::async,[&](){
-				auto res = _coasldcb(streamRoomId,_coasldcbContext);
+				auto res = _coasldcb(&ctx);
 				if (res.errname != ""){
 					throw SwiftErrorException(InternalError{.name = res.errname, .description = res.errwhat});
 				} else if (res.isvalid){
@@ -103,8 +138,14 @@ public:
 											   const std::string& type)override{
 		std::cout<<"creating Answer and Setting Descriptions..."<<std::endl;
 		if(_caasdcb){
+			CAASDCBParam ctx {
+				.roomId = streamRoomId,
+				.sdp = sdp,
+				.type = type,
+				.context = _caasdcbContext
+			};
 			std::future<std::string> fstring = std::async(std::launch::async,[&](){
-				auto res = _caasdcb(streamRoomId, sdp, type,_caasdcbContext);
+				auto res = _caasdcb(&ctx);
 				if (res.errname != ""){
 					throw SwiftErrorException(InternalError{.name = res.errname, .description = res.errwhat});
 				} else if (res.isvalid){
@@ -126,9 +167,15 @@ public:
 												  const std::string& type)override{
 		std::cout<<"setting Answer and Setting Remote Description.."<<std::endl;
 		if (_saasrdcb){
+			SAASRDCBParam ctx {
+				.roomId = streamRoomId,
+				.sdp = sdp,
+				.type = type,
+				.context = _saasrdcbContext
+			};
 			std::future<void> cb = std::async(std::launch::async,[&](){
 				
-				auto res = _saasrdcb(streamRoomId,sdp,type,_saasrdcbContext);
+				auto res = _saasrdcb(&ctx);
 				if (res.name != ""){
 					throw SwiftErrorException(res);
 				}
@@ -145,8 +192,14 @@ public:
 								  const std::string& connectionType) override{
 		 std::cout<<"updating Seesion Id..."<<std::endl;
 		 if (_usicb){
+			 USICBParam ctx {
+				 .roomId = streamRoomId,
+				 .sessionId = sessionId,
+				 .connectionType = connectionType,
+				 .context = _usicbContext
+			 };
 			 std::future<void> cb = std::async(std::launch::async,[&](){
-				 auto res = _usicb(streamRoomId, sessionId, connectionType,_usicbContext);
+				 auto res = _usicb(&ctx);
 				 if (res.name != ""){
 					 throw SwiftErrorException(res);
 				 }
@@ -161,8 +214,12 @@ public:
 	virtual void close(const std::string& streamRoomId)override{
 		std::cout<<"closing"<<std::endl;
 		if(_ccb){
+			CCBParam ctx{
+				.roomId = streamRoomId,
+				.context = _ccbContext
+			};
 			std::future<void> cb = std::async(std::launch::async,[&](){
-				auto res = _ccb(streamRoomId,_ccbContext);
+				auto res = _ccb(&ctx);
 				if (res.name != ""){
 					throw SwiftErrorException(res);
 				}
@@ -189,9 +246,9 @@ public:
 					 std::cout<<"(uK) still has callback and context:"<<_ukcbContext<<std::endl;
 				 }
 				 auto res = _ukcb(&ctx);//ctx);
-				 //if (res.error){
-				//	 throw SwiftErrorException(res.error.value());
-				// }
+				 if (res != ""){
+					 throw SwiftErrorException(InternalError());
+				 }
 				 std::cout<<res<<std::endl;
 			 });
 			 cb.get();
