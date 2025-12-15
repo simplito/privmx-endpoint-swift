@@ -77,6 +77,7 @@ final class WebRTCClient: @unchecked Sendable{
 					@Sendable in
 					if let pc = try? this.peerConnectionManager.getConnectionWithSession(streamRoomId: String(streamRoomId), connectionType: .Publisher).peerConnection{
 						do{
+							try pc.setLocalDescription(context!.pointee.)
 						let res = try await pc.offer(for: RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: [:]))
 							result = privmx.StringWithError(
 								result: std.string(res.sdp),
@@ -110,32 +111,17 @@ final class WebRTCClient: @unchecked Sendable{
 				Task.detached{
 					@Sendable in
 					defer {done = true}
-					if let pc = try? this.peerConnectionManager.getConnectionWithSession(streamRoomId: String(streamRoomId), connectionType: .Publisher).peerConnection{
+					if let pc = try? this.peerConnectionManager.getConnectionWithSession(streamRoomId: String(streamRoomId), connectionType: .Subscriber).peerConnection{
 						do{
-							let desc = try await pc.answer(for: RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: [:]))
-							do{
-								try await pc.setLocalDescription(desc)
-								
-								result = privmx.StringWithError(
-									result: std.string(desc.sdp),
-									isvalid: true,
-								errname: "",
-								errwhat: "")
-								
-							}catch let err2{
-								result = privmx.StringWithError(
-									result: "",
-									isvalid: true,
-									errname:"Failed setting local desctiption",
-									errwhat: std.string(err2.localizedDescription))
-							}
-						} catch let err {
+							this.reconfigurePeerConnection(room: String(streamRoomId), sdp: String(sdp), type: type)
+						}catch let err{
 							result = privmx.StringWithError(
-								result: "",
-								isvalid: true,
-								errname:"Failed creating answer",
-								errwhat: std.string(err.localizedDescription))
-						}
+							 result: "",
+							 isvalid: true,
+							 errname: std.__1.string("\((err as? PrivMXEndpointError)?.getName() ?? "ERROR")"),
+							 errwhat: std.__1.string("\((err as? PrivMXEndpointError)?.getDescription())")
+							)
+					 }
 					} else {
 						result = privmx.StringWithError(
 							result: "",
@@ -159,24 +145,20 @@ final class WebRTCClient: @unchecked Sendable{
 										type = context!.pointee.type
 				Task.detached{@Sendable in
 					do{
-						var pc = try this.peerConnectionManager.getConnectionWithSession(
-							streamRoomId: String(streamRoomId),
-							connectionType: .Publisher).peerConnection
-						let tp:RTCSdpType? = switch type{
-							case "answer":RTCSdpType.answer
-							case "offer": RTCSdpType.offer
-							case "pranswer":RTCSdpType.prAnswer
-							case "rollback":RTCSdpType.rollback
-							default:nil
+						let tp: RTCSdpType = switch type {
+							case "answer","Answer":
+								.answer
+							case "PrAnswer","pranswer":
+								.prAnswer
+							case "Offer","offer":
+								.offer
+							case "rollback","Rollback":
+								.rollback
+							default:
+								throw PrivMXEndpointError.otherFailure(privmx.InternalError(name: "Unknown Type", message: "", description: "got \(type) but couldn't map it to RTCSdpType"))
 						}
-						if let tp{
-							try await pc.setRemoteDescription(RTCSessionDescription(type: tp, sdp: String(sdp)))
-						} else {
-							res = privmx.InternalError(
-								name: "Unknown type",
-								message: "",
-								description: "got \(type) but couldn't map it to RTCSdpType")
-						}
+						await this.reconfigurePeerConnection(room: String(streamRoomId), sdp: String(sdp), type: tp)
+						
 					}catch let err{
 						res = privmx.InternalError(
 							name: "Error Updating Session",
@@ -282,6 +264,36 @@ final class WebRTCClient: @unchecked Sendable{
 		self.peerConnectionManager = PeerConnectionManager()
 		
 	}
+	
+	private func reconfigurePeerConnection(
+		room:String,
+		sdp: String,
+		type: String
+	) async throws -> Void{
+		let tp: RTCSdpType = switch type {
+			case "answer","Answer":
+					.answer
+			case "PrAnswer","pranswer":
+					.prAnswer
+			case "Offer","offer":
+					.offer
+			case "rollback","Rollback":
+					.rollback
+			default:
+				throw PrivMXEndpointError.otherFailure(privmx.InternalError(name: "Unknown Type", message: "", description: "got \(type) but couldn't map it to RTCSdpType"))
+		}
+		
+		var pc = try self.peerConnectionManager.getConnectionWithSession(
+			streamRoomId: String(room),
+			connectionType: .Subscriber).peerConnection
+		
+		try await pc.setRemoteDescription(RTCSessionDescription(type: tp, sdp: String(sdp)))
+		
+		let ans = try await pc.answer(for: RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: nil))
+		
+		self.lastProcessedAnswer[room] = privmx.endpoint.stream.SdpWithRoomModel(roomId: std.__1.string(room), sdp: std.__1.string(sdp), type: std.__1.string(type))
+	}
+		
 	
 	func addAudioTrack(
 		_ track: inout StreamTrackInfo,

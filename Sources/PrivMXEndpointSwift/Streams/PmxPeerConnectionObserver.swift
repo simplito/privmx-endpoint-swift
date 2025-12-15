@@ -194,6 +194,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		_ peerConnection: RTCPeerConnection,
 		didChange stateChanged: RTCSignalingState
 	) -> Void {
+		print("Signaling state changed")
 		onConnectionSignalingStateChanged?(peerConnection,stateChanged)
 	}
 	
@@ -201,6 +202,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		_ peerConnection: RTCPeerConnection,
 		didAdd stream: RTCMediaStream
 	) -> Void {
+		print("StreamAdded")
 		onStreamAdded?(peerConnection,stream)
 	}
 	
@@ -208,12 +210,14 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		_ peerConnection: RTCPeerConnection,
 		didRemove stream: RTCMediaStream
 	) {
+		print("StreamRemoved")
 		onStreamRemoved?(peerConnection,stream)
 	}
 	
 	public func peerConnectionShouldNegotiate(
 		_ peerConnection: RTCPeerConnection
 	) {
+		print("shouldrenegotiate")
 		onShouldRenegotiate?(peerConnection)
 	}
 	
@@ -221,6 +225,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		_ peerConnection: RTCPeerConnection,
 		didChange newState: RTCIceConnectionState
 	) {
+		print("ICE connection state changed")
 		onIceConnectionStateChanged?(peerConnection,newState)
 	}
 	
@@ -228,6 +233,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		_ peerConnection: RTCPeerConnection,
 		didChange newState: RTCIceGatheringState
 	) {
+		print("ICE gathering state changed")
 		onIceGatheringStateChanged?(peerConnection,newState)
 	}
 	
@@ -235,6 +241,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		_ peerConnection: RTCPeerConnection,
 		didGenerate candidate: RTCIceCandidate
 	) {
+		print("generated ICE candidate")
 		onIceCandidateGenerated?(peerConnection,candidate)
 	}
 	
@@ -242,6 +249,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		_ peerConnection: RTCPeerConnection,
 		didRemove candidates: [RTCIceCandidate]
 	) {
+		print("ICE candidate removed")
 		onIceCandidatesRemoved?(peerConnection,candidates)
 	}
 	
@@ -249,6 +257,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		_ peerConnection: RTCPeerConnection,
 		didOpen dataChannel: RTCDataChannel
 	) {
+		print("DATA channel opened")
 		onDataChannelOpened?(peerConnection,dataChannel)
 	}
 	
@@ -256,6 +265,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		_ peerConnection: RTCPeerConnection,
 		didStartReceivingOn transceiver: RTCRtpTransceiver
 	) {
+		print("Started receiving on transciever")
 		onStartedReceiving?(peerConnection,transceiver)
 	}
 	
@@ -264,6 +274,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		didAdd rtpReceiver: RTCRtpReceiver,
 		streams mediaStreams: [RTCMediaStream]
 	) {
+		print("receiver added streams")
 		onTracksAdded?(peerConnection,rtpReceiver,mediaStreams)
 		if let track = rtpReceiver.track, var peerConnectionFactory {
 			cryptors.value[track.trackId] = PMXFrameCryptorTransformer(for: rtpReceiver, with: peerConnectionFactory, pmxKeyStore: currentKeys)
@@ -280,6 +291,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		_ peerConnection: RTCPeerConnection,
 		didChange newState: RTCPeerConnectionState
 	) {
+		print("peerconnection state changed")
 		onConnectionPeerStateChanged?(peerConnection,newState)
 	}
 	
@@ -287,6 +299,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		_ peerConnection: RTCPeerConnection,
 		didRemove rtpReceiver: RTCRtpReceiver
 	) {
+		print("peerConnection removed receiver")
 		onStoppedReceiving?(peerConnection,rtpReceiver)
 	}
 	
@@ -294,6 +307,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		_ peerConnection: RTCPeerConnection,
 		didFailToGatherIceCandidate event: RTCIceCandidateErrorEvent
 	) {
+		print("failed gathering ICE candidates")
 		onIceCandidateErrorEvent?(peerConnection,event)
 	}
 	
@@ -301,6 +315,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		_ peerConnection: RTCPeerConnection,
 		didChangeStandardizedIceConnectionState newState: RTCIceConnectionState
 	) {
+		print("standardised Ice connection state changed")
 		onIceConnectionStateChanged?(peerConnection,newState)
 	}
 	
@@ -311,6 +326,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		lastReceivedMs lastDataReceivedMs: Int32,
 		changeReason reason: String
 	) {
+		print("PC changed local candidate")
 		onLocalCandidateChanged?(peerConnection,
 								 local,
 								 remote,

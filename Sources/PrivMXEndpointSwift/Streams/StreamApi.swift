@@ -217,10 +217,13 @@ public class StreamApi: @unchecked Sendable{
 		return result
 	}
 	
-	//public func listDevices(
-	//) throws -> [RTCIODevice] {
-	//	RTCAudioDeviceModule().inputDevices
-	//}
+	public func getMediaDevices(
+	) throws -> [RTCIODevice] {
+		var devices: [RTCIODevice]
+		devices = self.rtcClient.peerConnectionFactory.audioDeviceModule.inputDevices
+		//RTCVideoCaptureModule
+		return devices
+	}
 	
 	public func addTrack(
 		_ track: privmx.endpoint.stream.MediaDevice,
@@ -304,14 +307,14 @@ public class StreamApi: @unchecked Sendable{
 	}
 	
 	
-	public func openStream(
-		streamId: Int64,
-		_ streamRoomId: String,
-		settings: privmx.endpoint.stream.StreamSettings,
-		localStreamId: Int64
-	) throws -> Int64 {
-		return 1
-	}
+	//public func openStream(
+	//	streamId: Int64,
+	//	_ streamRoomId: String,
+	//	settings: privmx.endpoint.stream.StreamSettings,
+	//	localStreamId: Int64
+	//) throws -> Int64 {
+	//	return 1
+	//}
 	
 		public func subscribeToRemoteStreams(
 		in streamRoomId: String,

@@ -147,6 +147,7 @@ public:
 			std::future<std::string> fstring = std::async(std::launch::async,[&](){
 				auto res = _caasdcb(&ctx);
 				if (res.errname != ""){
+					std::cout<<"got error:"<<res.errname<<std::endl;
 					throw SwiftErrorException(InternalError{.name = res.errname, .description = res.errwhat});
 				} else if (res.isvalid){
 					return res.result;
