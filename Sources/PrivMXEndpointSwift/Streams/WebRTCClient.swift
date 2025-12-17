@@ -77,7 +77,7 @@ final class WebRTCClient: @unchecked Sendable{
 					@Sendable in
 					if let pc = try? this.peerConnectionManager.getConnectionWithSession(streamRoomId: String(streamRoomId), connectionType: .Publisher).peerConnection{
 						do{
-							try pc.setLocalDescription(context!.pointee.)
+							//try pc.setLocalDescription(context!.pointee.sd)
 						let res = try await pc.offer(for: RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: [:]))
 							result = privmx.StringWithError(
 								result: std.string(res.sdp),
@@ -113,7 +113,13 @@ final class WebRTCClient: @unchecked Sendable{
 					defer {done = true}
 					if let pc = try? this.peerConnectionManager.getConnectionWithSession(streamRoomId: String(streamRoomId), connectionType: .Subscriber).peerConnection{
 						do{
-							this.reconfigurePeerConnection(room: String(streamRoomId), sdp: String(sdp), type: type)
+							try await this.reconfigurePeerConnection(room: String(streamRoomId), sdp: String(sdp), type: String(type))
+							guard let lpa = this.lastProcessedAnswer[String(streamRoomId)]?.sdp
+							else {
+								throw PrivMXEndpointError.otherFailure(privmx.InternalError(name: "Missing answer sdp", message: "", description: ""))
+							}
+							result.result = lpa
+							result.isvalid = true
 						}catch let err{
 							result = privmx.StringWithError(
 							 result: "",
@@ -145,19 +151,8 @@ final class WebRTCClient: @unchecked Sendable{
 										type = context!.pointee.type
 				Task.detached{@Sendable in
 					do{
-						let tp: RTCSdpType = switch type {
-							case "answer","Answer":
-								.answer
-							case "PrAnswer","pranswer":
-								.prAnswer
-							case "Offer","offer":
-								.offer
-							case "rollback","Rollback":
-								.rollback
-							default:
-								throw PrivMXEndpointError.otherFailure(privmx.InternalError(name: "Unknown Type", message: "", description: "got \(type) but couldn't map it to RTCSdpType"))
-						}
-						await this.reconfigurePeerConnection(room: String(streamRoomId), sdp: String(sdp), type: tp)
+						
+						try await this.reconfigurePeerConnection(room: String(streamRoomId), sdp: String(sdp), type: String(type))
 						
 					}catch let err{
 						res = privmx.InternalError(
@@ -209,17 +204,16 @@ final class WebRTCClient: @unchecked Sendable{
 				for k in context!.pointee.keys{
 					print("!3.\(dbug)")
 					let ktype = if k.type == privmx.endpoint.stream.LOCAL{PMXKSKeyType.LOCAL} else {PMXKSKeyType.REMOTE}
-					if let kkey = k.key.getString(){
-						nkeys.append(PMXKSKey.init(
-							keyId: String(k.keyId),
-							key: kkey,
-							type:ktype)
-						)
-					}
+					let kkey = k.key
+					nkeys.append(PMXKSKey.init(
+						keyId: String(k.keyId),
+						key: try! Data(from:kkey),
+						type:ktype)
+					)
 					dbug += 1
 				}
 				for c in this.peerConnectionManager.connections[String(context!.pointee.roomId)] ?? [:]{
-					c.value.delegate.currentKeys.setKeys(nkeys)
+					c.value.delegate.currentKeys.value.setKeys(nkeys)
 				}
 				//for c in this.peerConnectionManager.connections.value{
 				//	var dbug = 0
@@ -273,7 +267,7 @@ final class WebRTCClient: @unchecked Sendable{
 		let tp: RTCSdpType = switch type {
 			case "answer","Answer":
 					.answer
-			case "PrAnswer","pranswer":
+			case "PrAnswer","pranswer","prAnswer":
 					.prAnswer
 			case "Offer","offer":
 					.offer
@@ -291,7 +285,22 @@ final class WebRTCClient: @unchecked Sendable{
 		
 		let ans = try await pc.answer(for: RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: nil))
 		
-		self.lastProcessedAnswer[room] = privmx.endpoint.stream.SdpWithRoomModel(roomId: std.__1.string(room), sdp: std.__1.string(sdp), type: std.__1.string(type))
+		let atype:std.string = switch ans.type{
+			case .answer:
+				"answer"
+			case .prAnswer:
+				"prAnswer"
+			case .offer:
+				"offer"
+			case .rollback:
+				"rollback"
+			@unknown default:
+				throw PrivMXEndpointError.otherFailure(privmx.InternalError(
+					name: "Unknown Type",
+					message: "",
+					description: "got \(type) but couldn't map it to RTCSdpType"))
+		}
+		self.lastProcessedAnswer[room] = privmx.endpoint.stream.SdpWithRoomModel(roomId: std.string(room), sdp: std.string(ans.sdp), type: atype)
 	}
 		
 	

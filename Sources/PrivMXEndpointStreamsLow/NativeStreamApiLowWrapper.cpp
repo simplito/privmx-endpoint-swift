@@ -392,6 +392,13 @@ ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::subscribeToRemoteStre
 			.name = "std::Exception",
 			.message = err.what()
 		};
+	}catch (privmx::ObjcErrorException & err) {
+		res.error ={
+			.name = "OBJC err",
+			.message = err.what()
+		};
+	}catch (privmx::SwiftErrorException & err) {
+		res.error = err.internalError;
 	}catch (...) {
 		res.error ={
 			.name = "Unknown Exception",

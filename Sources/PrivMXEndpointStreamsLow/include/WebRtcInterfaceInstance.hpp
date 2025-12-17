@@ -23,6 +23,7 @@
 namespace privmx{
 
 class ObjcErrorException : std::exception{
+public:
 	const char * what() const noexcept override{
 		
 		return "Objc returned an error";
@@ -239,7 +240,8 @@ public:
 			 .roomId = streamRoomId,
 			 .context = _ukcbContext
 		 };
-		 std::cout<<"updating Keys... "<<std::endl;
+		 
+		 std::cout<<"updating "<<keys.size()<<" Keys... "<<std::endl;
 		 if(_ukcb){
 			 std::future<void> cb = std::async([&](){
 				 if (_ukcb && _ukcbContext){
@@ -248,6 +250,7 @@ public:
 				 }
 				 auto res = _ukcb(&ctx);//ctx);
 				 if (res != ""){
+					 std::cout<<"uK failed"<<std::endl;
 					 throw SwiftErrorException(InternalError());
 				 }
 				 std::cout<<res<<std::endl;

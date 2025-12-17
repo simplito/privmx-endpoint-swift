@@ -18,7 +18,7 @@ import Synchronization
 
 public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate, @unchecked Sendable{
 	var streamRoomId: String
-	var currentKeys = PMXKeyStore()
+	var currentKeys = MutexGuarded<PMXKeyStore>(PMXKeyStore())
 	weak var peerConnectionFactory : RTCPeerConnectionFactory?
 	weak private var peerConnectionManager: PeerConnectionManager?
 	
@@ -51,7 +51,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		self.peerConnectionFactory = peerConnectionFactory
 		
 		self.streamRoomId = streamRoomId
-		self.currentKeys = currentKeys
+		self.currentKeys.value = currentKeys
 		self.onConnectionSignalingStateChanged = onConnectionSignalingStateChanged
 		self.onConnectionPeerStateChanged = onConnectionPeerStateChanged
 		self.onStreamAdded = onStreamAdded
@@ -204,6 +204,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 	) -> Void {
 		print("StreamAdded")
 		onStreamAdded?(peerConnection,stream)
+		print("SA done")
 	}
 	
 	public func peerConnection(
@@ -276,13 +277,17 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 	) {
 		print("receiver added streams")
 		onTracksAdded?(peerConnection,rtpReceiver,mediaStreams)
+		print("?0")
 		if let track = rtpReceiver.track, var peerConnectionFactory {
-			cryptors.value[track.trackId] = PMXFrameCryptorTransformer(for: rtpReceiver, with: peerConnectionFactory, pmxKeyStore: currentKeys)
+			print("?1")
+			cryptors.value[track.trackId] = PMXFrameCryptorTransformer(for: rtpReceiver, with: peerConnectionFactory, pmxKeyStore: currentKeys.value)
+			print("?2")
 			if track.kind == kRTCMediaStreamTrackKindVideo {
 				onVideoTrack?("\(streamRoomId)-\(track.trackId)")
+				print("?3.a")
 			}
 			else if track.kind == kRTCMediaStreamTrackKindAudio {
-				
+				print("?3.b")
 			}
 		}
 	}
