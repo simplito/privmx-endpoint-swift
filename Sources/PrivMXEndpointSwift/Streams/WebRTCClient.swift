@@ -202,12 +202,14 @@ final class WebRTCClient: @unchecked Sendable{
 				var nkeys = [PMXKSKey]()
 				var dbug = 0
 				for k in context!.pointee.keys{
-					print("!3.\(dbug)")
+					print("got \(dbug). key \(k.type) of \(k.key.size())")
 					let ktype = if k.type == privmx.endpoint.stream.LOCAL{PMXKSKeyType.LOCAL} else {PMXKSKeyType.REMOTE}
-					let kkey = k.key
+					let kkey = k.key.getData() ?? Data()
+					print("converted to", kkey.count, "sized Data")
+					//print(privmx.endpoint.core.Hex.encode(k.key))
 					nkeys.append(PMXKSKey.init(
 						keyId: String(k.keyId),
-						key: try! Data(from:kkey),
+						key: kkey,
 						type:ktype)
 					)
 					dbug += 1
@@ -215,14 +217,7 @@ final class WebRTCClient: @unchecked Sendable{
 				for c in this.peerConnectionManager.connections[String(context!.pointee.roomId)] ?? [:]{
 					c.value.delegate.currentKeys.value.setKeys(nkeys)
 				}
-				//for c in this.peerConnectionManager.connections.value{
-				//	var dbug = 0
-				//	print("!4.\(dbug)")
-				//	for peer in c.value.values{
-				//		peer.delegate.currentKeys.setKeys(nkeys)
-				//	}
-				//	dbug += 1
-				//}
+				
 				return ""
 			},
 			{ context in//Close

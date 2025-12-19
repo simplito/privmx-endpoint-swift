@@ -25,7 +25,6 @@ namespace privmx{
 class ObjcErrorException : std::exception{
 public:
 	const char * what() const noexcept override{
-		
 		return "Objc returned an error";
 	}
 };
