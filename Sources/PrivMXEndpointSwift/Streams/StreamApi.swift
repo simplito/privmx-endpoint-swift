@@ -9,7 +9,7 @@
 // limitations under the License.
 //
 
-#if Streams
+// #if Streams
 import PrivMXEndpointSwiftNative
 import PrivMXEndpointStreamsLow
 import Foundation
@@ -17,12 +17,11 @@ import WebRTC
 
 public class StreamApi: @unchecked Sendable{
 	private var api: privmx.NativeStreamApiLowWrapper
-	private var rtcClient: WebRTCClient
+	public var rtcClient: WebRTCClient
 	
 	private var streams = [privmx.endpoint.stream.StreamHandle:StreamData]()
 	private var streamTracks = [String:StreamTrackInfo]()
 	private var dataChannels = [String:RTCDataChannel]()
-	
 	private init(
 		api: privmx.NativeStreamApiLowWrapper,
 		rtcClient: WebRTCClient
@@ -49,10 +48,10 @@ public class StreamApi: @unchecked Sendable{
 		return StreamApi(
 			api: api,
 			rtcClient: WebRTCClient.create()
-			)
+		)
 	}
 	
-// MARK: - Rooms
+	// MARK: - Rooms
 	
 	/// Creates a StreamRoom on the Bridge
 	/// - Returns: StreamRoomId
@@ -194,10 +193,10 @@ public class StreamApi: @unchecked Sendable{
 		let res = api.joinStreamRoom(
 			std.string(streamRoomId),
 			rtcClient.webRtcInstance!.instance
-			)
+		)
 	}
 	
-// MARK: - STREAMS
+	// MARK: - STREAMS
 	public func createStreamIn(
 		_ streamRoomId: String
 	) throws -> privmx.endpoint.stream.StreamHandle {
@@ -205,28 +204,34 @@ public class StreamApi: @unchecked Sendable{
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.otherFailure(res.error.value!)
 		}
-		guard let result = res.result.value else {
+		guard let localStreamId = res.result.value else {
 			var err = privmx.InternalError()
 			err.name = "Value error"
 			err.description = "Unexpectedly recived nil result"
 			throw PrivMXEndpointError.otherFailure(err)
 		}
 		
-		self.streams[result] = StreamData(roomId: streamRoomId)
+		self.streams[localStreamId] = StreamData(roomId: streamRoomId)
 		
-		return result
+		return localStreamId
 	}
 	
 	public func getMediaDevices(
-	) throws -> [RTCIODevice] {
-		var devices: [RTCIODevice]
-		devices = self.rtcClient.peerConnectionFactory.audioDeviceModule.inputDevices
-		//RTCVideoCaptureModule
+	) throws -> [privmx.endpoint.stream.MediaDevice] {
+		var devices = [privmx.endpoint.stream.MediaDevice]()
+		//Audio input
+		let audioInDev = rtcClient.peerConnectionFactory.audioDeviceModule.inputDevice
+		let videoInDevs = RTCCameraVideoCapturer.captureDevices()
+		let desktopInDev = rtcClient.peerConnectionFactory.videoSource(forScreenCast: true)
+		devices.append(.init(
+			name: std.string(audioInDev.name),
+			id: std.string(audioInDev.deviceId),
+			type: privmx.endpoint.stream.Audio))
 		return devices
 	}
 	
-	public func addTrack(
-		_ track: privmx.endpoint.stream.MediaDevice,
+	public func addTrackFrom(
+		_ device: privmx.endpoint.stream.MediaDevice,
 		to streamHandle:privmx.endpoint.stream.StreamHandle
 	) throws -> Void{
 		guard let str = streams[streamHandle]
@@ -240,7 +245,7 @@ public class StreamApi: @unchecked Sendable{
 		print("found stream")
 		for entry in streamTracks{
 			if nil != entry.value.track?.trackId
-				&& entry.value.track!.trackId == String(track.id){
+				&& entry.value.track!.trackId == String(device.id){
 				throw PrivMXEndpointError.otherFailure(privmx.InternalError(
 					name: "Track already exists",
 					message: "",
@@ -251,7 +256,7 @@ public class StreamApi: @unchecked Sendable{
 		print("track is not a duplicate")
 		let sTrackId = UUID().uuidString
 		var sTrack : StreamTrackInfo
-		if track.type == privmx.endpoint.stream.Audio{
+		if device.type == privmx.endpoint.stream.Audio{
 			sTrack = StreamTrackInfo(
 				id: sTrackId,
 				streamHandle: streamHandle,
@@ -261,16 +266,24 @@ public class StreamApi: @unchecked Sendable{
 			print("adding audio track")
 			rtcClient.addAudioTrack(&sTrack, in: str.roomId)
 			
-		} else if track.type == privmx.endpoint.stream.Video{
+		} else if device.type == privmx.endpoint.stream.Video{
+			var vs = rtcClient.peerConnectionFactory.videoSource(forScreenCast: false)
+			var cptr = RTCCameraVideoCapturer(delegate: vs)
+			var dev = AVCaptureDevice.default(for: .video)
+			try cptr.startCapture(with: dev!, format: dev!.activeFormat, fps: 24)
+			var vtrack = rtcClient.peerConnectionFactory.videoTrack(
+				with: vs,
+				trackId: String(device.id))
 			sTrack = StreamTrackInfo(
 				id: sTrackId,
 				streamHandle: streamHandle,
-				track: rtcClient.peerConnectionFactory.videoTrack(
-					with: rtcClient.peerConnectionFactory.videoSource(),
-					trackId: sTrackId),
-				published: false)
-			rtcClient.addVideoTrack(sTrack)
-		} else if track.type == privmx.endpoint.stream.Desktop{
+				track: vtrack,
+				cameraCapturer: cptr,
+				published: false,
+			)
+			print("adding video track")
+			rtcClient.addVideoTrack(&sTrack,in:str.roomId)
+		} else if device.type == privmx.endpoint.stream.Desktop{
 			sTrack = StreamTrackInfo(
 				id: sTrackId,
 				streamHandle: streamHandle,
@@ -295,7 +308,7 @@ public class StreamApi: @unchecked Sendable{
 	) throws -> Void{
 		//streams[streamHandle]?.capturers.value.
 	}
-		
+	
 	
 	public func publishStream(
 		localStreamId: Int64
@@ -304,6 +317,11 @@ public class StreamApi: @unchecked Sendable{
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.otherFailure(res.error.value!)
 		}
+		let str = streams[localStreamId]!
+		var jc = try rtcClient.peerConnectionManager.getConnectionWithSession(streamRoomId: str.roomId, connectionType: .Publisher)
+		let strtrck = streamTracks
+		for
+		jc.peerConnection.add()
 	}
 	
 	
@@ -316,7 +334,7 @@ public class StreamApi: @unchecked Sendable{
 	//	return 1
 	//}
 	
-		public func subscribeToRemoteStreams(
+	public func subscribeToRemoteStreams(
 		in streamRoomId: String,
 		subscriptions: [privmx.endpoint.stream.StreamSubscription],
 		options: privmx.endpoint.stream.Settings
@@ -380,7 +398,7 @@ public class StreamApi: @unchecked Sendable{
 	func keyManagement(
 		_ disable: Bool
 	) throws -> Void{
-	
+		
 	}
 	
 	public func dropBrokenFrames(
@@ -389,7 +407,7 @@ public class StreamApi: @unchecked Sendable{
 	) throws -> Void{
 		
 	}
-
+	
 	//public func reconfigureStream(
 	//	localStreamId: Int64,
 	//	optionsJSON : String = "{}"
@@ -444,9 +462,9 @@ public class StreamApi: @unchecked Sendable{
 	///
 	/// - Returns: a properly formatted event subscription request.
 	public func buildSubscriptionQuery(
-	eventType: privmx.endpoint.stream.EventType,
-	selectorType: privmx.endpoint.stream.EventSelectorType,
-	selectorId: String
+		eventType: privmx.endpoint.stream.EventType,
+		selectorType: privmx.endpoint.stream.EventSelectorType,
+		selectorId: String
 	) throws -> privmx.SubscriptionQuery {
 		let res = api.buildSubscriptionQuery(eventType, selectorType, std.string(selectorId))
 		guard res.error.value == nil else {
@@ -459,6 +477,17 @@ public class StreamApi: @unchecked Sendable{
 			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(err)
 		}
 		return result
+	}
+	
+	public func setVideoStreamsHandler(
+		_ handler: ((String,RTCVideoTrack) -> Void)?
+	) -> Void {
+		rtcClient.setVideoStreamsHandler(handler)
+	}
+	public func setAudioStreamsHandler(
+		_ handler: ((String,RTCAudioTrack) -> Void)?
+	) -> Void {
+		rtcClient.setAudioStreamsHandler(handler)
 	}
 }
 
@@ -559,4 +588,4 @@ public extension EventHandler{
 	}
 }
 
-#endif // Streams
+// #endif // Streams

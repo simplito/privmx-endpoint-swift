@@ -8,7 +8,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#if Streams
+
+// #if Streams
 import Foundation
 import PrivMXEndpointSwiftNative
 import PrivMXEndpointStreamsLow
@@ -26,7 +27,6 @@ final class StreamData:@unchecked Sendable{
 	}
 	var status: Status
 	var roomId : String
-	
-	
+	var trackIds: [String]
 }
-#endif
+// #endif

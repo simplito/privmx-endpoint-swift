@@ -270,9 +270,9 @@ public enum PrivMXEndpointError : Error{
 	
 	case failedSyncingFile(privmx.InternalError)
 	
-#if Streams
+// #if Streams
 	case failedInitializingPeerConnection(privmx.InternalError)
-#endif
+// #endif
 	
 	/// Gets the Message of the error.
 	///
@@ -392,10 +392,10 @@ public enum PrivMXEndpointError : Error{
 					.failedSyncingFile(let err),
 					.failedGeneratingBIP39(let err):
 				return String(err.message)
-#if Streams
+// #if Streams
 			case .failedInitializingPeerConnection(let err):
 				return String(err.message)
-#endif
+// #endif
 		}
 	}
 	
@@ -518,10 +518,10 @@ public enum PrivMXEndpointError : Error{
 					.failedSyncingFile(let err),
 					.failedGeneratingBIP39(let err):
 				return err.code.value
-#if Streams
+// #if Streams
 			case .failedInitializingPeerConnection(let err):
 				return err.code.value
-#endif
+// #endif
 		}
 	}
 	
@@ -643,10 +643,10 @@ public enum PrivMXEndpointError : Error{
 					.failedSyncingFile(let err),
 					.failedGeneratingBIP39(let err):
 				return String(err.name)
-#if Streams
+// #if Streams
 			case .failedInitializingPeerConnection(let err):
 				return String(err.name)
-#endif
+// #endif
 		}
 	}
 	
@@ -768,10 +768,10 @@ public enum PrivMXEndpointError : Error{
 					.failedSyncingFile(let err),
 					.failedGeneratingBIP39(let err):
 				return String(err.description)
-#if Streams
+// #if Streams
 			case .failedInitializingPeerConnection(let err):
 				return String(err.description)
-#endif
+// #endif
 		}
 	}
 	
@@ -897,14 +897,14 @@ public enum PrivMXEndpointError : Error{
 				} else {
 					return nil
 				}
-#if Streams
+// #if Streams
 			case .failedInitializingPeerConnection(let err):
 				if let scope = err.scope.value{
 					return String(scope)
 				} else {
 					return nil
 				}
-#endif
+// #endif
 		}
 	}
 }

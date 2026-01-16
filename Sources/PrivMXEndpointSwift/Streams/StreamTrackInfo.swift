@@ -9,7 +9,7 @@
 // limitations under the License.
 //
 
-#if Streams
+// #if Streams
 import Foundation
 import WebRTC
 import PrivMXEndpointStreamsLow
@@ -23,8 +23,10 @@ struct StreamTrackInfo:Hashable,Identifiable{
 	var streamId:String? = nil
 	var streamHandle: privmx.endpoint.stream.StreamHandle
 	var track: RTCMediaStreamTrack? = nil
+	var cameraCapturer: RTCCameraVideoCapturer? = nil
+	var desktopCapturer: RTCDesktopCapturer? = nil
 	var dataChannelMeta: DataChannelMeta? = nil
 	var published: Bool
 	var markedToRemove: Bool? = nil
 }
-#endif // Streams
+// #endif // Streams

@@ -9,7 +9,7 @@
 // limitations under the License.
 //
 
-#if Streams
+// #if Streams
 import Foundation
 import WebRTC
 import PrivMXEndpointStreamsLow
@@ -19,12 +19,13 @@ import Synchronization
 public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate, @unchecked Sendable{
 	var streamRoomId: String
 	var currentKeys = MutexGuarded<PMXKeyStore>(PMXKeyStore())
-	weak var peerConnectionFactory : RTCPeerConnectionFactory?
-	weak private var peerConnectionManager: PeerConnectionManager?
+	weak var peerConnectionFactory : RTCPeerConnectionFactory!
+	weak private var peerConnectionManager: PeerConnectionManager!
 	
-	private var cryptors = MutexGuarded<[String : PMXFrameCryptorTransformer]>([:])
+	private var cryptors = MutexGuarded<[String : (PMXFrameCryptorTransformer,PMXFrameCryptorDelegate)]>([:])
 	
 	private var onFrameCallback:((Int64, Int64) -> Void)?
+	
 	
 	public init(
 		streamRoomId: String,
@@ -93,12 +94,19 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 	
 	private var onLocalCandidateChanged:((RTCPeerConnection,RTCIceCandidate,RTCIceCandidate,Int32,String)->Void)?
 	
-	private var onVideoTrack: ((String) -> Void)?
+	private nonisolated(unsafe) var onVideoTrack: ((String, RTCVideoTrack) -> Void)?
+	private nonisolated(unsafe) var onAudioTrack: ((String, RTCAudioTrack) -> Void)?
 	
 	public func setOnVideoTrackCallback(
-		_ cb: ((String) -> Void)?
+		_ cb: ((String, RTCVideoTrack) -> Void)?
 	) {
 		onVideoTrack = cb
+	}
+	
+	public func setOnAudioTrackCallback(
+		_ cb: ((String, RTCAudioTrack) -> Void)?
+	) {
+		onAudioTrack = cb
 	}
 	
 	public func setConnectionSignalingStateChangedCallback(
@@ -194,7 +202,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		_ peerConnection: RTCPeerConnection,
 		didChange stateChanged: RTCSignalingState
 	) -> Void {
-		print("Signaling state changed")
+		print("Signaling state changed to ",stateChanged.rawValue)
 		onConnectionSignalingStateChanged?(peerConnection,stateChanged)
 	}
 	
@@ -204,6 +212,9 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 	) -> Void {
 		print("StreamAdded")
 		onStreamAdded?(peerConnection,stream)
+		for vt in stream.videoTracks{
+			//onVideoTrack?("\(streamRoomId)-\(vt.trackId)", vt)
+		}
 		print("SA done")
 	}
 	
@@ -226,7 +237,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		_ peerConnection: RTCPeerConnection,
 		didChange newState: RTCIceConnectionState
 	) {
-		print("ICE connection state changed")
+		print("ICE connection state changed to", newState)
 		onIceConnectionStateChanged?(peerConnection,newState)
 	}
 	
@@ -268,6 +279,32 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 	) {
 		print("Started receiving on transciever")
 		onStartedReceiving?(peerConnection,transceiver)
+		let receiver = transceiver.receiver
+		if let track = receiver.track, var peerConnectionFactory {
+			var pfct = PMXFrameCryptorTransformer(for: receiver, with: peerConnectionFactory, pmxKeyStore: currentKeys.value)
+			var deleg = PMXFrameCryptorDelegate()
+			if pfct != nil{
+			pfct!.register(deleg)
+			pfct!.setDropFramesIfCryptionFailed(false)
+				cryptors.value[track.trackId] = (pfct!,deleg)
+			}
+			if track.kind == kRTCMediaStreamTrackKindVideo {
+				if let track = track as? RTCVideoTrack{
+					print("Got a Video Track")
+					onVideoTrack?("\(streamRoomId)-\(track.trackId)", track)
+				} else {
+					print("Couldn't cast media track as video track")
+				}
+			}
+			else if track.kind == kRTCMediaStreamTrackKindAudio {
+				if let track = track as? RTCAudioTrack{
+					print("Got an Audio Track")
+					onAudioTrack?("\(streamRoomId)-\(track.trackId)",track)
+				}else{
+					print("Couldn't cast media track as audio track")
+				}
+			}
+		}
 	}
 	
 	public func peerConnection(
@@ -278,18 +315,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 		print("receiver added streams")
 		onTracksAdded?(peerConnection,rtpReceiver,mediaStreams)
 		print("?0")
-		if let track = rtpReceiver.track, var peerConnectionFactory {
-			print("?1")
-			cryptors.value[track.trackId] = PMXFrameCryptorTransformer(for: rtpReceiver, with: peerConnectionFactory, pmxKeyStore: currentKeys.value)
-			print("?2")
-			if track.kind == kRTCMediaStreamTrackKindVideo {
-				onVideoTrack?("\(streamRoomId)-\(track.trackId)")
-				print("?3.a")
-			}
-			else if track.kind == kRTCMediaStreamTrackKindAudio {
-				print("?3.b")
-			}
-		}
+		
 	}
 	
 	public func peerConnection(
@@ -339,4 +365,4 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 								 reason)
 	}
 }
-#endif // Streams
+// #endif // Streams

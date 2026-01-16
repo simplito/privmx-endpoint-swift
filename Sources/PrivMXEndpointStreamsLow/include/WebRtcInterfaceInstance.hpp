@@ -109,7 +109,6 @@ typedef std::string(*UpdateKeysCallback)(UKCBParam*);//const UKCBParam&);
 class WebRtcInterfaceInstance: public privmx::endpoint::stream::WebRTCInterface{
 public:
 	virtual std::string createOfferAndSetLocalDescription(const std::string& streamRoomId) override {
-		std::cout<<"creatingOffer and setting Local Description"<<std::endl;
 		if (_coasldcb){
 			COASLDCBParam ctx {
 				.roomId = streamRoomId,
@@ -136,7 +135,6 @@ public:
 	virtual std::string createAnswerAndSetDescriptions(const std::string& streamRoomId,
 											   const std::string& sdp,
 											   const std::string& type)override{
-		std::cout<<"creating Answer and Setting Descriptions..."<<std::endl;
 		if(_caasdcb){
 			CAASDCBParam ctx {
 				.roomId = streamRoomId,

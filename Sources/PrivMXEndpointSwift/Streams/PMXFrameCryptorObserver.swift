@@ -9,16 +9,15 @@
 // limitations under the License.
 //
  
-#if Streams
+// #if Streams
 import WebRTC
 import Foundation
 
 public class PMXFrameCryptorDelegate: PMXFrameCryptorObserver{
 	public func onFrameCryptionStateChanged(_ state: PMXFrameCryptionState) {
-		
+	// TODO: implement onFrameCryptionStateChanged
+		print("FrameCryptionState changed to ",state, state.rawValue)
 	}
-	
-	
 }
 
-#endif
+// #endif

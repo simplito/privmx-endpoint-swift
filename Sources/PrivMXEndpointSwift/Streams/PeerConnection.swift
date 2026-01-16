@@ -8,7 +8,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#if Streams
+// #if Streams
 import PrivMXEndpointSwiftNative
 import PrivMXEndpointStreamsLow
 import WebRTC
@@ -38,4 +38,4 @@ public class PeerConnection: @unchecked Sendable{
 	
 }
 
-#endif // Streams
+// #endif // Streams

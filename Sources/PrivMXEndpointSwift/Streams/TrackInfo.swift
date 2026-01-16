@@ -9,7 +9,7 @@
 // limitations under the License.
 //
 
-#if Streams
+// #if Streams
 import Foundation
 import WebRTC
 import PrivMXEndpointStreamsLow
@@ -47,4 +47,4 @@ class DesktopTrackInfo{
 	var frameCryptor: PMXFrameCryptorTransformer
 	
 }
-#endif // Streams
+// #endif // Streams

@@ -9,7 +9,7 @@
 // limitations under the License.
 //
 
-#if Streams
+// #if Streams
 import Foundation
 import PrivMXEndpointStreamsLow
 import WebRTC
@@ -65,7 +65,7 @@ public final class PeerConnectionManager: Sendable {
 		
 		jv.delegate.setIceCandidateGeneratedCallback({
 			peerConnection,candidate in
-			
+			print("Setting IceCandidateGenerated")
 			let roomConnections = self.connections[streamRoomId] ?? [:]
 			let roomConnection = roomConnections[type]
 			if !candidate.sdp.isEmpty,let sessionId = roomConnection?.sessionId, sessionId > -1{
@@ -114,4 +114,4 @@ public final class PeerConnectionManager: Sendable {
 		return connections[streamRoomId]![connectionType]!
 	}
 }
-#endif // Streams
+// #endif // Streams

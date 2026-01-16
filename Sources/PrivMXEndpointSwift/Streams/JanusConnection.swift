@@ -9,7 +9,7 @@
 // limitations under the License.
 //
 
-#if Streams
+// #if Streams
 import Foundation
 import PrivMXEndpointStreamsLow
 import WebRTC
@@ -32,4 +32,4 @@ public final class JanusConnection: @unchecked Sendable{
 		self.delegate = delegate
 	}
 }
-#endif // Streams
+// #endif // Streams

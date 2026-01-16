@@ -51,9 +51,12 @@ let package = Package(
 				"PrivMXEndpointSwiftNative",
 				.target(
 					name: "PrivMXEndpointStreamsLow",
-					condition: .when(traits: ["Streams"])
+					//condition: .when(traits: ["Streams"])
 				),
-				.target(name: "WebRTC", condition: .when(traits: ["Streams"]))
+				.target(
+					name: "WebRTC",
+						//condition: .when(traits: ["Streams"])
+					   )
 			],
 			swiftSettings: [
 				.interoperabilityMode(.Cxx),
