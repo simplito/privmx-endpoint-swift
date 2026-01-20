@@ -32,7 +32,7 @@ public final class WebRTCClient: @unchecked Sendable{
 	nonisolated(unsafe)var clientId: String?
 	nonisolated(unsafe)var initOptions: InitOptions?
 	
-	nonisolated(unsafe)var keyStore = PMXKeyStore()
+	//nonisolated(unsafe)var keyStore = PMXKeyStore()
 	nonisolated(unsafe)var constraints = RTCMediaConstraints.init(mandatoryConstraints: [:], optionalConstraints: nil)
 	
 	nonisolated(unsafe)var lastProcessedAnswer: [String:privmx.endpoint.stream.SdpWithRoomModel] = [:]
@@ -99,6 +99,7 @@ public final class WebRTCClient: @unchecked Sendable{
 								isvalid: true,
 								errname: "",
 								errwhat: "")
+							print("create offer set loc desc")
 							try await pc.setLocalDescription(res)
 							done=true
 						} catch let err{
@@ -130,7 +131,9 @@ public final class WebRTCClient: @unchecked Sendable{
 					defer {done = true}
 					if let pc = try? this.peerConnectionManager.getConnectionWithSession(streamRoomId: String(streamRoomId), connectionType: .Subscriber).peerConnection{
 						do{
-							try await this.reconfigurePeerConnection(room: String(streamRoomId), sdp: String(sdp), type: String(type))
+							
+							print("create answer and set descs")
+							try await this.reconfigurePeerConnection(room: String(streamRoomId), sdp: String(sdp), type: String(type),connectionType: .Subscriber)
 							guard let lpa = this.lastProcessedAnswer[String(streamRoomId)]?.sdp
 							else {
 								throw PrivMXEndpointError.otherFailure(privmx.InternalError(name: "Missing answer sdp", message: "", description: ""))
@@ -170,8 +173,8 @@ public final class WebRTCClient: @unchecked Sendable{
 				//print(sdp)
 				Task.detached{@Sendable in
 					do{
-						
-						try await this.reconfigurePeerConnection(room: String(streamRoomId), sdp: String(sdp), type: String(type))
+						print("set answer and set rem desc")
+						try await this.reconfigurePeerConnection(room: String(streamRoomId), sdp: String(sdp), type: String(type),connectionType: .Publisher)
 						
 					}catch let err{
 						res = privmx.InternalError(
@@ -268,10 +271,14 @@ public final class WebRTCClient: @unchecked Sendable{
 	private init(
 		options:InitOptions? = nil
 	){
+		var encf = RTCDefaultVideoEncoderFactory()
+		
+		encf.preferredCodec = .init(name: kRTCVp8CodecName)
+		
 		self.initOptions = options
 		self.peerConnectionManager = PeerConnectionManager()
 		self.peerConnectionFactory = RTCPeerConnectionFactory(
-			encoderFactory: RTCDefaultVideoEncoderFactory(),
+			encoderFactory: encf,
 			decoderFactory: RTCDefaultVideoDecoderFactory()
 		)
 	}
@@ -279,7 +286,8 @@ public final class WebRTCClient: @unchecked Sendable{
 	private func reconfigurePeerConnection(
 		room:String,
 		sdp: String,
-		type: String
+		type: String,
+		connectionType: ConnectionType
 	) async throws -> Void{
 		print("reconfigure peer connection")
 		print("reconfigure type: ",type)
@@ -298,10 +306,11 @@ public final class WebRTCClient: @unchecked Sendable{
 		
 		var pc = try self.peerConnectionManager.getConnectionWithSession(
 			streamRoomId: String(room),
-			connectionType: .Subscriber).peerConnection
+			connectionType: connectionType).peerConnection
 		
+		print(1)
 		try await pc.setRemoteDescription(RTCSessionDescription(type: tp, sdp: String(sdp)))
-		
+		print(2)
 		let ans = try await pc.answer(for: RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: nil))
 		
 		let atype:std.string = switch ans.type{
@@ -320,6 +329,9 @@ public final class WebRTCClient: @unchecked Sendable{
 					description: "got \(type) but couldn't map it to RTCSdpType"))
 		}
 		self.lastProcessedAnswer[room] = privmx.endpoint.stream.SdpWithRoomModel(roomId: std.string(room), sdp: std.string(ans.sdp), type: atype)
+		
+		print("reconfigure: set local desc")
+		print(ans.type)
 		try await pc.setLocalDescription(ans)
 		
 		
@@ -341,13 +353,17 @@ public final class WebRTCClient: @unchecked Sendable{
 	func addVideoTrack(
 		_ track: inout StreamTrackInfo,
 		in streamRoomId: String
-	){
-		var pc = self.peerConnectionManager.connections[streamRoomId]?[.Publisher]?.peerConnection
-		pc?.add(
-			track.track!,
-			streamIds: [track.streamId!])
-		track.published = true
-		var source = peerConnectionFactory.audioSource(with: constraints)
+	)throws{
+		var jc = try peerConnectionManager.getConnectionWithSession(streamRoomId: streamRoomId, connectionType: .Publisher)
+		var sender = jc.peerConnection.add(track.track!, streamIds: [track.streamId!])
+		var pfct = PMXFrameCryptorTransformer(for: sender!, with: peerConnectionFactory, pmxKeyStore: jc.delegate.currentKeys.value)
+		var deleg = PMXFrameCryptorDelegate()
+		if pfct != nil{
+			pfct!.register(deleg)
+			pfct!.setDropFramesIfCryptionFailed(false)
+			jc.delegate.cryptors.value[track.track!.trackId] = (pfct!,deleg)
+		}
+		jc.senders.append(sender!)
 	}
 	func addDesktopTrack(_ track: StreamTrackInfo){}
 }

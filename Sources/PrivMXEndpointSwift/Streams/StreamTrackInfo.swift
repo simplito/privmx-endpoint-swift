@@ -16,13 +16,13 @@ import PrivMXEndpointStreamsLow
 
 public struct DataChannelMeta: Hashable{
 	var name: String
+	// TODO: fill Data Channel Metadata
 }
-
-struct StreamTrackInfo:Hashable,Identifiable{
-	var id: String
+public struct StreamTrackInfo:Hashable,Identifiable{
+	public var id: String
 	var streamId:String? = nil
 	var streamHandle: privmx.endpoint.stream.StreamHandle
-	var track: RTCMediaStreamTrack? = nil
+	public var track: RTCMediaStreamTrack? = nil
 	var cameraCapturer: RTCCameraVideoCapturer? = nil
 	var desktopCapturer: RTCDesktopCapturer? = nil
 	var dataChannelMeta: DataChannelMeta? = nil

@@ -19,9 +19,9 @@ public class StreamApi: @unchecked Sendable{
 	private var api: privmx.NativeStreamApiLowWrapper
 	public var rtcClient: WebRTCClient
 	
-	private var streams = [privmx.endpoint.stream.StreamHandle:StreamData]()
-	private var streamTracks = [String:StreamTrackInfo]()
-	private var dataChannels = [String:RTCDataChannel]()
+	 public var streams = [privmx.endpoint.stream.StreamHandle:StreamData]()
+	 public var streamTracks = [String:StreamTrackInfo]()
+	 public var dataChannels = [String:RTCDataChannel]()
 	private init(
 		api: privmx.NativeStreamApiLowWrapper,
 		rtcClient: WebRTCClient
@@ -232,7 +232,8 @@ public class StreamApi: @unchecked Sendable{
 	
 	public func addTrackFrom(
 		_ device: privmx.endpoint.stream.MediaDevice,
-		to streamHandle:privmx.endpoint.stream.StreamHandle
+		to streamHandle:privmx.endpoint.stream.StreamHandle,
+		withHandler handler:(RTCMediaStreamTrack) -> Void = {_ in}
 	) throws -> Void{
 		guard let str = streams[streamHandle]
 		else {
@@ -253,12 +254,15 @@ public class StreamApi: @unchecked Sendable{
 					code: nil, scope: nil))
 			}
 		}
+		//streams[streamHandle]!.trackIds.append(String(device.id))
+		
 		print("track is not a duplicate")
 		let sTrackId = UUID().uuidString
 		var sTrack : StreamTrackInfo
 		if device.type == privmx.endpoint.stream.Audio{
 			sTrack = StreamTrackInfo(
 				id: sTrackId,
+				streamId: String(device.id),
 				streamHandle: streamHandle,
 				track: rtcClient.peerConnectionFactory.audioTrack(
 					withTrackId: sTrackId),
@@ -270,27 +274,35 @@ public class StreamApi: @unchecked Sendable{
 			var vs = rtcClient.peerConnectionFactory.videoSource(forScreenCast: false)
 			var cptr = RTCCameraVideoCapturer(delegate: vs)
 			var dev = AVCaptureDevice.default(for: .video)
-			try cptr.startCapture(with: dev!, format: dev!.activeFormat, fps: 24)
+			dev?.activeFormat
 			var vtrack = rtcClient.peerConnectionFactory.videoTrack(
 				with: vs,
 				trackId: String(device.id))
 			sTrack = StreamTrackInfo(
 				id: sTrackId,
+				streamId: String(device.id),
 				streamHandle: streamHandle,
 				track: vtrack,
 				cameraCapturer: cptr,
 				published: false,
 			)
 			print("adding video track")
-			rtcClient.addVideoTrack(&sTrack,in:str.roomId)
+			try rtcClient.addVideoTrack(&sTrack,in:str.roomId)
+			handler(vtrack)
+			try cptr.startCapture(with: dev!, format: dev!.activeFormat, fps: 24)
 		} else if device.type == privmx.endpoint.stream.Desktop{
+			var vs = rtcClient.peerConnectionFactory.videoSource(forScreenCast: true)
+			var cptr = RTCDesktopCapturer(delegate: vs)
+			cptr.startCapture()
 			sTrack = StreamTrackInfo(
 				id: sTrackId,
+				streamId: String(device.id),
 				streamHandle: streamHandle,
 				track: rtcClient.peerConnectionFactory.videoTrack(
 					with: rtcClient.peerConnectionFactory.videoSource(
 						forScreenCast: true),
 					trackId: sTrackId),
+				desktopCapturer: cptr,
 				published: false)
 			
 			rtcClient.addDesktopTrack(sTrack)
@@ -299,7 +311,7 @@ public class StreamApi: @unchecked Sendable{
 		}
 		
 		streamTracks[sTrackId] = sTrack
-		
+		streams[streamHandle]?.trackIds.append(sTrackId)
 	}
 	
 	public func removeTrack(
@@ -311,17 +323,21 @@ public class StreamApi: @unchecked Sendable{
 	
 	
 	public func publishStream(
-		localStreamId: Int64
+		_ streamHandle: privmx.endpoint.stream.StreamHandle
 	) throws -> Void {
-		let res = api.publishStream(localStreamId)
+		let str = streams[streamHandle]!
+		var jc = try rtcClient.peerConnectionManager.getConnectionWithSession(
+			streamRoomId: str.roomId,
+			connectionType: .Publisher)
+		for t in str.trackIds{
+			guard let track = streamTracks[t]
+			else {throw PrivMXEndpointError.otherFailure(privmx.InternalError(name: "missing track", message: "", description: ""))}
+			streamTracks[t]?.published = true
+		}
+		let res = api.publishStream(streamHandle)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.otherFailure(res.error.value!)
 		}
-		let str = streams[localStreamId]!
-		var jc = try rtcClient.peerConnectionManager.getConnectionWithSession(streamRoomId: str.roomId, connectionType: .Publisher)
-		let strtrck = streamTracks
-		for
-		jc.peerConnection.add()
 	}
 	
 	

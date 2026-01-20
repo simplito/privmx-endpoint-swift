@@ -22,7 +22,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 	weak var peerConnectionFactory : RTCPeerConnectionFactory!
 	weak private var peerConnectionManager: PeerConnectionManager!
 	
-	private var cryptors = MutexGuarded<[String : (PMXFrameCryptorTransformer,PMXFrameCryptorDelegate)]>([:])
+	var cryptors = MutexGuarded<[String : (PMXFrameCryptorTransformer,PMXFrameCryptorDelegate)]>([:])
 	
 	private var onFrameCallback:((Int64, Int64) -> Void)?
 	
@@ -285,7 +285,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 			var deleg = PMXFrameCryptorDelegate()
 			if pfct != nil{
 			pfct!.register(deleg)
-			pfct!.setDropFramesIfCryptionFailed(false)
+			pfct!.setDropFramesIfCryptionFailed(true)
 				cryptors.value[track.trackId] = (pfct!,deleg)
 			}
 			if track.kind == kRTCMediaStreamTrackKindVideo {

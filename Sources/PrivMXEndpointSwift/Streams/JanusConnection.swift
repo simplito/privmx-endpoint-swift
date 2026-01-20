@@ -19,7 +19,7 @@ public final class JanusConnection: @unchecked Sendable{
 	var delegate: PmxPeerConnectionObserver
 	var sessionId: Int64
 	var hasSubscriptions : Bool
-	
+	var senders: [RTCRtpSender] = []
 	init(
 		peerConnection: RTCPeerConnection,
 		sessionId: Int64,

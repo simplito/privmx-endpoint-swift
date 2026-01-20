@@ -15,18 +15,22 @@ import PrivMXEndpointSwiftNative
 import PrivMXEndpointStreamsLow
 import WebRTC
 
-final class StreamData:@unchecked Sendable{
-	enum Status{
+final public class StreamData:@unchecked Sendable{
+	public enum Status{
 		case Offline,Online
 	}
+	
+	public internal(set) var status: Status
+	public internal(set) var roomId : String
+	public internal(set) var trackIds: [String]
+	
 	init(
 		roomId: String,
+		trackIds:[String] = []
 	){
 		self.status = .Offline
 		self.roomId = roomId
+		self.trackIds = trackIds
 	}
-	var status: Status
-	var roomId : String
-	var trackIds: [String]
 }
 // #endif

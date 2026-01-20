@@ -18,7 +18,7 @@ public enum ConnectionType:String,Sendable{
 	case Subscriber = "subscriber"
 	case Publisher = "publisher"
 }
-
+/*
 public class PeerConnection: @unchecked Sendable{
 	var rtcPeerConnection: RTCPeerConnection
 	var rtcPeerConnectionObserver: PmxPeerConnectionObserver
@@ -37,5 +37,5 @@ public class PeerConnection: @unchecked Sendable{
 	}
 	
 }
-
+*/
 // #endif // Streams
