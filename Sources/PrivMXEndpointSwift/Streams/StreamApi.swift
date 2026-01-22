@@ -14,6 +14,7 @@ import PrivMXEndpointSwiftNative
 import PrivMXEndpointStreamsLow
 import Foundation
 import WebRTC
+import ScreenCaptureKit
 
 public class StreamApi: @unchecked Sendable{
 	private var api: privmx.NativeStreamApiLowWrapper
@@ -260,15 +261,23 @@ public class StreamApi: @unchecked Sendable{
 		let sTrackId = UUID().uuidString
 		var sTrack : StreamTrackInfo
 		if device.type == privmx.endpoint.stream.Audio{
+			var asrc = rtcClient.peerConnectionFactory.audioSource(with: nil)
+			var dev = AVCaptureDevice.default(for: .audio)
+			
+			var atrack = rtcClient.peerConnectionFactory.audioTrack(
+				with: asrc,
+				trackId: String(device.id))
 			sTrack = StreamTrackInfo(
 				id: sTrackId,
 				streamId: String(device.id),
 				streamHandle: streamHandle,
-				track: rtcClient.peerConnectionFactory.audioTrack(
-					withTrackId: sTrackId),
-				published: true)
+				track: atrack,
+				published: false,
+			)
 			print("adding audio track")
-			rtcClient.addAudioTrack(&sTrack, in: str.roomId)
+			
+			try rtcClient.addVideoTrack(&sTrack,in:str.roomId)
+			handler(atrack)
 			
 		} else if device.type == privmx.endpoint.stream.Video{
 			var vs = rtcClient.peerConnectionFactory.videoSource(forScreenCast: false)
@@ -293,19 +302,23 @@ public class StreamApi: @unchecked Sendable{
 		} else if device.type == privmx.endpoint.stream.Desktop{
 			var vs = rtcClient.peerConnectionFactory.videoSource(forScreenCast: true)
 			var cptr = RTCDesktopCapturer(delegate: vs)
-			cptr.startCapture()
+			//var dev = AVCaptureDevice.default(for: .)
+			//dev?.activeFormat
+			var vtrack = rtcClient.peerConnectionFactory.videoTrack(
+				with: vs,
+				trackId: String(device.id))
 			sTrack = StreamTrackInfo(
 				id: sTrackId,
 				streamId: String(device.id),
 				streamHandle: streamHandle,
-				track: rtcClient.peerConnectionFactory.videoTrack(
-					with: rtcClient.peerConnectionFactory.videoSource(
-						forScreenCast: true),
-					trackId: sTrackId),
+				track: vtrack,
 				desktopCapturer: cptr,
-				published: false)
-			
-			rtcClient.addDesktopTrack(sTrack)
+				published: false,
+			)
+			print("adding video track")
+			try rtcClient.addVideoTrack(&sTrack,in:str.roomId)
+			handler(vtrack)
+			//try cptr.startCapture(with: dev!, format: dev!.activeFormat, fps: 24)
 		} else {
 			throw PrivMXEndpointError.otherFailure(privmx.InternalError(name: "Unknown Track Type", message: "", description: ""))
 		}

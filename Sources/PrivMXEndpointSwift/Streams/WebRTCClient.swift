@@ -341,13 +341,24 @@ public final class WebRTCClient: @unchecked Sendable{
 	func addAudioTrack(
 		_ track: inout StreamTrackInfo,
 		in streamRoomId: String
-	){
+	) throws {
 		var pc = self.peerConnectionManager.connections[streamRoomId]?[.Publisher]?.peerConnection
+		var source = peerConnectionFactory.audioSource(with: constraints)
 		pc?.add(
 			track.track!,
 			streamIds: [track.streamId!])
 		track.published = true
-		var source = peerConnectionFactory.audioSource(with: constraints)
+		var jc = try peerConnectionManager.getConnectionWithSession(streamRoomId: streamRoomId, connectionType: .Publisher)
+		var sender = jc.peerConnection.add(track.track!, streamIds: [track.streamId!])
+		var pfct = PMXFrameCryptorTransformer(for: sender!, with: peerConnectionFactory, pmxKeyStore: jc.delegate.currentKeys.value)
+		var deleg = PMXFrameCryptorDelegate()
+		if pfct != nil{
+			pfct!.register(deleg)
+			pfct!.setDropFramesIfCryptionFailed(false)
+			jc.delegate.cryptors.value[track.track!.trackId] = (pfct!,deleg)
+		}
+		jc.senders.append(sender!)
+
 		
 	}
 	func addVideoTrack(
