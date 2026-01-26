@@ -24,7 +24,9 @@ public struct StreamTrackInfo:Hashable,Identifiable{
 	var streamHandle: privmx.endpoint.stream.StreamHandle
 	public var track: RTCMediaStreamTrack? = nil
 	var cameraCapturer: RTCCameraVideoCapturer? = nil
+	#if os(macOS)
 	var desktopCapturer: RTCDesktopCapturer? = nil
+	#endif
 	var dataChannelMeta: DataChannelMeta? = nil
 	var published: Bool
 	var markedToRemove: Bool? = nil

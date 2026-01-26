@@ -12,11 +12,11 @@ public final class PMXAudioPlayer: NSObject, RTCAudioRenderer{
 	public let node: AVAudioPlayerNode = AVAudioPlayerNode()
 	public func render(pcmBuffer: AVAudioPCMBuffer) {
 		do{
-			try node.scheduleBuffer(pcmBuffer) {
-				print("scheduled")
-			}
+			print("scheduling")
+			try node.scheduleBuffer(pcmBuffer)
 		}catch {
 			print(error)
+			print("Failed scheduling")
 		}
 	}
 }

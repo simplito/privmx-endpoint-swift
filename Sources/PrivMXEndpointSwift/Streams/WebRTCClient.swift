@@ -32,7 +32,6 @@ public final class WebRTCClient: @unchecked Sendable{
 	nonisolated(unsafe)var clientId: String?
 	nonisolated(unsafe)var initOptions: InitOptions?
 	
-	//nonisolated(unsafe)var keyStore = PMXKeyStore()
 	nonisolated(unsafe)var constraints = RTCMediaConstraints.init(mandatoryConstraints: [:], optionalConstraints: nil)
 	
 	nonisolated(unsafe)var lastProcessedAnswer: [String:privmx.endpoint.stream.SdpWithRoomModel] = [:]
@@ -79,10 +78,9 @@ public final class WebRTCClient: @unchecked Sendable{
 		}
 	}
 	
-	static func create(
-		with options: InitOptions? = nil
-	) -> WebRTCClient{
-		nonisolated(unsafe)var client = WebRTCClient(options:options)
+	private static func setCppCallbacksInClient(
+	_ client: inout WebRTCClient
+	) {
 		client.webRtcInstance = privmx.WRTCIIHolder(
 			{ context in//CreateOfferAndSetLocalDescription
 				nonisolated(unsafe)var this = Unmanaged<WebRTCClient>.fromOpaque(context!.pointee.context).takeUnretainedValue()
@@ -265,6 +263,41 @@ public final class WebRTCClient: @unchecked Sendable{
 				return res
 			},
 			Unmanaged.passUnretained(client).toOpaque())
+
+	}
+	
+#if os(iOS)
+	static func create(
+		audioHandler: AVAudioEngineRTCAudioDevice,
+		with options: InitOptions? = nil
+	) -> WebRTCClient{
+		nonisolated(unsafe)var client = WebRTCClient(audioDevice: audioHandler,options:options)
+		setCppCallbacksInClient(&client)
+		return client
+	}
+	
+	private init(
+		audioDevice: AVAudioEngineRTCAudioDevice,
+		options:InitOptions? = nil
+	){
+		var encf = RTCDefaultVideoEncoderFactory()
+		
+		encf.preferredCodec = .init(name: kRTCVp8CodecName)
+		
+		self.initOptions = options
+		self.peerConnectionManager = PeerConnectionManager()
+		self.peerConnectionFactory = RTCPeerConnectionFactory(
+			encoderFactory: encf,
+			decoderFactory: RTCDefaultVideoDecoderFactory(),
+			audioDevice: audioDevice
+		)
+	}
+#else
+	static func create(
+		with options: InitOptions? = nil
+	) -> WebRTCClient{
+		nonisolated(unsafe)var client = WebRTCClient(options:options)
+		setCppCallbacksInClient(&client)
 		return client
 	}
 	
@@ -282,6 +315,7 @@ public final class WebRTCClient: @unchecked Sendable{
 			decoderFactory: RTCDefaultVideoDecoderFactory()
 		)
 	}
+	#endif
 	
 	private func reconfigurePeerConnection(
 		room:String,

@@ -14,8 +14,9 @@ import PrivMXEndpointSwiftNative
 import PrivMXEndpointStreamsLow
 import Foundation
 import WebRTC
+#if os(macOS)
 import ScreenCaptureKit
-
+#endif
 public class StreamApi: @unchecked Sendable{
 	private var api: privmx.NativeStreamApiLowWrapper
 	public var rtcClient: WebRTCClient
@@ -23,6 +24,21 @@ public class StreamApi: @unchecked Sendable{
 	 public var streams = [privmx.endpoint.stream.StreamHandle:StreamData]()
 	 public var streamTracks = [String:StreamTrackInfo]()
 	 public var dataChannels = [String:RTCDataChannel]()
+	#if os(iOS)
+	public private(set) var audioHandler : AVAudioEngineRTCAudioDevice
+	private init(
+		api: privmx.NativeStreamApiLowWrapper,
+		audioHandler:AVAudioEngineRTCAudioDevice,
+		rtcClient: WebRTCClient
+	) {
+		self.api = api
+		self.rtcClient = rtcClient
+		self.audioHandler = audioHandler
+		self.rtcClient.bindTrickleImpl(){ sessionId, candidate in
+			self.api.trickle(sessionId, std.string(candidate))}
+		self.rtcClient.bindCreatePeerConnectionImpl()
+	}
+#else
 	private init(
 		api: privmx.NativeStreamApiLowWrapper,
 		rtcClient: WebRTCClient
@@ -34,7 +50,27 @@ public class StreamApi: @unchecked Sendable{
 			self.api.trickle(sessionId, std.string(candidate))}
 		self.rtcClient.bindCreatePeerConnectionImpl()
 	}
+#endif
 	
+#if os(iOS)
+	/// Creates the API instance
+	public static func create(
+		connection: Connection,
+		audioHandler: AVAudioEngineRTCAudioDevice,
+		eventApi: inout EventApi
+	) throws -> StreamApi{
+		let low = privmx.NativeStreamApiLowWrapper.create(connection.api, &eventApi.api)
+		guard var api = low.result.value
+		else {
+			throw PrivMXEndpointError.otherFailure(privmx.InternalError())
+		}
+		return StreamApi(
+			api: api,
+			audioHandler:audioHandler,
+			rtcClient: WebRTCClient.create(audioHandler:audioHandler)
+		)
+	}
+#else
 	/// Creates the API instance
 	public static func create(
 		connection: Connection,
@@ -45,13 +81,13 @@ public class StreamApi: @unchecked Sendable{
 		else {
 			throw PrivMXEndpointError.otherFailure(privmx.InternalError())
 		}
-		
+		var ah = ()
 		return StreamApi(
 			api: api,
 			rtcClient: WebRTCClient.create()
 		)
 	}
-	
+#endif
 	// MARK: - Rooms
 	
 	/// Creates a StreamRoom on the Bridge
@@ -300,10 +336,10 @@ public class StreamApi: @unchecked Sendable{
 			handler(vtrack)
 			try cptr.startCapture(with: dev!, format: dev!.activeFormat, fps: 24)
 		} else if device.type == privmx.endpoint.stream.Desktop{
+#if os(macOS)
+			// TODO: Screen Share
 			var vs = rtcClient.peerConnectionFactory.videoSource(forScreenCast: true)
 			var cptr = RTCDesktopCapturer(delegate: vs)
-			//var dev = AVCaptureDevice.default(for: .)
-			//dev?.activeFormat
 			var vtrack = rtcClient.peerConnectionFactory.videoTrack(
 				with: vs,
 				trackId: String(device.id))
@@ -319,6 +355,9 @@ public class StreamApi: @unchecked Sendable{
 			try rtcClient.addVideoTrack(&sTrack,in:str.roomId)
 			handler(vtrack)
 			//try cptr.startCapture(with: dev!, format: dev!.activeFormat, fps: 24)
+			#else
+			throw PrivMXEndpointError.otherFailure(privmx.InternalError(name: "ILLEGAL op", message: "Screen share not available outside macos", description: ""))
+#endif
 		} else {
 			throw PrivMXEndpointError.otherFailure(privmx.InternalError(name: "Unknown Track Type", message: "", description: ""))
 		}
