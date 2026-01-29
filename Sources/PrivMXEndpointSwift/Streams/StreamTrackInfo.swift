@@ -1,6 +1,6 @@
 //
 // PrivMX Endpoint Swift
-// Copyright © 2024 Simplito sp. z o.o.
+// Copyright © 2026 Simplito sp. z o.o.
 //
 // This file is part of PrivMX Platform (https://privmx.dev).
 // This software is Licensed under the MIT License.
@@ -24,7 +24,7 @@ public struct StreamTrackInfo:Hashable,Identifiable{
 	var streamHandle: privmx.endpoint.stream.StreamHandle
 	public var track: RTCMediaStreamTrack? = nil
 	var cameraCapturer: RTCCameraVideoCapturer? = nil
-	var desktopCapturer: RTCDesktopCapturer? = nil
+	var desktopCapturer: PMXDesktopCapturer? = nil
 	var dataChannelMeta: DataChannelMeta? = nil
 	var published: Bool
 	var markedToRemove: Bool? = nil

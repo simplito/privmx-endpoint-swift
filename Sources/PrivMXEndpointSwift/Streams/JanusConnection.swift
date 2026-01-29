@@ -1,6 +1,6 @@
 //
 // PrivMX Endpoint Swift
-// Copyright © 2024 Simplito sp. z o.o.
+// Copyright © 2026 Simplito sp. z o.o.
 //
 // This file is part of PrivMX Platform (https://privmx.dev).
 // This software is Licensed under the MIT License.

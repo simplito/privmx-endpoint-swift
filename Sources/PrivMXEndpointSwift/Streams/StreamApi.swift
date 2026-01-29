@@ -1,6 +1,6 @@
 //
 // PrivMX Endpoint Swift
-// Copyright © 2024 Simplito sp. z o.o.
+// Copyright © 2026 Simplito sp. z o.o.
 //
 // This file is part of PrivMX Platform (https://privmx.dev).
 // This software is Licensed under the MIT License.
@@ -232,9 +232,9 @@ public class StreamApi: @unchecked Sendable{
 	}
 	
 	public func addTrackFrom(
-		_ device: privmx.endpoint.stream.MediaDevice,
+		_ device: TrackType,
 		to streamHandle:privmx.endpoint.stream.StreamHandle,
-		withHandler handler:(RTCMediaStreamTrack) -> Void = {_ in}
+		withHandler handler: @escaping (RTCMediaStreamTrack) -> Void = {_ in}
 	) throws -> Void{
 		guard let str = streams[streamHandle]
 		else {
@@ -247,7 +247,7 @@ public class StreamApi: @unchecked Sendable{
 		print("found stream")
 		for entry in streamTracks{
 			if nil != entry.value.track?.trackId
-				&& entry.value.track!.trackId == String(device.id){
+				&& entry.value.track!.trackId == String(device.getId()){
 				throw PrivMXEndpointError.otherFailure(privmx.InternalError(
 					name: "Track already exists",
 					message: "",
@@ -260,16 +260,17 @@ public class StreamApi: @unchecked Sendable{
 		print("track is not a duplicate")
 		let sTrackId = UUID().uuidString
 		var sTrack : StreamTrackInfo
-		if device.type == privmx.endpoint.stream.Audio{
+		switch device {
+			case .Audio(let id):
 			var asrc = rtcClient.peerConnectionFactory.audioSource(with: nil)
 			var dev = AVCaptureDevice.default(for: .audio)
 			
 			var atrack = rtcClient.peerConnectionFactory.audioTrack(
 				with: asrc,
-				trackId: String(device.id))
+				trackId: String(id))
 			sTrack = StreamTrackInfo(
 				id: sTrackId,
-				streamId: String(device.id),
+				streamId: String(id),
 				streamHandle: streamHandle,
 				track: atrack,
 				published: false,
@@ -278,18 +279,19 @@ public class StreamApi: @unchecked Sendable{
 			
 			try rtcClient.addVideoTrack(&sTrack,in:str.roomId)
 			handler(atrack)
-			
-		} else if device.type == privmx.endpoint.stream.Video{
+			streamTracks[sTrackId] = sTrack
+			streams[streamHandle]?.trackIds.append(sTrackId)
+		 case .Video(let id):
 			var vs = rtcClient.peerConnectionFactory.videoSource(forScreenCast: false)
 			var cptr = RTCCameraVideoCapturer(delegate: vs)
 			var dev = AVCaptureDevice.default(for: .video)
 			dev?.activeFormat
 			var vtrack = rtcClient.peerConnectionFactory.videoTrack(
 				with: vs,
-				trackId: String(device.id))
+				trackId: String(id))
 			sTrack = StreamTrackInfo(
 				id: sTrackId,
-				streamId: String(device.id),
+				streamId: String(id),
 				streamHandle: streamHandle,
 				track: vtrack,
 				cameraCapturer: cptr,
@@ -299,32 +301,40 @@ public class StreamApi: @unchecked Sendable{
 			try rtcClient.addVideoTrack(&sTrack,in:str.roomId)
 			handler(vtrack)
 			try cptr.startCapture(with: dev!, format: dev!.activeFormat, fps: 24)
-		} else if device.type == privmx.endpoint.stream.Desktop{
-			var vs = rtcClient.peerConnectionFactory.videoSource(forScreenCast: true)
-			var cptr = RTCDesktopCapturer(delegate: vs)
-			//var dev = AVCaptureDevice.default(for: .)
-			//dev?.activeFormat
-			var vtrack = rtcClient.peerConnectionFactory.videoTrack(
-				with: vs,
-				trackId: String(device.id))
-			sTrack = StreamTrackInfo(
-				id: sTrackId,
-				streamId: String(device.id),
-				streamHandle: streamHandle,
-				track: vtrack,
-				desktopCapturer: cptr,
-				published: false,
-			)
-			print("adding video track")
-			try rtcClient.addVideoTrack(&sTrack,in:str.roomId)
-			handler(vtrack)
-			//try cptr.startCapture(with: dev!, format: dev!.activeFormat, fps: 24)
-		} else {
+			streamTracks[sTrackId] = sTrack
+			streams[streamHandle]?.trackIds.append(sTrackId)
+#if os(macOS)
+			case .Desktop(let id, let filter):
+				
+				var vs = self.rtcClient.peerConnectionFactory.videoSource(forScreenCast: true)
+				var cptr = try? PMXDesktopCapturer(videoDelegate: vs,
+												   filter: filter,
+												   configuration: .init())
+				//var dev = AVCaptureDevice.default(for: .)
+				//dev?.activeFormat
+				var vtrack = self.rtcClient.peerConnectionFactory.videoTrack(
+					with: vs,
+					trackId: String(id))
+				var sTrack = StreamTrackInfo(
+					id: sTrackId,
+					streamId: String(id),
+					streamHandle: streamHandle,
+					track: vtrack,
+					desktopCapturer: cptr,
+					published: false,
+				)
+				print("adding video track")
+				try? self.rtcClient.addVideoTrack(&sTrack,in:str.roomId)
+				handler(vtrack)
+				Task{try? await cptr?.startRecording()}
+				self.streamTracks[sTrackId] = sTrack
+				self.streams[streamHandle]?.trackIds.append(sTrackId)
+#endif // os(macOS)
+		default:
 			throw PrivMXEndpointError.otherFailure(privmx.InternalError(name: "Unknown Track Type", message: "", description: ""))
 		}
 		
-		streamTracks[sTrackId] = sTrack
-		streams[streamHandle]?.trackIds.append(sTrackId)
+		
 	}
 	
 	public func removeTrack(
@@ -431,8 +441,8 @@ public class StreamApi: @unchecked Sendable{
 	}
 	
 	public func dropBrokenFrames(
-		in roomId:Bool,
-		_ enable: Bool
+		_ enable: Bool,
+		in roomId:Bool
 	) throws -> Void{
 		
 	}
