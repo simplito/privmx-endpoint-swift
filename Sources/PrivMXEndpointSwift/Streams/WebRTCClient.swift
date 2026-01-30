@@ -92,7 +92,7 @@ public final class WebRTCClient: @unchecked Sendable{
 					@Sendable in
 					if let pc = try? this.peerConnectionManager.getConnectionWithSession(streamRoomId: String(streamRoomId), connectionType: .Publisher).peerConnection{
 						do{
-							let res = try await pc.offer(for: RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: [:]))
+							let res = try await pc.offer(for: this.constraints)
 							result = privmx.StringWithError(
 								result: std.string(res.sdp),
 								isvalid: true,

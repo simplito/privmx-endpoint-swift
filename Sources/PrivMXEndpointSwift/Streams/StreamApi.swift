@@ -365,6 +365,27 @@ public class StreamApi: @unchecked Sendable{
 				Task{try? await cptr?.startRecording()}
 				self.streamTracks[sTrackId] = sTrack
 				self.streams[streamHandle]?.trackIds.append(sTrackId)
+#else
+			case .Desktop(let id):
+				var vs = self.rtcClient.peerConnectionFactory.videoSource(forScreenCast: true)
+				var cptr = try? PMXDesktopCapturer(videoDelegate: vs)
+				var vtrack = self.rtcClient.peerConnectionFactory.videoTrack(
+					with: vs,
+					trackId: String(id))
+				var sTrack = StreamTrackInfo(
+					id: sTrackId,
+					streamId: String(id),
+					streamHandle: streamHandle,
+					track: vtrack,
+					desktopCapturer: cptr,
+					published: false,
+				)
+				print("adding video track")
+				try? self.rtcClient.addVideoTrack(&sTrack,in:str.roomId)
+				handler(vtrack)
+				Task{try? await cptr?.startRecording()}
+				self.streamTracks[sTrackId] = sTrack
+				self.streams[streamHandle]?.trackIds.append(sTrackId)
 #endif // os(macOS)
 		default:
 			throw PrivMXEndpointError.otherFailure(privmx.InternalError(name: "Unknown Track Type", message: "", description: ""))

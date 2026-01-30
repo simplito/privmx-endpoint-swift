@@ -8,24 +8,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
+#if os(macOS)
 import ScreenCaptureKit
+#else
+import ReplayKit
+#endif
 
 public enum TrackType:Equatable{
 	case Audio(Id:String)
 	case Video(Id:String)
+#if os(macOS)
 	case Desktop(Id:String,filter: SCContentFilter)
+#else
+	case Desktop(Id:String)
+#endif
 	
 	func getId(
 	) -> String {
 		switch self{
-				case .Audio(let id),
+#if os(macOS)
+			case .Audio(let id),
 					.Desktop(let id,_),
 					.Video(let id):
 				return id
+#else
+			case .Audio(let id),
+					.Desktop(let id),
+					.Video(let id):
+				return id
+#endif
 		}
 	}
-	
+#if os(macOS)
 	func getFilter(
 	) -> SCContentFilter?{
 		switch self {
@@ -33,4 +47,5 @@ public enum TrackType:Equatable{
 			default: nil
 		}
 	}
+#endif
 }

@@ -10,10 +10,14 @@
 //
 
 import WebRTC
+#if os(macOS)
 import ScreenCaptureKit
+#else
+import ReplayKit
+#endif
 import PrivMXEndpointSwiftNative
 
-
+#if os(macOS)
 final class StreamOutput:NSObject, SCStreamOutput{
 	weak var capturer: PMXDesktopCapturer?
 	public func stream(
@@ -33,13 +37,13 @@ final class StreamOutput:NSObject, SCStreamOutput{
 	}
 
 }
-
+#endif
 public final class PMXDesktopCapturer: RTCVideoCapturer, @unchecked Sendable{
 
 	private var sampleHandlerQueue = DispatchQueue(label: "sample_handler")
 	private var audioSource: RTCAudioSource?
+#if os(macOS)
 	nonisolated(unsafe) private let stream: SCStream
-	var x : RTCMediaSource?
 	let output = StreamOutput()
 	public init(
 		videoDelegate: RTCVideoCapturerDelegate,
@@ -84,5 +88,29 @@ public final class PMXDesktopCapturer: RTCVideoCapturer, @unchecked Sendable{
 			try await stream.startCapture()
 		}
 	}
+#else
+	let output = RPScreenRecorder.shared()
+	
+	public init(
+		videoDelegate: RTCVideoCapturerDelegate,
+		audioDelegate: RTCAudioSource? = nil
+	) {
+		super.init(delegate: videoDelegate)
+	}
+	
+	public func startRecording(){
+		output.startCapture(handler:{
+			sampleBuffer,type,err in
+			if let imbuf = CMSampleBufferGetImageBuffer(sampleBuffer){
+				let pixbuf = RTCCVPixelBuffer(pixelBuffer: imbuf)
+				self.delegate?.capturer(self, didCapture: RTCVideoFrame(
+					buffer: pixbuf,
+					rotation: RTCVideoRotation._0,
+					timeStampNs: Int64(sampleBuffer.decodeTimeStamp.value)))
+			}
+		})
+	}
+		
+#endif
 	
 }
