@@ -16,14 +16,14 @@ import WebRTC
 
 public final class JanusConnection: @unchecked Sendable{
 	var peerConnection : RTCPeerConnection
-	var delegate: PmxPeerConnectionObserver
+	var delegate: PMXPeerConnectionDelegate
 	var sessionId: Int64
 	var hasSubscriptions : Bool
 	var senders: [RTCRtpSender] = []
 	init(
 		peerConnection: RTCPeerConnection,
 		sessionId: Int64,
-		delegate:PmxPeerConnectionObserver,
+		delegate:PMXPeerConnectionDelegate,
 		hasSubscriptions: Bool
 	) {
 		self.peerConnection = peerConnection
@@ -32,4 +32,79 @@ public final class JanusConnection: @unchecked Sendable{
 		self.delegate = delegate
 	}
 }
+
+public class JanusConnection2: @unchecked Sendable{
+	var peerConnection : RTCPeerConnection
+	var peerConnectionDelegate: PMXPeerConnectionDelegate
+	var sessionId: Int64 = -1
+	init(
+		peerConnection: RTCPeerConnection,
+		peerConnectionDelegate:PMXPeerConnectionDelegate,
+	) {
+		self.peerConnection = peerConnection
+		self.peerConnectionDelegate = peerConnectionDelegate
+	}
+	
+	func reconfigure(
+		sdp: String,
+		type: String,
+		roomId:String
+	) async throws -> privmx.endpoint.stream.SdpWithRoomModel{
+		print("reconfigure peer connection")
+		print("reconfigure type: ",type)
+		let tp: RTCSdpType = switch type {
+			case "answer","Answer":
+					.answer
+			case "PrAnswer","pranswer","prAnswer":
+					.prAnswer
+			case "Offer","offer":
+					.offer
+			case "rollback","Rollback":
+					.rollback
+			default:
+				throw PrivMXEndpointError.otherFailure(privmx.InternalError(name: "Unknown Type", message: "", description: "got \(type) but couldn't map it to RTCSdpType"))
+		}
+		
+		var pc = try self.peerConnection
+		
+		try await pc.setRemoteDescription(RTCSessionDescription(type: tp, sdp: String(sdp)))
+		let ans = try await pc.answer(for: RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: nil))
+		
+		let atype:std.string = switch ans.type{
+			case .answer:
+				"answer"
+			case .prAnswer:
+				"prAnswer"
+			case .offer:
+				"offer"
+			case .rollback:
+				"rollback"
+			@unknown default:
+				throw PrivMXEndpointError.otherFailure(privmx.InternalError(
+					name: "Unknown Type",
+					message: "",
+					description: "got \(type) but couldn't map it to RTCSdpType"))
+		}
+		let res = privmx.endpoint.stream.SdpWithRoomModel(roomId: std.string(roomId), sdp: std.string(ans.sdp), type: atype)
+		
+		try await pc.setLocalDescription(ans)
+		
+		return res
+	}
+	
+	func updateSessionId(
+		_ sid: Int64
+	) -> Void {
+		self.sessionId = sid
+	}
+}
+
+public final class JanusPublisher:JanusConnection2{
+	var audioTracks: [String: AudioTrackInfo] = [:]
+	var videoTracks: [String: VideoTrackInfo] = [:]
+	var videoCapturers: [String: RTCVideoCapturer] = [:]
+}
+
+public final class JanusSubscriber:JanusConnection2{}
+
 // #endif // Streams

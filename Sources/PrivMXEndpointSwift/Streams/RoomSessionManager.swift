@@ -1,0 +1,246 @@
+//
+// PrivMX Endpoint Swift
+// Copyright © 2026 Simplito sp. z o.o.
+//
+// This file is part of PrivMX Platform (https://privmx.dev).
+// This software is Licensed under the MIT License.
+//
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+import PrivMXEndpointSwiftNative
+import WebRTC
+import Foundation
+
+final class RoomSessionManager{
+	private var rtcConfiguration: RTCConfiguration = RTCConfiguration()
+	nonisolated(unsafe)var webRtcInstance: privmx.WRTCIIHolder!
+	
+	
+	nonisolated(unsafe) var streamHandles: [privmx.endpoint.stream.StreamHandle:String] = [:]
+	nonisolated(unsafe) var roomSessions: [String:RoomJanusSession] = [:]
+	
+	private let onTrickle: @Sendable (Int64,String) throws -> Void
+	private let peerConnectionFactory: RTCPeerConnectionFactory
+	
+	
+	
+	func create(
+		onTrickle: @escaping @Sendable (Int64,String) throws -> Void,
+		peerConnectionFactory: RTCPeerConnectionFactory
+	) -> RoomSessionManager {
+		var mgr = RoomSessionManager(
+			onTrickle: onTrickle,
+			peerConnectionFactory: peerConnectionFactory)
+		
+		return mgr
+	}
+	
+	func createPeerConnection(
+		streamRoomId: String
+	) -> (RTCPeerConnection?, RTCPeerConnectionDelegate){
+		var observer = PMXPeerConnectionDelegate(
+			streamRoomId: streamRoomId,
+			peerConnectionFactory: self.peerConnectionFactory
+		)
+		return (self.peerConnectionFactory.peerConnection(
+			with: RTCConfiguration(),
+			constraints: RTCMediaConstraints.init(
+				mandatoryConstraints: [:],
+				optionalConstraints: nil),
+			delegate: observer), observer)
+	}
+	
+	private init(
+		onTrickle: @escaping @Sendable (Int64,String) throws -> Void,
+		peerConnectionFactory: RTCPeerConnectionFactory
+	){
+		self.onTrickle = onTrickle
+		self.peerConnectionFactory = peerConnectionFactory
+	}
+	
+	private static func setCppCallbacksInClient(
+	_ client: inout RoomSessionManager
+	) {
+		client.webRtcInstance = privmx.WRTCIIHolder(
+			{ context in//CreateOfferAndSetLocalDescription
+				nonisolated(unsafe)var this = Unmanaged<RoomSessionManager>.fromOpaque(context!.pointee.context).takeUnretainedValue()
+				nonisolated(unsafe)var result = privmx.StringWithError()
+				nonisolated(unsafe)var done = false
+				nonisolated(unsafe) let streamRoomId = context!.pointee.roomId
+				Task.detached(){
+					@Sendable in
+					if let jc = this.roomSessions[String(streamRoomId)]?.publisher{
+						do{
+							let res = try await jc.peerConnection.offer(for: RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: [:]))
+							result = privmx.StringWithError(
+								result: std.string(res.sdp),
+								isvalid: true,
+								errname: "",
+								errwhat: "")
+							print("create offer set loc desc")
+							try await jc.peerConnection.setLocalDescription(res)
+							done=true
+						} catch let err{
+							result = privmx.StringWithError(
+								result: "",
+								isvalid: true,
+								errname: "Failed creating SDP",
+								errwhat: std.string(err.localizedDescription))
+							done = true
+						}
+						
+					}
+				}
+				while !done {
+					usleep(100)
+				}
+				return result
+			},
+			{ context in//CreateAnswerAndSetDescriptions
+				nonisolated(unsafe) var result = privmx.StringWithError()
+				nonisolated(unsafe) var this = Unmanaged<RoomSessionManager>.fromOpaque(context!.pointee.context).takeUnretainedValue()
+				nonisolated(unsafe) var done = false
+				nonisolated(unsafe) let streamRoomId = context!.pointee.roomId,
+										sdp = context!.pointee.sdp,
+										type = context!.pointee.type
+				//print(sdp)
+				Task.detached{
+					@Sendable in
+					defer {done = true}
+					if let jc = this.roomSessions[String(streamRoomId)]?.subscriber{
+						do{
+							let lpa = try await jc.reconfigure(
+								sdp: String(sdp),
+								type: String(type),
+								roomId: String(streamRoomId)
+							)
+							result.result = lpa.sdp
+							result.isvalid = true
+						}catch let err{
+							result = privmx.StringWithError(
+								result: "",
+								isvalid: true,
+								errname: std.__1.string("\((err as? PrivMXEndpointError)?.getName() ?? "ERROR")"),
+								errwhat: std.__1.string("\((err as? PrivMXEndpointError)?.getDescription())")
+							)
+						}
+					} else {
+						result = privmx.StringWithError(
+							result: "",
+							isvalid: true,
+							errname:"could not get a PeerConnection",
+							errwhat: "")
+					}
+				}
+				while !done {
+					usleep(100)
+				}
+				return result
+			},
+			{context in//SetAnswerAndSetRemoteDescription
+				//TODO: Impl saasrd
+				nonisolated(unsafe) var this = Unmanaged<RoomSessionManager>.fromOpaque(context!.pointee.context).takeUnretainedValue()
+				nonisolated(unsafe) var res = privmx.InternalError()
+				nonisolated(unsafe) var done = false
+				nonisolated(unsafe) let streamRoomId = String(context!.pointee.roomId),
+										sdp = String(context!.pointee.sdp),
+										type = String(context!.pointee.type)
+				
+				//print(sdp)
+				Task.detached{@Sendable in
+					do{
+						print("set answer and set rem desc")
+						try await this.roomSessions[streamRoomId]?.publisher?
+							.reconfigure(
+								sdp: sdp,
+								type: type,
+								roomId: streamRoomId)
+						
+					}catch let err{
+						res = privmx.InternalError(
+							name: "Error Updating Session",
+							message: "",
+							description: err.localizedDescription)
+					}
+					done = true
+				}
+				while !done {
+					usleep(100)
+				}
+				return res
+			},
+			{ context in//UpdateSessionId
+				print("update sessionid")
+				var res = privmx.InternalError()
+				var this = Unmanaged<RoomSessionManager>.fromOpaque(context!.pointee.context).takeUnretainedValue()
+				let streamRoomId = context!.pointee.roomId,
+					sessionId = context!.pointee.sessionId,
+					connectiontype = context!.pointee.connectionType,
+					srid = String(streamRoomId)
+				do{
+					if connectiontype == ConnectionType.Publisher.rawValue{
+						try this.roomSessions[srid]?.publisher?.updateSessionId(sessionId)
+					} else if connectiontype == ConnectionType.Subscriber.rawValue {
+						try this.roomSessions[srid]?.subscriber?.updateSessionId(sessionId)
+					} else {
+						res = privmx.InternalError(
+							name: "Unknown ConnectionType",
+							message: "", description: "")
+					}
+				}catch let err{
+					res = privmx.InternalError(
+						name: "Error Updating Session",
+						message: "",
+						description: err.localizedDescription)
+				}
+				return res
+			},
+			{ context in//UpdateKeys
+				print("Updating Keys")
+				var res = privmx.InternalError()
+				var this = Unmanaged<RoomSessionManager>.fromOpaque(context!.pointee.context).takeUnretainedValue()
+				var nkeys = [PMXKSKey]()
+				var dbug = 0
+				for k in context!.pointee.keys{
+					let ktype = if k.type == privmx.endpoint.stream.LOCAL{PMXKSKeyType.LOCAL} else {PMXKSKeyType.REMOTE}
+					let kkey = k.key.getData() ?? Data()
+					//print("converted to", kkey.count, "sized Data")
+					print("got \(dbug).key \(k.type) id \(k.keyId) : \(privmx.endpoint.core.Hex.encode(k.key))")
+					nkeys.append(PMXKSKey.init(
+						keyId: String(k.keyId),
+						key: kkey,
+						type:ktype)
+					)
+					dbug += 1
+				}
+				this.roomSessions[String(context!.pointee.roomId)]?.keyStore.setKeys(nkeys)
+				
+				return ""
+			},
+			{ context in//Close
+				var this = Unmanaged<RoomSessionManager>.fromOpaque(context!).takeUnretainedValue()
+				var res = privmx.InternalError()
+				let streamRoomId = context!.pointee.roomId
+				let srid = String(streamRoomId)
+				do{
+					try this.roomSessions[srid]?.publisher?
+						.peerConnection.close()
+					
+					try this.roomSessions[srid]?.subscriber?
+						.peerConnection.close()
+					
+				}catch let err{
+					res = privmx.InternalError(
+						name: "Error Updating Session",
+						message: "",
+						description: err.localizedDescription)
+				}
+				return res
+			},
+			Unmanaged.passUnretained(client).toOpaque())
+
+	}
+	
+}

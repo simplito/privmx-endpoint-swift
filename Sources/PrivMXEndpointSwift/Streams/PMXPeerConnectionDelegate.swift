@@ -16,21 +16,16 @@ import PrivMXEndpointStreamsLow
 import Synchronization
 
 
-public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate, @unchecked Sendable{
+final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unchecked Sendable{
 	var streamRoomId: String
 	var currentKeys = MutexGuarded<PMXKeyStore>(PMXKeyStore())
 	weak var peerConnectionFactory : RTCPeerConnectionFactory!
-	weak private var peerConnectionManager: PeerConnectionManager!
 	
 	var cryptors = MutexGuarded<[String : (PMXFrameCryptorTransformer,PMXFrameCryptorDelegate)]>([:])
-	
-	private var onFrameCallback:((Int64, Int64) -> Void)?
-	
 	
 	public init(
 		streamRoomId: String,
 		peerConnectionFactory: RTCPeerConnectionFactory,
-		peerConnectionManager: PeerConnectionManager,
 		currentKeys: PMXKeyStore = PMXKeyStore(),
 		onConnectionSignalingStateChanged: ((RTCPeerConnection, RTCSignalingState) -> Void)? = nil,
 		onConnectionPeerStateChanged: ((RTCPeerConnection, RTCPeerConnectionState) -> Void)? = nil,
@@ -156,6 +151,7 @@ public final class PmxPeerConnectionObserver:NSObject,RTCPeerConnectionDelegate,
 	){
 		onIceCandidateGenerated = cb
 	}
+	
 	public func setIceCandidatesRemovedCallback(
 		_ cb :(@Sendable (RTCPeerConnection,[RTCIceCandidate])->Void)?
 	){

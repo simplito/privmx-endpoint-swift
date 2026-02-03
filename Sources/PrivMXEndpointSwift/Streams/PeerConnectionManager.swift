@@ -16,9 +16,13 @@ import WebRTC
 
 public final class PeerConnectionManager: Sendable {
 	
-	nonisolated(unsafe) var _createPeerConnection : (@Sendable (String) -> (RTCPeerConnection?,PmxPeerConnectionObserver))?
+	nonisolated(unsafe) var _createPeerConnection : (@Sendable (String) -> (RTCPeerConnection?,PMXPeerConnectionDelegate))?
 	nonisolated(unsafe) var _onTrickle : (@Sendable (Int64,String) throws -> Void)?
 	nonisolated(unsafe) var connections = [String : [ConnectionType:JanusConnection]]()
+	
+	nonisolated(unsafe) public var streams = [privmx.endpoint.stream.StreamHandle:StreamData]()
+	nonisolated(unsafe) public var streamTracks = [String:StreamTrackInfo]()
+	nonisolated(unsafe) public var dataChannels = [String:RTCDataChannel]()
 	
 	enum State{
 		case reading,writing
@@ -26,7 +30,7 @@ public final class PeerConnectionManager: Sendable {
 	}
 	
 	init(
-		_createPeerConnection: (@Sendable (String) -> (RTCPeerConnection?,PmxPeerConnectionObserver))? = nil,
+		_createPeerConnection: (@Sendable (String) -> (RTCPeerConnection?,PMXPeerConnectionDelegate))? = nil,
 		_onTrickle: (@Sendable (Int64,String) throws -> Void)? = nil
 	) {
 		self._createPeerConnection = _createPeerConnection

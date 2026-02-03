@@ -37,7 +37,7 @@ public final class WebRTCClient: @unchecked Sendable{
 	
 	nonisolated(unsafe)var lastProcessedAnswer: [String:privmx.endpoint.stream.SdpWithRoomModel] = [:]
 	
-	nonisolated(unsafe) var peerConnectionFactory : RTCPeerConnectionFactory
+	nonisolated(unsafe)var peerConnectionFactory : RTCPeerConnectionFactory
 	
 	func bindTrickleImpl(
 		_ trickleImpl:@escaping @Sendable (Int64,String)->Void
@@ -61,10 +61,9 @@ public final class WebRTCClient: @unchecked Sendable{
 	func bindCreatePeerConnectionImpl(
 	) {
 		peerConnectionManager._createPeerConnection = { streamRoomId in
-			var observer = PmxPeerConnectionObserver(
+			var observer = PMXPeerConnectionDelegate(
 				streamRoomId: streamRoomId,
-				peerConnectionFactory: self.peerConnectionFactory,
-				peerConnectionManager: self.peerConnectionManager
+				peerConnectionFactory: self.peerConnectionFactory
 			)
 			
 			observer.setOnVideoTrackCallback(self.videoTrackHandler)
@@ -77,6 +76,7 @@ public final class WebRTCClient: @unchecked Sendable{
 					optionalConstraints: nil),
 				delegate: observer), observer)
 		}
+			
 	}
 	
 	private static func setCppCallbacksInClient(
@@ -196,11 +196,11 @@ public final class WebRTCClient: @unchecked Sendable{
 					sessionId = context!.pointee.sessionId,
 					connectiontype = context!.pointee.connectionType
 				do{
-					if String(connectiontype) == ConnectionType.Publisher.rawValue{
+					if connectiontype == ConnectionType.Publisher.rawValue{
 						try this.peerConnectionManager.updateSessionForConnection(
 							streamRoomId: String(streamRoomId),
 							connectionType: .Publisher, sessionId: sessionId)
-					} else if String(connectiontype) == ConnectionType.Subscriber.rawValue {
+					} else if connectiontype == ConnectionType.Subscriber.rawValue {
 						try this.peerConnectionManager.updateSessionForConnection(
 							streamRoomId: String(streamRoomId),
 							connectionType: .Subscriber, sessionId: sessionId)

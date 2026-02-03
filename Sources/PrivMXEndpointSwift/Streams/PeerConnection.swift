@@ -15,7 +15,7 @@ import PrivMXEndpointStreamsLow
 import WebRTC
 
 
-public enum ConnectionType:String,Sendable{
+public enum ConnectionType:std.string,Sendable{
 	case Subscriber = "subscriber"
 	case Publisher = "publisher"
 }
