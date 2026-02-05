@@ -22,28 +22,198 @@ final class RoomSessionManager{
 	nonisolated(unsafe) var roomSessions: [String:RoomJanusSession] = [:]
 	
 	private let onTrickle: @Sendable (Int64,String) throws -> Void
-	private let peerConnectionFactory: RTCPeerConnectionFactory
+	let peerConnectionFactory: RTCPeerConnectionFactory
+	private var initOptions: InitOptions?
 	
-	
-	
-	func create(
+	#if os(iOS)
+	static func create(
 		onTrickle: @escaping @Sendable (Int64,String) throws -> Void,
-		peerConnectionFactory: RTCPeerConnectionFactory
+		audioHandler: AVAudioEngineRTCAudioDevice,
+		options: InitOptions?
 	) -> RoomSessionManager {
+		var encf = RTCDefaultVideoEncoderFactory()
+		
+		encf.preferredCodec = .init(name: kRTCVp8CodecName)
+		
 		var mgr = RoomSessionManager(
 			onTrickle: onTrickle,
-			peerConnectionFactory: peerConnectionFactory)
-		
+			peerConnectionFactory: RTCPeerConnectionFactory(
+				encoderFactory: encf,
+			 decoderFactory: RTCDefaultVideoDecoderFactory(),
+			 audioDevice: audioHandler)
+		)
+		mgr.initOptions = options
+		setCppCallbacksInManager(&mgr)
 		return mgr
+	}
+	#else
+	static func create(
+		onTrickle: @escaping @Sendable (Int64,String) throws -> Void,
+		options: InitOptions? = nil
+	) -> RoomSessionManager {
+		var encf = RTCDefaultVideoEncoderFactory()
+		
+		encf.preferredCodec = .init(name: kRTCVp8CodecName)
+		
+		var mgr = RoomSessionManager(
+			onTrickle: onTrickle,
+			peerConnectionFactory: RTCPeerConnectionFactory(
+				encoderFactory: encf,
+			 decoderFactory: RTCDefaultVideoDecoderFactory())
+		)
+		setCppCallbacksInManager(&mgr)
+		mgr.initOptions = options
+		return mgr
+	}
+	#endif
+	
+	func addRoomSessionFor(
+		_ roomId: String
+	) throws -> Void {
+		guard roomSessions[roomId] == nil
+		else {
+			throw PrivMXEndpointError.otherFailure(.init(
+				name: "Room Session already exists",
+				message: "",
+				description: "")
+			)
+		}
+		var ks = PMXKeyStore()
+		roomSessions[roomId] = RoomJanusSession(
+			keyStore: ks,
+			_getPeerConnectionWithDelegate:{
+				return self.createPeerConnection(keyStore: &ks,streamRoomId: roomId)
+			}, roomId: roomId)
+	}
+	
+	
+	func addVideoTrack(
+		_ track: RTCVideoTrack,
+		to roomId: String
+	) throws -> Void {
+		guard let session = roomSessions[roomId]
+		else {
+			throw PrivMXEndpointError.otherFailure(
+				.init(
+					name: "No session for room",
+					message: "", description: ""
+				)
+			)
+		}
+		let pub = try session.getOrCreatePublisher()
+		guard nil == pub.videoTracks[track.trackId] else
+		{
+			throw PrivMXEndpointError.otherFailure(
+				.init(
+					name: "Track already added",
+					message: "", description: ""
+				)
+			)
+		}
+		
+		guard var sender = pub.peerConnection.add(track, streamIds: [roomId])
+		else {
+			throw PrivMXEndpointError.otherFailure(
+				.init(
+					name: "Couldn't create sender",
+					message: "", description: ""
+				)
+			)
+		}
+		
+		guard var cryptor = PMXFrameCryptorTransformer(
+			for: sender,
+			   with: peerConnectionFactory,
+			pmxKeyStore: session.keyStore.value)
+		else {
+			throw PrivMXEndpointError.otherFailure(
+				.init(
+					name: "Couldn't create cryptor",
+					message: "", description: ""
+				)
+			)
+		}
+		pub.videoTracks[track.trackId] = VideoTrackInfo(
+			track: track,
+			sender: sender,
+			frameCryptor: cryptor)
+	}
+	
+	func addAudioTrack(
+		_ track: RTCAudioTrack,
+		to roomId: String
+	) throws -> Void {
+		guard let session = roomSessions[roomId]
+		else {
+			throw PrivMXEndpointError.otherFailure(
+				.init(
+					name: "No session for room",
+					message: "", description: ""
+				)
+			)
+		}
+		let pub = try session.getOrCreatePublisher()
+		guard nil == pub.videoTracks[track.trackId] else
+		{
+			throw PrivMXEndpointError.otherFailure(
+				.init(
+					name: "Track already added",
+					message: "", description: ""
+				)
+			)
+		}
+		
+		guard var sender = pub.peerConnection.add(track, streamIds: [roomId])
+		else {
+			throw PrivMXEndpointError.otherFailure(
+				.init(
+					name: "Couldn't create sender",
+					message: "", description: ""
+				)
+			)
+		}
+		
+		guard var cryptor = PMXFrameCryptorTransformer(
+			for: sender,
+			   with: peerConnectionFactory,
+			pmxKeyStore: session.keyStore.value)
+		else {
+			throw PrivMXEndpointError.otherFailure(
+				.init(
+					name: "Couldn't create cryptor",
+					message: "", description: ""
+				)
+			)
+		}
+		pub.audioTracks[track.trackId] = AudioTrackInfo(
+			track: track,
+			sender: sender,
+			frameCryptor: cryptor)
+	}
+	var onATrack: ((String,RTCAudioTrack) -> Void)?
+	func setAudioStreamsHandler(
+	_ handler: ((String,RTCAudioTrack) -> Void)?
+	) -> Void{
+		self.onATrack = handler
+	}
+	var onVTrack: ((String,RTCVideoTrack) -> Void)?
+	func setVideoStreamsHandler(
+	_ handler: ((String,RTCVideoTrack) -> Void)?
+	) -> Void{
+		self.onVTrack = handler
 	}
 	
 	func createPeerConnection(
+		keyStore:inout PMXKeyStore,
 		streamRoomId: String
-	) -> (RTCPeerConnection?, RTCPeerConnectionDelegate){
+	) -> (RTCPeerConnection?, PMXPeerConnectionDelegate){
 		var observer = PMXPeerConnectionDelegate(
 			streamRoomId: streamRoomId,
-			peerConnectionFactory: self.peerConnectionFactory
+			peerConnectionFactory: self.peerConnectionFactory,
+			currentKeys: &keyStore
 		)
+		observer.setOnAudioTrackCallback(onATrack)
+		observer.setOnVideoTrackCallback(onVTrack)
 		return (self.peerConnectionFactory.peerConnection(
 			with: RTCConfiguration(),
 			constraints: RTCMediaConstraints.init(
@@ -60,10 +230,10 @@ final class RoomSessionManager{
 		self.peerConnectionFactory = peerConnectionFactory
 	}
 	
-	private static func setCppCallbacksInClient(
-	_ client: inout RoomSessionManager
+	private static func setCppCallbacksInManager(
+	_ mgr: inout RoomSessionManager
 	) {
-		client.webRtcInstance = privmx.WRTCIIHolder(
+		mgr.webRtcInstance = privmx.WRTCIIHolder(
 			{ context in//CreateOfferAndSetLocalDescription
 				nonisolated(unsafe)var this = Unmanaged<RoomSessionManager>.fromOpaque(context!.pointee.context).takeUnretainedValue()
 				nonisolated(unsafe)var result = privmx.StringWithError()
@@ -71,16 +241,17 @@ final class RoomSessionManager{
 				nonisolated(unsafe) let streamRoomId = context!.pointee.roomId
 				Task.detached(){
 					@Sendable in
-					if let jc = this.roomSessions[String(streamRoomId)]?.publisher{
+					if let jc = try this.roomSessions[String(streamRoomId)]?.getOrCreatePublisher(){
+						let pc = jc.peerConnection
 						do{
-							let res = try await jc.peerConnection.offer(for: RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: [:]))
+							let res = try await pc.offer(for: RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: [:]))
 							result = privmx.StringWithError(
 								result: std.string(res.sdp),
 								isvalid: true,
 								errname: "",
 								errwhat: "")
 							print("create offer set loc desc")
-							try await jc.peerConnection.setLocalDescription(res)
+							try await pc.setLocalDescription(res)
 							done=true
 						} catch let err{
 							result = privmx.StringWithError(
@@ -109,7 +280,7 @@ final class RoomSessionManager{
 				Task.detached{
 					@Sendable in
 					defer {done = true}
-					if let jc = this.roomSessions[String(streamRoomId)]?.subscriber{
+					if let jc = try? this.roomSessions[String(streamRoomId)]?.getOrCreateSubscriber(){
 						do{
 							let lpa = try await jc.reconfigure(
 								sdp: String(sdp),
@@ -152,12 +323,12 @@ final class RoomSessionManager{
 				Task.detached{@Sendable in
 					do{
 						print("set answer and set rem desc")
-						try await this.roomSessions[streamRoomId]?.publisher?
+						try await this.roomSessions[streamRoomId]?.getOrCreatePublisher()	
 							.reconfigure(
 								sdp: sdp,
 								type: type,
 								roomId: streamRoomId)
-						
+					
 					}catch let err{
 						res = privmx.InternalError(
 							name: "Error Updating Session",
@@ -202,20 +373,20 @@ final class RoomSessionManager{
 				var res = privmx.InternalError()
 				var this = Unmanaged<RoomSessionManager>.fromOpaque(context!.pointee.context).takeUnretainedValue()
 				var nkeys = [PMXKSKey]()
-				var dbug = 0
+				//var dbug = 0
 				for k in context!.pointee.keys{
 					let ktype = if k.type == privmx.endpoint.stream.LOCAL{PMXKSKeyType.LOCAL} else {PMXKSKeyType.REMOTE}
 					let kkey = k.key.getData() ?? Data()
 					//print("converted to", kkey.count, "sized Data")
-					print("got \(dbug).key \(k.type) id \(k.keyId) : \(privmx.endpoint.core.Hex.encode(k.key))")
+					//print("got \(dbug).key \(k.type) id \(k.keyId) : \(privmx.endpoint.core.Hex.encode(k.key))")
 					nkeys.append(PMXKSKey.init(
 						keyId: String(k.keyId),
 						key: kkey,
 						type:ktype)
 					)
-					dbug += 1
 				}
-				this.roomSessions[String(context!.pointee.roomId)]?.keyStore.setKeys(nkeys)
+				
+				this.roomSessions[String(context!.pointee.roomId)]?.updateKeys(nkeys)
 				
 				return ""
 			},
@@ -239,7 +410,7 @@ final class RoomSessionManager{
 				}
 				return res
 			},
-			Unmanaged.passUnretained(client).toOpaque())
+			Unmanaged.passUnretained(mgr).toOpaque())
 
 	}
 	

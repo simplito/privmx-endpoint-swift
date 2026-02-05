@@ -14,6 +14,7 @@ import Foundation
 import PrivMXEndpointStreamsLow
 import WebRTC
 
+@available(*, deprecated)
 public final class PeerConnectionManager: Sendable {
 	
 	nonisolated(unsafe) var _createPeerConnection : (@Sendable (String) -> (RTCPeerConnection?,PMXPeerConnectionDelegate))?

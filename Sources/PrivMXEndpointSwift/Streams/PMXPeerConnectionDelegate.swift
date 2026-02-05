@@ -18,7 +18,7 @@ import Synchronization
 
 final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unchecked Sendable{
 	var streamRoomId: String
-	var currentKeys = MutexGuarded<PMXKeyStore>(PMXKeyStore())
+	var currentKeys : PMXKeyStore
 	weak var peerConnectionFactory : RTCPeerConnectionFactory!
 	
 	var cryptors = MutexGuarded<[String : (PMXFrameCryptorTransformer,PMXFrameCryptorDelegate)]>([:])
@@ -26,7 +26,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 	public init(
 		streamRoomId: String,
 		peerConnectionFactory: RTCPeerConnectionFactory,
-		currentKeys: PMXKeyStore = PMXKeyStore(),
+		currentKeys: inout PMXKeyStore,
 		onConnectionSignalingStateChanged: ((RTCPeerConnection, RTCSignalingState) -> Void)? = nil,
 		onConnectionPeerStateChanged: ((RTCPeerConnection, RTCPeerConnectionState) -> Void)? = nil,
 		onStreamAdded: ((RTCPeerConnection, RTCMediaStream) -> Void)? = nil,
@@ -47,7 +47,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		self.peerConnectionFactory = peerConnectionFactory
 		
 		self.streamRoomId = streamRoomId
-		self.currentKeys.value = currentKeys
+		self.currentKeys = currentKeys
 		self.onConnectionSignalingStateChanged = onConnectionSignalingStateChanged
 		self.onConnectionPeerStateChanged = onConnectionPeerStateChanged
 		self.onStreamAdded = onStreamAdded
@@ -198,7 +198,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didChange stateChanged: RTCSignalingState
 	) -> Void {
-		print("Signaling state changed to ",stateChanged.rawValue)
+		//print("Signaling state changed to ",stateChanged.rawValue)
 		onConnectionSignalingStateChanged?(peerConnection,stateChanged)
 	}
 	
@@ -206,10 +206,10 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didAdd stream: RTCMediaStream
 	) -> Void {
-		print("StreamAdded")
+		//print("StreamAdded")
 		onStreamAdded?(peerConnection,stream)
 		for vt in stream.videoTracks{
-			//onVideoTrack?("\(streamRoomId)-\(vt.trackId)", vt)
+			onVideoTrack?("\(streamRoomId)-\(vt.trackId)", vt)
 		}
 		print("SA done")
 	}
@@ -218,14 +218,14 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didRemove stream: RTCMediaStream
 	) {
-		print("StreamRemoved")
+		//print("StreamRemoved")
 		onStreamRemoved?(peerConnection,stream)
 	}
 	
 	public func peerConnectionShouldNegotiate(
 		_ peerConnection: RTCPeerConnection
 	) {
-		print("shouldrenegotiate")
+		//print("shouldrenegotiate")
 		onShouldRenegotiate?(peerConnection)
 	}
 	
@@ -233,7 +233,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didChange newState: RTCIceConnectionState
 	) {
-		print("ICE connection state changed to", newState)
+		//print("ICE connection state changed to", newState)
 		onIceConnectionStateChanged?(peerConnection,newState)
 	}
 	
@@ -241,7 +241,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didChange newState: RTCIceGatheringState
 	) {
-		print("ICE gathering state changed")
+		//print("ICE gathering state changed")
 		onIceGatheringStateChanged?(peerConnection,newState)
 	}
 	
@@ -249,7 +249,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didGenerate candidate: RTCIceCandidate
 	) {
-		print("generated ICE candidate")
+		//print("generated ICE candidate")
 		onIceCandidateGenerated?(peerConnection,candidate)
 	}
 	
@@ -257,7 +257,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didRemove candidates: [RTCIceCandidate]
 	) {
-		print("ICE candidate removed")
+		//print("ICE candidate removed")
 		onIceCandidatesRemoved?(peerConnection,candidates)
 	}
 	
@@ -265,7 +265,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didOpen dataChannel: RTCDataChannel
 	) {
-		print("DATA channel opened")
+		//print("DATA channel opened")
 		onDataChannelOpened?(peerConnection,dataChannel)
 	}
 	
@@ -273,11 +273,11 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didStartReceivingOn transceiver: RTCRtpTransceiver
 	) {
-		print("Started receiving on transciever")
+		print("[Streams] Started receiving on transciever")
 		onStartedReceiving?(peerConnection,transceiver)
 		let receiver = transceiver.receiver
 		if let track = receiver.track, var peerConnectionFactory {
-			var pfct = PMXFrameCryptorTransformer(for: receiver, with: peerConnectionFactory, pmxKeyStore: currentKeys.value)
+			var pfct = PMXFrameCryptorTransformer(for: receiver, with: peerConnectionFactory, pmxKeyStore: currentKeys)
 			var deleg = PMXFrameCryptorDelegate()
 			if pfct != nil{
 			pfct!.register(deleg)
@@ -318,7 +318,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didChange newState: RTCPeerConnectionState
 	) {
-		print("peerconnection state changed")
+		print("[dbg]peerconnection state changed to", newState, newState.rawValue, "on : \(peerConnection)")
 		onConnectionPeerStateChanged?(peerConnection,newState)
 	}
 	
@@ -342,7 +342,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didChangeStandardizedIceConnectionState newState: RTCIceConnectionState
 	) {
-		print("standardised Ice connection state changed")
+		print("standardised Ice connection state changed: \(newState) raw: \(newState.rawValue)")
 		onIceConnectionStateChanged?(peerConnection,newState)
 	}
 	

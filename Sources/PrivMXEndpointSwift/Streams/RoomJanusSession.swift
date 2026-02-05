@@ -15,34 +15,67 @@ import PrivMXEndpointSwiftNative
 
 class RoomJanusSession{
 	init(
-		_createJanusConnection: @escaping () -> JanusConnection,
+		keyStore: PMXKeyStore,
+		audioTrackHandler: ((String,RTCAudioTrack) -> Void) = {_,_ in},
+		videoTrackHandler: ((String,RTCVideoTrack) -> Void) = {_,_ in},
+		_getPeerConnectionWithDelegate: @escaping () -> (RTCPeerConnection?, PMXPeerConnectionDelegate),
 		roomId: String
 	) {
-		self._createJanusConnection = _createJanusConnection
+		self._getPeerConnectionWithDelegate = _getPeerConnectionWithDelegate
 		self.roomId = roomId
+		self.keyStore = MutexGuarded(keyStore)
 	}
 	
-	var keyStore: PMXKeyStore = PMXKeyStore()
+	var keyStore: MutexGuarded<PMXKeyStore>
+	private var defaultAudioTrackHandler:((String,RTCAudioTrack) -> Void)?
+	private var defaultVideoTrackHandler:((String,RTCVideoTrack) -> Void)?
 	private var _pubJC: MutexGuarded<JanusPublisher>?
 	private var _subJC: MutexGuarded<JanusSubscriber>?
 	let roomId: String
 	
-	private var _createJanusConnection: (() -> JanusConnection)
+	private var _getPeerConnectionWithDelegate: (() -> (RTCPeerConnection?, PMXPeerConnectionDelegate))
 	
-	func getOrCreatePublisher(){
-		if nil != _pubJC{
-			var jc = _createJanusConnection()
+	func getOrCreatePublisher(
+	) throws -> JanusPublisher{
+		if nil == _pubJC{
+			var (pc,del) = _getPeerConnectionWithDelegate()
+			guard let pc else {
+				throw PrivMXEndpointError.otherFailure(
+					.init(
+						name: "Failed Creating PeerConnection",
+						message: "",
+						description: "")
+				)
+			}
+			del.currentKeys = keyStore.value
+			del.setOnAudioTrackCallback(defaultAudioTrackHandler)
+			del.setOnVideoTrackCallback(defaultVideoTrackHandler)
 			_pubJC = MutexGuarded(JanusPublisher(
-				peerConnection: jc.peerConnection,
-				peerConnectionDelegate: jc.delegate))
-			
+				peerConnection: pc,
+				peerConnectionDelegate: del))
 		}
+		return _pubJC!.value
 	}
 	
-	func getOrCreateSubscriber(){
-		if nil != _subJC{
+	func getOrCreateSubscriber(
+	) throws -> JanusSubscriber {
+		if nil == _subJC{
+			var (pc,del) = _getPeerConnectionWithDelegate()
+			guard let pc else {
+				throw PrivMXEndpointError.otherFailure(
+					.init(
+						name: "Failed Creating PeerConnection",
+						message: "",
+						description: "")
+				)
+			}
+			_subJC = MutexGuarded(JanusSubscriber(
+				peerConnection: pc,
+				peerConnectionDelegate: del
+			))
 			
 		}
+		return _subJC!.value
 	}
 	
 	var publisher: JanusPublisher?{
@@ -69,4 +102,9 @@ class RoomJanusSession{
 		nil != _subJC
 	}
 	
+	public func updateKeys(
+		_ keys: [PMXKSKey]
+	){
+		keyStore.value.setKeys(keys)
+	}
 }
