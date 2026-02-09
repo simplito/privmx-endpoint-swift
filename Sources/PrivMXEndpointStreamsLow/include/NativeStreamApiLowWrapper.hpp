@@ -140,6 +140,8 @@ public:
 	static ResultWithError<endpoint::stream::StreamNewStreamsEvent> extractStreamNewStreamsEvent(const endpoint::core::EventHolder& eventHolder);
 	static ResultWithError<bool> isStreamsUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
 	static ResultWithError<endpoint::stream::StreamsUpdatedEvent> extractStreamsUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<bool> isStreamUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<endpoint::stream::StreamUpdatedEvent> extractStreamUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
 	
 };
 

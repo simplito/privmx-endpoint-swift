@@ -39,7 +39,7 @@ ResultWithError<NativeStreamApiLowWrapper> NativeStreamApiLowWrapper::create(con
 		};
 	}
 	return res;
-	}
+}
 
 NativeStreamApiLowWrapper::NativeStreamApiLowWrapper(const NativeConnectionWrapper &connection,
 													 NativeEventApiWrapper &eventApi){
@@ -85,27 +85,27 @@ ResultWithError<std::string> NativeStreamApiLowWrapper::createStreamRoom(const s
 	return res;}
 
 ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::updateStreamRoom(const std::string& streamRoomId,
-												 const UserWithPubKeyVector& users,
-												 const UserWithPubKeyVector& managers,
-												 const endpoint::core::Buffer& publicMeta,
-												 const endpoint::core::Buffer& privateMeta,
-												 const int64_t version,
-												 const bool force,
-												 const bool forceGenerateNewKey,
-												 const OptionalContainerPolicy& policies
+																			const UserWithPubKeyVector& users,
+																			const UserWithPubKeyVector& managers,
+																			const endpoint::core::Buffer& publicMeta,
+																			const endpoint::core::Buffer& privateMeta,
+																			const int64_t version,
+																			const bool force,
+																			const bool forceGenerateNewKey,
+																			const OptionalContainerPolicy& policies
 																			){
 	ResultWithError<std::nullptr_t> res;
 	try{
-		 getApi()->updateStreamRoom(streamRoomId,
-									users,
-									managers,
-									publicMeta,
-									privateMeta,
-									version,
-									force,
-									forceGenerateNewKey,
-									policies
-									);
+		getApi()->updateStreamRoom(streamRoomId,
+								   users,
+								   managers,
+								   publicMeta,
+								   privateMeta,
+								   version,
+								   force,
+								   forceGenerateNewKey,
+								   policies
+								   );
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -225,7 +225,7 @@ ResultWithError<StreamInfoVector> NativeStreamApiLowWrapper::listStreams(const s
 	return res;}
 
 ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::joinStreamRoom(const std::string &streamRoomId,
-																		WebRTCInterfaceReference webRtc){
+																		  WebRTCInterfaceReference webRtc){
 	ResultWithError<std::nullptr_t> res;
 	try{
 		getApi()->joinStreamRoom(streamRoomId, webRtc);
@@ -373,8 +373,8 @@ ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::unpublishStream(const
 	return res;}
 
 ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::subscribeToRemoteStreams(const std::string& streamRoomId,
-																			 const StreamSubscriptiopnsVector& subscriptions,
-																			 const endpoint::stream::Settings& settings){
+																					const StreamSubscriptiopnsVector& subscriptions,
+																					const endpoint::stream::Settings& settings){
 	ResultWithError<std::nullptr_t> res;
 	try{
 		getApi()->subscribeToRemoteStreams(streamRoomId,
@@ -407,15 +407,15 @@ ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::subscribeToRemoteStre
 	}
 	return res;}
 ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::modifyRemoteStreamsSubscriptions(const std::string& streamRoomId,
-																			 const StreamSubscriptiopnsVector& subscriptionsToAdd,
-																			 const StreamSubscriptiopnsVector& subscriptionsToRemove,
-																			 const endpoint::stream::Settings& options){
+																							const StreamSubscriptiopnsVector& subscriptionsToAdd,
+																							const StreamSubscriptiopnsVector& subscriptionsToRemove,
+																							const endpoint::stream::Settings& options){
 	ResultWithError<std::nullptr_t> res;
 	try{
 		getApi()->modifyRemoteStreamsSubscriptions(streamRoomId,
-										   subscriptionsToAdd,
-										   subscriptionsToRemove,
-										   options);
+												   subscriptionsToAdd,
+												   subscriptionsToRemove,
+												   options);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -612,78 +612,496 @@ ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::keyManagement(const s
 	}
 	return res;}
 
-
 ResultWithError<bool> StreamApiLowEventHandler::isStreamRoomCreatedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
+	try{
+		res.result = privmx::endpoint::stream::Events::isStreamRoomCreatedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
 	return res;
 }
 ResultWithError<stream::StreamRoomCreatedEvent> StreamApiLowEventHandler::extractStreamRoomCreatedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<stream::StreamRoomCreatedEvent> res;
+	try{
+		res.result = privmx::endpoint::stream::Events::extractStreamRoomCreatedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
 	return res;
 }
+
 ResultWithError<bool> StreamApiLowEventHandler::isStreamRoomUpdatedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
+	try{
+		res.result = privmx::endpoint::stream::Events::isStreamRoomUpdatedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
 	return res;
 }
 ResultWithError<stream::StreamRoomUpdatedEvent> StreamApiLowEventHandler::extractStreamRoomUpdatedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<stream::StreamRoomUpdatedEvent> res;
+	try{
+		res.result = privmx::endpoint::stream::Events::extractStreamRoomUpdatedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
 	return res;
 }
+
 ResultWithError<bool> StreamApiLowEventHandler::isStreamRoomDeletedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
+	try{
+		res.result = privmx::endpoint::stream::Events::isStreamRoomDeletedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
 	return res;
 }
 ResultWithError<stream::StreamRoomDeletedEvent> StreamApiLowEventHandler::extractStreamRoomDeletedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<stream::StreamRoomDeletedEvent> res;
+	try{
+		res.result = privmx::endpoint::stream::Events::extractStreamRoomDeletedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
 	return res;
 }
+
 ResultWithError<bool> StreamApiLowEventHandler::isStreamPublishedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
+	try{
+		res.result = privmx::endpoint::stream::Events::isStreamPublishedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
 	return res;
 }
 ResultWithError<stream::StreamPublishedEvent> StreamApiLowEventHandler::extractStreamPublishedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<stream::StreamPublishedEvent> res;
+	try{
+		res.result = privmx::endpoint::stream::Events::extractStreamPublishedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
 	return res;
 }
+
 ResultWithError<bool> StreamApiLowEventHandler::isStreamJoinedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
+	try{
+		res.result = privmx::endpoint::stream::Events::isStreamJoinedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
 	return res;
 }
 ResultWithError<stream::StreamJoinedEvent> StreamApiLowEventHandler::extractStreamJoinedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<stream::StreamJoinedEvent> res;
+	try{
+		res.result = privmx::endpoint::stream::Events::extractStreamJoinedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
 	return res;
 }
+
 ResultWithError<bool> StreamApiLowEventHandler::isStreamUnpublishedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
+	try{
+		res.result = privmx::endpoint::stream::Events::isStreamUnpublishedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
 	return res;
 }
 ResultWithError<stream::StreamUnpublishedEvent> StreamApiLowEventHandler::extractStreamUnpublishedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<stream::StreamUnpublishedEvent> res;
+	try{
+		res.result = privmx::endpoint::stream::Events::extractStreamUnpublishedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
 	return res;
 }
+
 ResultWithError<bool> StreamApiLowEventHandler::isStreamLeftEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
+	try{
+		res.result = privmx::endpoint::stream::Events::isStreamLeftEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
 	return res;
 }
 ResultWithError<stream::StreamLeftEvent> StreamApiLowEventHandler::extractStreamLeftEvent(const endpoint::core::EventHolder& eventHolder){
 	ResultWithError<stream::StreamLeftEvent> res;
+	try{
+		res.result = privmx::endpoint::stream::Events::extractStreamLeftEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
 	return res;
 }
+
 ResultWithError<bool> StreamApiLowEventHandler::isStreamNewStreamsEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
+	try{
+		res.result = privmx::endpoint::stream::Events::isStreamNewStreamsEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
 	return res;
 }
 ResultWithError<stream::StreamNewStreamsEvent> StreamApiLowEventHandler::extractStreamNewStreamsEvent(const endpoint::core::EventHolder& eventHolder){
 	ResultWithError<stream::StreamNewStreamsEvent> res;
+	try{
+		res.result = privmx::endpoint::stream::Events::extractStreamNewStreamsEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
 	return res;
 }
+
 ResultWithError<bool> StreamApiLowEventHandler::isStreamsUpdatedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
+	try{
+		res.result = privmx::endpoint::stream::Events::isStreamsUpdatedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
 	return res;
 }
 ResultWithError<stream::StreamsUpdatedEvent> StreamApiLowEventHandler::extractStreamsUpdatedEvent(const endpoint::core::EventHolder& eventHolder){
 	ResultWithError<stream::StreamsUpdatedEvent> res;
+	try{
+		res.result = privmx::endpoint::stream::Events::extractStreamsUpdatedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
 	return res;
 }
+
+
+ResultWithError<bool> StreamApiLowEventHandler::isStreamUpdatedEvent(const core::EventHolder& eventHolder){
+	ResultWithError<bool> res;
+	try{
+		res.result = privmx::endpoint::stream::Events::isStreamUpdatedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+ResultWithError<stream::StreamUpdatedEvent> StreamApiLowEventHandler::extractStreamUpdatedEvent(const endpoint::core::EventHolder& eventHolder){
+	ResultWithError<stream::StreamUpdatedEvent> res;
+	try{
+		res.result = privmx::endpoint::stream::Events::extractStreamUpdatedEvent(eventHolder);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;
+}
+
 
 }
