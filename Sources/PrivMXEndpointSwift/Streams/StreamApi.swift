@@ -269,9 +269,17 @@ public class StreamApi: @unchecked Sendable{
 		videoTrackHandler: ((String,RTCVideoTrack) -> Void)?
 	) throws -> Void {
 		try roomSessionManager.addRoomSessionFor(streamRoomId)
+		guard let instance = roomSessionManager.roomSessions[streamRoomId]?.webRTCInstance
+		else {
+			throw PrivMXEndpointError.otherFailure(
+				.init(
+					name: "Missing session for room",
+					message: "",
+					description: ""))
+		}
 		let res = api.joinStreamRoom(
 			std.string(streamRoomId),
-			roomSessionManager.webRtcInstance!.instance
+			instance.instance
 		)
 		if let err = res.error.value{
 			roomSessionManager.roomSessions[streamRoomId] = nil

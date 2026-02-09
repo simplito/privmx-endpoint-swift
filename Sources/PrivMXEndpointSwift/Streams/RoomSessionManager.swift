@@ -61,7 +61,7 @@ final class RoomSessionManager{
 				encoderFactory: encf,
 			 decoderFactory: RTCDefaultVideoDecoderFactory())
 		)
-		setCppCallbacksInManager(&mgr)
+		//setCppCallbacksInManager(&mgr)
 		mgr.initOptions = options
 		return mgr
 	}
@@ -79,11 +79,15 @@ final class RoomSessionManager{
 			)
 		}
 		var ks = PMXKeyStore()
-		roomSessions[roomId] = RoomJanusSession(
+		var rjs = RoomJanusSession(
 			keyStore: ks,
+			roomId: roomId,
 			_getPeerConnectionWithDelegate:{
 				return self.createPeerConnection(keyStore: &ks,streamRoomId: roomId)
-			}, roomId: roomId)
+			}
+		)
+		setCppCallbacksInSession(&rjs)
+		roomSessions[roomId] = rjs
 	}
 	
 	
@@ -230,39 +234,38 @@ final class RoomSessionManager{
 		self.peerConnectionFactory = peerConnectionFactory
 	}
 	
-	private static func setCppCallbacksInManager(
-	_ mgr: inout RoomSessionManager
+	private func setCppCallbacksInSession(
+	_ session: inout RoomJanusSession
 	) {
-		mgr.webRtcInstance = privmx.WRTCIIHolder(
+		session.webRTCInstance = privmx.WRTCIIHolder(
 			{ context in//CreateOfferAndSetLocalDescription
-				nonisolated(unsafe)var this = Unmanaged<RoomSessionManager>.fromOpaque(context!.pointee.context).takeUnretainedValue()
+				nonisolated(unsafe)var this = Unmanaged<RoomJanusSession>.fromOpaque(context!.pointee.context).takeUnretainedValue()
 				nonisolated(unsafe)var result = privmx.StringWithError()
 				nonisolated(unsafe)var done = false
 				nonisolated(unsafe) let streamRoomId = context!.pointee.roomId
 				Task.detached(){
 					@Sendable in
-					if let jc = try this.roomSessions[String(streamRoomId)]?.getOrCreatePublisher(){
-						let pc = jc.peerConnection
-						do{
-							let res = try await pc.offer(for: RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: [:]))
-							result = privmx.StringWithError(
-								result: std.string(res.sdp),
-								isvalid: true,
-								errname: "",
-								errwhat: "")
-							print("create offer set loc desc")
-							try await pc.setLocalDescription(res)
-							done=true
-						} catch let err{
-							result = privmx.StringWithError(
-								result: "",
-								isvalid: true,
-								errname: "Failed creating SDP",
-								errwhat: std.string(err.localizedDescription))
-							done = true
-						}
-						
+					let jc = try this.getOrCreatePublisher()
+					let pc = jc.peerConnection
+					do{
+						let res = try await pc.offer(for: RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: [:]))
+						result = privmx.StringWithError(
+							result: std.string(res.sdp),
+							isvalid: true,
+							errname: "",
+							errwhat: "")
+						print("create offer set loc desc")
+						try await pc.setLocalDescription(res)
+						done=true
+					} catch let err{
+						result = privmx.StringWithError(
+							result: "",
+							isvalid: true,
+							errname: "Failed creating SDP",
+							errwhat: std.string(err.localizedDescription))
+						done = true
 					}
+					
 				}
 				while !done {
 					usleep(100)
@@ -271,7 +274,7 @@ final class RoomSessionManager{
 			},
 			{ context in//CreateAnswerAndSetDescriptions
 				nonisolated(unsafe) var result = privmx.StringWithError()
-				nonisolated(unsafe) var this = Unmanaged<RoomSessionManager>.fromOpaque(context!.pointee.context).takeUnretainedValue()
+				nonisolated(unsafe) var this = Unmanaged<RoomJanusSession>.fromOpaque(context!.pointee.context).takeUnretainedValue()
 				nonisolated(unsafe) var done = false
 				nonisolated(unsafe) let streamRoomId = context!.pointee.roomId,
 										sdp = context!.pointee.sdp,
@@ -280,7 +283,7 @@ final class RoomSessionManager{
 				Task.detached{
 					@Sendable in
 					defer {done = true}
-					if let jc = try? this.roomSessions[String(streamRoomId)]?.getOrCreateSubscriber(){
+					if let jc = try? this.getOrCreateSubscriber(){
 						do{
 							let lpa = try await jc.reconfigure(
 								sdp: String(sdp),
@@ -312,7 +315,7 @@ final class RoomSessionManager{
 			},
 			{context in//SetAnswerAndSetRemoteDescription
 				//TODO: Impl saasrd
-				nonisolated(unsafe) var this = Unmanaged<RoomSessionManager>.fromOpaque(context!.pointee.context).takeUnretainedValue()
+				nonisolated(unsafe) var this = Unmanaged<RoomJanusSession>.fromOpaque(context!.pointee.context).takeUnretainedValue()
 				nonisolated(unsafe) var res = privmx.InternalError()
 				nonisolated(unsafe) var done = false
 				nonisolated(unsafe) let streamRoomId = String(context!.pointee.roomId),
@@ -323,7 +326,7 @@ final class RoomSessionManager{
 				Task.detached{@Sendable in
 					do{
 						print("set answer and set rem desc")
-						try await this.roomSessions[streamRoomId]?.getOrCreatePublisher()	
+						try await this.getOrCreatePublisher()
 							.reconfigure(
 								sdp: sdp,
 								type: type,
@@ -345,16 +348,16 @@ final class RoomSessionManager{
 			{ context in//UpdateSessionId
 				print("update sessionid")
 				var res = privmx.InternalError()
-				var this = Unmanaged<RoomSessionManager>.fromOpaque(context!.pointee.context).takeUnretainedValue()
+				var this = Unmanaged<RoomJanusSession>.fromOpaque(context!.pointee.context).takeUnretainedValue()
 				let streamRoomId = context!.pointee.roomId,
 					sessionId = context!.pointee.sessionId,
 					connectiontype = context!.pointee.connectionType,
 					srid = String(streamRoomId)
 				do{
 					if connectiontype == ConnectionType.Publisher.rawValue{
-						try this.roomSessions[srid]?.publisher?.updateSessionId(sessionId)
+						try this.publisher?.updateSessionId(sessionId)
 					} else if connectiontype == ConnectionType.Subscriber.rawValue {
-						try this.roomSessions[srid]?.subscriber?.updateSessionId(sessionId)
+						try this.subscriber?.updateSessionId(sessionId)
 					} else {
 						res = privmx.InternalError(
 							name: "Unknown ConnectionType",
@@ -371,7 +374,7 @@ final class RoomSessionManager{
 			{ context in//UpdateKeys
 				print("Updating Keys")
 				var res = privmx.InternalError()
-				var this = Unmanaged<RoomSessionManager>.fromOpaque(context!.pointee.context).takeUnretainedValue()
+				var this = Unmanaged<RoomJanusSession>.fromOpaque(context!.pointee.context).takeUnretainedValue()
 				var nkeys = [PMXKSKey]()
 				//var dbug = 0
 				for k in context!.pointee.keys{
@@ -385,24 +388,20 @@ final class RoomSessionManager{
 						type:ktype)
 					)
 				}
-				if let session = this.roomSessions[String(context!.pointee.roomId)]{
-					session.updateKeys(nkeys)
-				} else {
-					print( "[dbg] missing room session")
-				}
+				this.updateKeys(nkeys)
 				
 				return ""
 			},
 			{ context in//Close
-				var this = Unmanaged<RoomSessionManager>.fromOpaque(context!).takeUnretainedValue()
+				var this = Unmanaged<RoomJanusSession>.fromOpaque(context!).takeUnretainedValue()
 				var res = privmx.InternalError()
 				let streamRoomId = context!.pointee.roomId
 				let srid = String(streamRoomId)
 				do{
-					try this.roomSessions[srid]?.publisher?
+					try this.publisher?
 						.peerConnection.close()
 					
-					try this.roomSessions[srid]?.subscriber?
+					try this.subscriber?
 						.peerConnection.close()
 					
 				}catch let err{
@@ -413,7 +412,7 @@ final class RoomSessionManager{
 				}
 				return res
 			},
-			Unmanaged.passUnretained(mgr).toOpaque())
+			Unmanaged.passUnretained(session).toOpaque())
 
 	}
 	

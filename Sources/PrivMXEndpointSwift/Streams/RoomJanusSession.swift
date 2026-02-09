@@ -16,16 +16,17 @@ import PrivMXEndpointSwiftNative
 class RoomJanusSession{
 	init(
 		keyStore: PMXKeyStore,
+		roomId: String,
+		_getPeerConnectionWithDelegate: @escaping () -> (RTCPeerConnection?, PMXPeerConnectionDelegate),
 		audioTrackHandler: ((String,RTCAudioTrack) -> Void) = {_,_ in},
 		videoTrackHandler: ((String,RTCVideoTrack) -> Void) = {_,_ in},
-		_getPeerConnectionWithDelegate: @escaping () -> (RTCPeerConnection?, PMXPeerConnectionDelegate),
-		roomId: String
 	) {
 		self._getPeerConnectionWithDelegate = _getPeerConnectionWithDelegate
 		self.roomId = roomId
 		self.keyStore = MutexGuarded(keyStore)
 	}
 	
+	nonisolated(unsafe)var webRTCInstance: privmx.WRTCIIHolder!
 	var keyStore: MutexGuarded<PMXKeyStore>
 	private var defaultAudioTrackHandler:((String,RTCAudioTrack) -> Void)?
 	private var defaultVideoTrackHandler:((String,RTCVideoTrack) -> Void)?
