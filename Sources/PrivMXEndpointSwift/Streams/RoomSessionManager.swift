@@ -15,8 +15,6 @@ import Foundation
 
 final class RoomSessionManager{
 	private var rtcConfiguration: RTCConfiguration = RTCConfiguration()
-	nonisolated(unsafe)var webRtcInstance: privmx.WRTCIIHolder!
-	
 	
 	nonisolated(unsafe) var streamHandles: [privmx.endpoint.stream.StreamHandle:String] = [:]
 	nonisolated(unsafe) var roomSessions: [String:RoomJanusSession] = [:]

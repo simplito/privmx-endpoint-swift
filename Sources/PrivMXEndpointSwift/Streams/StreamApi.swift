@@ -289,6 +289,22 @@ public class StreamApi: @unchecked Sendable{
 		roomSessionManager.setVideoStreamsHandler(videoTrackHandler)
 	}
 	
+	public func leaveStreamRoom(
+		_ roomId: String
+	) throws -> Void {
+		if let handle = roomSessionManager.streamHandles.first(where: {$0.value == roomId}){
+			roomSessionManager.streamHandles[handle.key] = nil
+		}
+		
+		let res = api.leaveStreamRoom(std.string(roomId))
+		
+		if let err = res.error.value{
+			throw PrivMXEndpointError.otherFailure(err)
+		}
+		
+		roomSessionManager.roomSessions[roomId] = nil
+	}
+	
 	// MARK: - STREAMS
 	public func createStreamIn(
 		_ streamRoomId: String
@@ -498,7 +514,6 @@ public class StreamApi: @unchecked Sendable{
 		_ track:privmx.endpoint.stream.MediaDevice,
 		from streamHandle: privmx.endpoint.stream.StreamHandle
 	) throws -> Void{
-		//streams[streamHandle]?.capturers.value.
 	}
 	
 	public func publishStream(
@@ -558,8 +573,8 @@ public class StreamApi: @unchecked Sendable{
 		let res = api.subscribeToRemoteStreams(std.string(streamRoomId),
 											   siv,
 											   options)
-		guard res.error.value == nil else {
-			throw PrivMXEndpointError.otherFailure(res.error.value!)
+		if let err = res.error.value{
+			throw PrivMXEndpointError.otherFailure(err)
 		}
 	}
 	
