@@ -268,16 +268,17 @@ public class StreamApi: @unchecked Sendable{
 		audioTrackHandler: ((String,RTCAudioTrack) -> Void)?,
 		videoTrackHandler: ((String,RTCVideoTrack) -> Void)?
 	) throws -> Void {
+		try roomSessionManager.addRoomSessionFor(streamRoomId)
 		let res = api.joinStreamRoom(
 			std.string(streamRoomId),
 			roomSessionManager.webRtcInstance!.instance
 		)
 		if let err = res.error.value{
+			roomSessionManager.roomSessions[streamRoomId] = nil
 			throw PrivMXEndpointError.otherFailure(err)
 		}
 		roomSessionManager.setAudioStreamsHandler(audioTrackHandler)
 		roomSessionManager.setVideoStreamsHandler(videoTrackHandler)
-		try? roomSessionManager.addRoomSessionFor(streamRoomId)
 	}
 	
 	// MARK: - STREAMS

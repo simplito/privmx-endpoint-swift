@@ -378,15 +378,18 @@ final class RoomSessionManager{
 					let ktype = if k.type == privmx.endpoint.stream.LOCAL{PMXKSKeyType.LOCAL} else {PMXKSKeyType.REMOTE}
 					let kkey = k.key.getData() ?? Data()
 					//print("converted to", kkey.count, "sized Data")
-					//print("got \(dbug).key \(k.type) id \(k.keyId) : \(privmx.endpoint.core.Hex.encode(k.key))")
+					//print("got key \(k.type) id \(k.keyId) : \(privmx.endpoint.core.Hex.encode(k.key))")
 					nkeys.append(PMXKSKey.init(
 						keyId: String(k.keyId),
 						key: kkey,
 						type:ktype)
 					)
 				}
-				
-				this.roomSessions[String(context!.pointee.roomId)]?.updateKeys(nkeys)
+				if let session = this.roomSessions[String(context!.pointee.roomId)]{
+					session.updateKeys(nkeys)
+				} else {
+					print( "[dbg] missing room session")
+				}
 				
 				return ""
 			},
