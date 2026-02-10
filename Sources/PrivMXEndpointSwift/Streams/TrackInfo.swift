@@ -9,6 +9,7 @@
 // limitations under the License.
 //
 
+/*
 // #if Streams
 import Foundation
 import WebRTC
@@ -48,3 +49,4 @@ class DesktopTrackInfo{
 	
 }
 // #endif // Streams
+*/

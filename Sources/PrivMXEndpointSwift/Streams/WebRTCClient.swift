@@ -16,7 +16,7 @@ import PrivMXEndpointStreamsLow
 import Foundation
 import WebRTC
 
-struct InitOptions: @unchecked Sendable{
+public struct InitOptions: @unchecked Sendable{
 	var signalingServer: String
 	var appServer: String
 	var mediaServer: String
@@ -24,7 +24,8 @@ struct InitOptions: @unchecked Sendable{
 	var iceTransportPolicy: RTCIceTransportPolicy
 	var encKey: String?
 }
-
+/*
+@available(*, deprecated)
 public final class WebRTCClient: @unchecked Sendable{
 	nonisolated(unsafe)let peerConnectionManager: PeerConnectionManager
 	nonisolated(unsafe)var webRtcInstance: privmx.WRTCIIHolder?
@@ -37,7 +38,7 @@ public final class WebRTCClient: @unchecked Sendable{
 	
 	nonisolated(unsafe)var lastProcessedAnswer: [String:privmx.endpoint.stream.SdpWithRoomModel] = [:]
 	
-	nonisolated(unsafe) var peerConnectionFactory : RTCPeerConnectionFactory
+	nonisolated(unsafe)var peerConnectionFactory : RTCPeerConnectionFactory
 	
 	func bindTrickleImpl(
 		_ trickleImpl:@escaping @Sendable (Int64,String)->Void
@@ -61,10 +62,10 @@ public final class WebRTCClient: @unchecked Sendable{
 	func bindCreatePeerConnectionImpl(
 	) {
 		peerConnectionManager._createPeerConnection = { streamRoomId in
-			var observer = PmxPeerConnectionObserver(
+			var observer = PMXPeerConnectionDelegate(
 				streamRoomId: streamRoomId,
 				peerConnectionFactory: self.peerConnectionFactory,
-				peerConnectionManager: self.peerConnectionManager
+				currentKeys: PMXKeyStore()
 			)
 			
 			observer.setOnVideoTrackCallback(self.videoTrackHandler)
@@ -77,6 +78,7 @@ public final class WebRTCClient: @unchecked Sendable{
 					optionalConstraints: nil),
 				delegate: observer), observer)
 		}
+			
 	}
 	
 	private static func setCppCallbacksInClient(
@@ -196,11 +198,11 @@ public final class WebRTCClient: @unchecked Sendable{
 					sessionId = context!.pointee.sessionId,
 					connectiontype = context!.pointee.connectionType
 				do{
-					if String(connectiontype) == ConnectionType.Publisher.rawValue{
+					if connectiontype == ConnectionType.Publisher.rawValue{
 						try this.peerConnectionManager.updateSessionForConnection(
 							streamRoomId: String(streamRoomId),
 							connectionType: .Publisher, sessionId: sessionId)
-					} else if String(connectiontype) == ConnectionType.Subscriber.rawValue {
+					} else if connectiontype == ConnectionType.Subscriber.rawValue {
 						try this.peerConnectionManager.updateSessionForConnection(
 							streamRoomId: String(streamRoomId),
 							connectionType: .Subscriber, sessionId: sessionId)
@@ -236,7 +238,7 @@ public final class WebRTCClient: @unchecked Sendable{
 					dbug += 1
 				}
 				for c in this.peerConnectionManager.connections[String(context!.pointee.roomId)] ?? [:]{
-					c.value.delegate.currentKeys.value.setKeys(nkeys)
+					c.value.delegate.currentKeys.setKeys(nkeys)
 				}
 				
 				return ""
@@ -385,7 +387,7 @@ public final class WebRTCClient: @unchecked Sendable{
 		track.published = true
 		var jc = try peerConnectionManager.getConnectionWithSession(streamRoomId: streamRoomId, connectionType: .Publisher)
 		var sender = jc.peerConnection.add(track.track!, streamIds: [track.streamId!])
-		var pfct = PMXFrameCryptorTransformer(for: sender!, with: peerConnectionFactory, pmxKeyStore: jc.delegate.currentKeys.value)
+		var pfct = PMXFrameCryptorTransformer(for: sender!, with: peerConnectionFactory, pmxKeyStore: jc.delegate.currentKeys)
 		var deleg = PMXFrameCryptorDelegate()
 		if pfct != nil{
 			pfct!.register(deleg)
@@ -402,7 +404,7 @@ public final class WebRTCClient: @unchecked Sendable{
 	)throws{
 		var jc = try peerConnectionManager.getConnectionWithSession(streamRoomId: streamRoomId, connectionType: .Publisher)
 		var sender = jc.peerConnection.add(track.track!, streamIds: [track.streamId!])
-		var pfct = PMXFrameCryptorTransformer(for: sender!, with: peerConnectionFactory, pmxKeyStore: jc.delegate.currentKeys.value)
+		var pfct = PMXFrameCryptorTransformer(for: sender!, with: peerConnectionFactory, pmxKeyStore: jc.delegate.currentKeys)
 		var deleg = PMXFrameCryptorDelegate()
 		if pfct != nil{
 			pfct!.register(deleg)
@@ -413,5 +415,5 @@ public final class WebRTCClient: @unchecked Sendable{
 	}
 	func addDesktopTrack(_ track: StreamTrackInfo){}
 }
-
+*/
 // #endif

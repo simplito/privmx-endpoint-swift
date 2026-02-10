@@ -125,10 +125,10 @@ public:
 				}
 			});
 			auto res = fstring.get();
-			std::cout<<"cOaSLD done"<<std::endl;
+			//std::cout<<"cOaSLD done"<<std::endl;
 			return res;
 		} else {
-			std::cout<<"cOaSLD failed"<<std::endl;
+			//std::cout<<"cOaSLD failed"<<std::endl;
 			throw CallbackNotSet();
 		}
 	}
@@ -154,10 +154,10 @@ public:
 				}
 			});
 			auto res = fstring.get();
-			std::cout<<"cAaSD done"<<std::endl;
+			//std::cout<<"cAaSD done"<<std::endl;
 			return res;
 		} else {
-			std::cout<<"cAaSD failed"<<std::endl;
+			//std::cout<<"cAaSD failed"<<std::endl;
 			throw CallbackNotSet();
 		}
 	}
@@ -180,16 +180,16 @@ public:
 				}
 			});
 			cb.get();
-			std::cout<<"sAaSRD done"<<std::endl;
+		//	std::cout<<"sAaSRD done"<<std::endl;
 		} else {
-			std::cout<<"sAaSRD failed"<<std::endl;
+		//	std::cout<<"sAaSRD failed"<<std::endl;
 			throw CallbackNotSet();
 		}
 	}
 	 virtual void updateSessionId(const std::string& streamRoomId,
 						 const int64_t sessionId,
 								  const std::string& connectionType) override{
-		 std::cout<<"updating Seesion Id..."<<std::endl;
+		// std::cout<<"updating Seesion Id..."<<std::endl;
 		 if (_usicb){
 			 USICBParam ctx {
 				 .roomId = streamRoomId,
@@ -204,14 +204,14 @@ public:
 				 }
 			 });
 			 cb.get();
-			 std::cout<<"uSI done"<<std::endl;
+			// std::cout<<"uSI done"<<std::endl;
 		 } else {
-			 std::cout<<"uSI done failed"<<std::endl;
+			//std::cout<<"uSI done failed"<<std::endl;
 			 throw CallbackNotSet();
 		 }
 	 }
 	virtual void close(const std::string& streamRoomId)override{
-		std::cout<<"closing"<<std::endl;
+		//std::cout<<"closing"<<std::endl;
 		if(_ccb){
 			CCBParam ctx{
 				.roomId = streamRoomId,
@@ -224,9 +224,9 @@ public:
 				}
 			});
 			cb.get();
-			std::cout<<"closing done"<<std::endl;
+		//	std::cout<<"closing done"<<std::endl;
 		} else {
-			std::cout<<"closing failed"<<std::endl;
+			//std::cout<<"closing failed"<<std::endl;
 			throw CallbackNotSet();
 		}
 	}
@@ -238,24 +238,24 @@ public:
 			 .context = _ukcbContext
 		 };
 		 
-		 std::cout<<"updating "<<keys.size()<<" Keys... "<<std::endl;
+		 //std::cout<<"[dbg]updating "<<keys.size()<<" Keys... "<<std::endl;
 		 if(_ukcb){
 			 std::future<void> cb = std::async([&](){
 				 if (_ukcb && _ukcbContext){
-					 printf("%p", &_ukcb);
-					 std::cout<<"(uK) still has callback and context:"<<_ukcbContext<<std::endl;
+				//	 printf("%p", &_ukcb);
+				//	 std::cout<<"(uK) still has callback and context:"<<_ukcbContext<<std::endl;
 				 }
 				 auto res = _ukcb(&ctx);//ctx);
 				 if (res != ""){
-					 std::cout<<"uK failed"<<std::endl;
+				//	 std::cout<<"uK failed"<<std::endl;
 					 throw SwiftErrorException(InternalError());
 				 }
 				 std::cout<<res<<std::endl;
 			 });
 			 cb.get();
-			 std::cout<<"uK done"<<std::endl;
+			 //std::cout<<"uK done"<<std::endl;
 		 } else {
-			 std::cout<<"uK failed"<<std::endl;
+			 //std::cout<<"uK failed"<<std::endl;
 			 throw CallbackNotSet();
 		 }
 	 }
