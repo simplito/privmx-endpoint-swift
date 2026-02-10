@@ -26,7 +26,6 @@ let package = Package(
 			targets: [
 				"PrivMXEndpointSwift",
 				"PrivMXEndpointSwiftNative",
-				"PrivMXEndpointStreamsLow",
 				"PrivMXEndpoint",
 				"WebRTC",
 				"POCO",
@@ -50,10 +49,6 @@ let package = Package(
 			dependencies: [
 				"PrivMXEndpointSwiftNative",
 				.target(
-					name: "PrivMXEndpointStreamsLow",
-					//condition: .when(traits: ["Streams"])
-				),
-				.target(
 					name: "WebRTC",
 						//condition: .when(traits: ["Streams"])
 					   )
@@ -61,18 +56,6 @@ let package = Package(
 			swiftSettings: [
 				.interoperabilityMode(.Cxx),
 			]),
-		.target(
-			name: "PrivMXEndpointStreamsLow",
-			dependencies: [
-				"WebRTC",
-				"PrivMXEndpointSwiftNative"
-			],
-			swiftSettings: [
-				.interoperabilityMode(.Cxx),
-						   ]),
-		//.binaryTarget(
-		//	name:"PMXStreamModule",
-		//	path: "../Frameworks/WebRTC.xcframework"),
 		.binaryTarget(
 			name:"WebRTC",
 			path: "../Frameworks/WebRTC.xcframework"),

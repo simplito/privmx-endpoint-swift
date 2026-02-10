@@ -17,6 +17,7 @@ import PrivMXEndpointSwiftNative
 /// and extract the events if present. It acts as a Swift wrapper for PrivMX Core Event handling mechanisms.
 public enum EventHandler{
 	
+	// MARK: - Core
 	/// Checks whether event held in the 'EventHolder' is an 'LibConnectedEvent'
 	///
 	/// - Parameter eventHolder: holder object that wraps the 'Event'
@@ -385,6 +386,8 @@ public enum EventHandler{
 		return result
 	}
 	
+	//MARK: - Store
+	
 	/// Checks whether event held in the 'EventHolder' is an 'StoreCreatedEvent'
 	///
 	/// - Parameter eventHolder: holder object that wraps the 'Event'
@@ -708,6 +711,7 @@ public enum EventHandler{
 		return result
 	}
 	
+	//MARK: - Thread
 	
 	/// Checks whether event held in the 'EventHolder' is an 'ThreadCreatedEvent'
 	///
@@ -1080,6 +1084,8 @@ public enum EventHandler{
 		return result
 	}
 	
+	// MARK: - Inbox
+	
 	/// Checks whether event held in the 'EventHolder' is an 'InboxCreatedEvent'
 	///
 	/// - Parameter eventHolder: holder object that wraps the 'Event'
@@ -1310,6 +1316,8 @@ public enum EventHandler{
 		return result
 	}
 	
+	//MARK: - Event
+	
 	/// Checks whether event held in the 'EventHolder' is an 'ContextCustomEvent'
 	///
 	/// - Parameter eventHolder: holder object that wraps the 'Event'
@@ -1356,6 +1364,8 @@ public enum EventHandler{
 		return result
 	}
 	
+	//MARK: - KVDB
+	 
 	/// Checks whether event held in the 'EventHolder' is an 'KvdbCreatedEvent'
 	///
 	/// - Parameter eventHolder: holder object that wraps the 'Event'
@@ -1679,5 +1689,342 @@ public enum EventHandler{
 		}
 		return result
 	}
+
+	//MARK: - Stream
+	
+	public static func isStreamRoomCreatedEvent(
+		in holder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.StreamApiLowEventHandler.isStreamRoomCreatedEvent(holder)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	public static func extractStreamRoomCreatedEvent(
+		in holder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.stream.StreamRoomCreatedEvent {
+		let res = privmx.StreamApiLowEventHandler.extractStreamRoomCreatedEvent(holder)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
+	
+	public static func isStreamRoomUpdatedEvent(
+		in holder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.StreamApiLowEventHandler.isStreamRoomUpdatedEvent(holder)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	public static func extractStreamRoomUpdatedEvent(
+		in holder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.stream.StreamRoomUpdatedEvent {
+		let res = privmx.StreamApiLowEventHandler.extractStreamRoomUpdatedEvent(holder)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
+	
+	public static func isStreamRoomDeletedEvent(
+		in holder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.StreamApiLowEventHandler.isStreamRoomDeletedEvent(holder)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	public static func extractStreamRoomDeletedEvent(
+		in holder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.stream.StreamRoomDeletedEvent {
+		let res = privmx.StreamApiLowEventHandler.extractStreamRoomDeletedEvent(holder)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
+	
+	public static func isStreamJoinedEvent(
+		in holder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.StreamApiLowEventHandler.isStreamJoinedEvent(holder)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	public static func extractStreamJoinedEvent(
+		in holder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.stream.StreamJoinedEvent {
+		let res = privmx.StreamApiLowEventHandler.extractStreamJoinedEvent(holder)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
+	
+	public static func isStreamUnpublishedEvent(
+		in holder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.StreamApiLowEventHandler.isStreamUnpublishedEvent(holder)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	public static func extractStreamUnpublishedEvent(
+		in holder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.stream.StreamUnpublishedEvent {
+		let res = privmx.StreamApiLowEventHandler.extractStreamUnpublishedEvent(holder)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
+	
+	public static func isStreamPublishedEvent(
+		in holder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.StreamApiLowEventHandler.isStreamPublishedEvent(holder)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	public static func extractStreamPublishedEvent(
+		in holder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.stream.StreamPublishedEvent {
+		let res = privmx.StreamApiLowEventHandler.extractStreamPublishedEvent(holder)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
+	
+	
+	public static func isStreamLeftEvent(
+		in holder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.StreamApiLowEventHandler.isStreamLeftEvent(holder)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	public static func extractStreamLeftEvent(
+		in holder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.stream.StreamLeftEvent {
+		let res = privmx.StreamApiLowEventHandler.extractStreamLeftEvent(holder)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
+	
+	
+	public static func isStreamNewStreamsEvent(
+		in holder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.StreamApiLowEventHandler.isStreamNewStreamsEvent(holder)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	public static func extractStreamNewStreamsEvent(
+		in holder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.stream.StreamNewStreamsEvent {
+		let res = privmx.StreamApiLowEventHandler.extractStreamNewStreamsEvent(holder)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
+	
+	
+	public static func isStreamsUpdatedEvent(
+		in holder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.StreamApiLowEventHandler.isStreamsUpdatedEvent(holder)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	public static func extractStreamsUpdatedEvent(
+		in holder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.stream.StreamsUpdatedEvent {
+		let res = privmx.StreamApiLowEventHandler.extractStreamsUpdatedEvent(holder)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
+	
+	
+	public static func isStreamUpdatedEvent(
+		in holder: privmx.endpoint.core.EventHolder
+	) throws -> Bool {
+		let res = privmx.StreamApiLowEventHandler.isStreamUpdatedEvent(holder)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedQueryingEventHolder(err)
+		}
+		return result
+	}
+	public static func extractStreamUpdatedEvent(
+		in holder: privmx.endpoint.core.EventHolder
+	) throws -> privmx.endpoint.stream.StreamUpdatedEvent {
+		let res = privmx.StreamApiLowEventHandler.extractStreamUpdatedEvent(holder)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
+		}
+		return result
+	}
+	
 
 }
