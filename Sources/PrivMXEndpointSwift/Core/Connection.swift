@@ -37,7 +37,7 @@ public class Connection{
 	}
 	
 	/// An instance of the wrapped C++ class.
-	package var api: privmx.NativeConnectionWrapper
+	public var api: privmx.NativeConnectionWrapper
 	
 	/// Connects to the PrivMX Bridge server.
 	///

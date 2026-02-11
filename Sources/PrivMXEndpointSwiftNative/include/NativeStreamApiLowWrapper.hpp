@@ -144,7 +144,7 @@ public:
 	static ResultWithError<endpoint::stream::StreamUpdatedEvent> extractStreamUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
 	
 };
-
+namespace endpoint::wrapper{
 static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::StreamRoomCreatedEvent& event){
 	return endpoint::wrapper::_get_subIds_from_event(event);
 }
@@ -171,6 +171,11 @@ static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::str
 }
 static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::StreamsUpdatedEvent& event){
 	return endpoint::wrapper::_get_subIds_from_event(event);
+}
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::StreamUpdatedEvent& event){
+	return endpoint::wrapper::_get_subIds_from_event(event);
+	
+}
 }
 
 class WRTCIIHolder{
