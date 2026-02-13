@@ -41,7 +41,7 @@ final class RoomSessionManager{
 			 audioDevice: audioHandler)
 		)
 		mgr.initOptions = options
-		setCppCallbacksInManager(&mgr)
+		//setCppCallbacksInSession(&mgr)
 		return mgr
 	}
 	#else

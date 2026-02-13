@@ -12,7 +12,7 @@
 // #if Streams
 import Foundation
 import WebRTC
-import PrivMXEndpointStreamsLow
+import PrivMXEndpointSwiftNative
 
 public struct DataChannelMeta: Hashable{
 	var name: String

@@ -12,7 +12,6 @@
 // #if Streams
 import Foundation
 import PrivMXEndpointSwiftNative
-import PrivMXEndpointStreamsLow
 import WebRTC
 
 final public class StreamData:@unchecked Sendable{

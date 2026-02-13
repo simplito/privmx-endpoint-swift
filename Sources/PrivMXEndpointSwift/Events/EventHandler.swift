@@ -1695,7 +1695,7 @@ public enum EventHandler{
 	public static func isStreamRoomCreatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> Bool {
-		let res = privmx.StreamApiLowEventHandler.isStreamRoomCreatedEvent(holder)
+		let res = privmx.StreamApiLowEventHandler.isStreamRoomCreatedEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedQueryingEventHolder(err)
 		}
@@ -1711,7 +1711,7 @@ public enum EventHandler{
 	public static func extractStreamRoomCreatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.stream.StreamRoomCreatedEvent {
-		let res = privmx.StreamApiLowEventHandler.extractStreamRoomCreatedEvent(holder)
+		let res = privmx.StreamApiLowEventHandler.extractStreamRoomCreatedEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
 		}
@@ -1728,7 +1728,7 @@ public enum EventHandler{
 	public static func isStreamRoomUpdatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> Bool {
-		let res = privmx.StreamApiLowEventHandler.isStreamRoomUpdatedEvent(holder)
+		let res = privmx.StreamApiLowEventHandler.isStreamRoomUpdatedEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedQueryingEventHolder(err)
 		}
@@ -1744,7 +1744,7 @@ public enum EventHandler{
 	public static func extractStreamRoomUpdatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.stream.StreamRoomUpdatedEvent {
-		let res = privmx.StreamApiLowEventHandler.extractStreamRoomUpdatedEvent(holder)
+		let res = privmx.StreamApiLowEventHandler.extractStreamRoomUpdatedEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
 		}
@@ -1761,7 +1761,7 @@ public enum EventHandler{
 	public static func isStreamRoomDeletedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> Bool {
-		let res = privmx.StreamApiLowEventHandler.isStreamRoomDeletedEvent(holder)
+		let res = privmx.StreamApiLowEventHandler.isStreamRoomDeletedEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedQueryingEventHolder(err)
 		}
@@ -1777,7 +1777,7 @@ public enum EventHandler{
 	public static func extractStreamRoomDeletedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.stream.StreamRoomDeletedEvent {
-		let res = privmx.StreamApiLowEventHandler.extractStreamRoomDeletedEvent(holder)
+		let res = privmx.StreamApiLowEventHandler.extractStreamRoomDeletedEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
 		}
@@ -1794,7 +1794,7 @@ public enum EventHandler{
 	public static func isStreamJoinedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> Bool {
-		let res = privmx.StreamApiLowEventHandler.isStreamJoinedEvent(holder)
+		let res = privmx.StreamApiLowEventHandler.isStreamJoinedEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedQueryingEventHolder(err)
 		}
@@ -1810,7 +1810,7 @@ public enum EventHandler{
 	public static func extractStreamJoinedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.stream.StreamJoinedEvent {
-		let res = privmx.StreamApiLowEventHandler.extractStreamJoinedEvent(holder)
+		let res = privmx.StreamApiLowEventHandler.extractStreamJoinedEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
 		}
@@ -1827,7 +1827,7 @@ public enum EventHandler{
 	public static func isStreamUnpublishedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> Bool {
-		let res = privmx.StreamApiLowEventHandler.isStreamUnpublishedEvent(holder)
+		let res = privmx.StreamApiLowEventHandler.isStreamUnpublishedEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedQueryingEventHolder(err)
 		}
@@ -1843,7 +1843,7 @@ public enum EventHandler{
 	public static func extractStreamUnpublishedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.stream.StreamUnpublishedEvent {
-		let res = privmx.StreamApiLowEventHandler.extractStreamUnpublishedEvent(holder)
+		let res = privmx.StreamApiLowEventHandler.extractStreamUnpublishedEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
 		}
@@ -1860,7 +1860,7 @@ public enum EventHandler{
 	public static func isStreamPublishedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> Bool {
-		let res = privmx.StreamApiLowEventHandler.isStreamPublishedEvent(holder)
+		let res = privmx.StreamApiLowEventHandler.isStreamPublishedEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedQueryingEventHolder(err)
 		}
@@ -1876,7 +1876,7 @@ public enum EventHandler{
 	public static func extractStreamPublishedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.stream.StreamPublishedEvent {
-		let res = privmx.StreamApiLowEventHandler.extractStreamPublishedEvent(holder)
+		let res = privmx.StreamApiLowEventHandler.extractStreamPublishedEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
 		}
@@ -1894,7 +1894,7 @@ public enum EventHandler{
 	public static func isStreamLeftEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> Bool {
-		let res = privmx.StreamApiLowEventHandler.isStreamLeftEvent(holder)
+		let res = privmx.StreamApiLowEventHandler.isStreamLeftEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedQueryingEventHolder(err)
 		}
@@ -1910,7 +1910,7 @@ public enum EventHandler{
 	public static func extractStreamLeftEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.stream.StreamLeftEvent {
-		let res = privmx.StreamApiLowEventHandler.extractStreamLeftEvent(holder)
+		let res = privmx.StreamApiLowEventHandler.extractStreamLeftEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
 		}
@@ -1928,7 +1928,7 @@ public enum EventHandler{
 	public static func isStreamNewStreamsEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> Bool {
-		let res = privmx.StreamApiLowEventHandler.isStreamNewStreamsEvent(holder)
+		let res = privmx.StreamApiLowEventHandler.isStreamNewStreamsEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedQueryingEventHolder(err)
 		}
@@ -1944,7 +1944,7 @@ public enum EventHandler{
 	public static func extractStreamNewStreamsEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.stream.StreamNewStreamsEvent {
-		let res = privmx.StreamApiLowEventHandler.extractStreamNewStreamsEvent(holder)
+		let res = privmx.StreamApiLowEventHandler.extractStreamNewStreamsEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
 		}
@@ -1962,7 +1962,7 @@ public enum EventHandler{
 	public static func isStreamsUpdatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> Bool {
-		let res = privmx.StreamApiLowEventHandler.isStreamsUpdatedEvent(holder)
+		let res = privmx.StreamApiLowEventHandler.isStreamsUpdatedEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedQueryingEventHolder(err)
 		}
@@ -1978,7 +1978,7 @@ public enum EventHandler{
 	public static func extractStreamsUpdatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.stream.StreamsUpdatedEvent {
-		let res = privmx.StreamApiLowEventHandler.extractStreamsUpdatedEvent(holder)
+		let res = privmx.StreamApiLowEventHandler.extractStreamsUpdatedEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
 		}
@@ -1996,7 +1996,7 @@ public enum EventHandler{
 	public static func isStreamUpdatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> Bool {
-		let res = privmx.StreamApiLowEventHandler.isStreamUpdatedEvent(holder)
+		let res = privmx.StreamApiLowEventHandler.isStreamUpdatedEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedQueryingEventHolder(err)
 		}
@@ -2012,7 +2012,7 @@ public enum EventHandler{
 	public static func extractStreamUpdatedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> privmx.endpoint.stream.StreamUpdatedEvent {
-		let res = privmx.StreamApiLowEventHandler.extractStreamUpdatedEvent(holder)
+		let res = privmx.StreamApiLowEventHandler.extractStreamUpdatedEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
 		}

@@ -11,7 +11,6 @@
 
 // #if Streams
 import PrivMXEndpointSwiftNative
-import PrivMXEndpointStreamsLow
 import WebRTC
 
 
