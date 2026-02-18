@@ -11,7 +11,7 @@
 
 // #if Streams
 import Foundation
-import PrivMXEndpointStreamsLow
+import PrivMXEndpointSwiftNative
 import WebRTC
 
 @available(*, deprecated)

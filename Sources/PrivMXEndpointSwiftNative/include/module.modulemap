@@ -10,6 +10,9 @@ module PrivMXEndpointSwiftNative {
 	header "NativeEventApiWrapper.hpp"
 	header "NativeKvdbApiWrapper.hpp"
 	header "NativeExtKeyWrapper.hpp"
+	header "NativeStreamApiLowWrapper.hpp"
+	header "WebRtcInterfaceInstance.hpp"
+	
 	
     requires cplusplus17
     export *

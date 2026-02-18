@@ -11,7 +11,6 @@
 
 // #if Streams
 import PrivMXEndpointSwiftNative
-import PrivMXEndpointStreamsLow
 import Foundation
 import WebRTC
 #if os(macOS)
@@ -736,103 +735,6 @@ public class StreamApi: @unchecked Sendable{
 		_ handler: ((String,RTCAudioTrack) -> Void)?
 	) -> Void {
 		roomSessionManager.setAudioStreamsHandler(handler)
-	}
-}
-
-
-public extension EventHandler{
-
-	static func isStreamRoomCreatedEvent(
-		eventHolder: privmx.endpoint.core.EventHolder
-	) throws -> Bool {
-		let res = privmx.StreamApiLowEventHandler.isStreamRoomCreatedEvent(eventHolder)
-		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
-		}
-		guard let result = res.result.value else {
-			var err = privmx.InternalError()
-			err.name = "Value error"
-			err.description = "Unexpectedly recived nil result"
-			throw PrivMXEndpointError.failedQueryingEventHolder(err)
-		}
-		return result
-	}
-	static func extractStreamRoomCreatedEvent(
-		eventHolder: privmx.endpoint.core.EventHolder
-	) throws -> privmx.endpoint.stream.StreamRoomCreatedEvent {
-		let res = privmx.StreamApiLowEventHandler.extractStreamRoomCreatedEvent(eventHolder)
-		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
-		}
-		guard let result = res.result.value else {
-			var err = privmx.InternalError()
-			err.name = "Value error"
-			err.description = "Unexpectedly recived nil result"
-			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
-		}
-		return result
-	}
-	
-	static func isStreamRoomUpdatedEvent(
-		eventHolder: privmx.endpoint.core.EventHolder
-	) throws -> Bool {
-		let res = privmx.StreamApiLowEventHandler.isStreamRoomUpdatedEvent(eventHolder)
-		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
-		}
-		guard let result = res.result.value else {
-			var err = privmx.InternalError()
-			err.name = "Value error"
-			err.description = "Unexpectedly recived nil result"
-			throw PrivMXEndpointError.failedQueryingEventHolder(err)
-		}
-		return result
-	}
-	static func extractStreamRoomUpdatedEvent(
-		eventHolder: privmx.endpoint.core.EventHolder
-	) throws -> privmx.endpoint.stream.StreamRoomUpdatedEvent {
-		let res = privmx.StreamApiLowEventHandler.extractStreamRoomUpdatedEvent(eventHolder)
-		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
-		}
-		guard let result = res.result.value else {
-			var err = privmx.InternalError()
-			err.name = "Value error"
-			err.description = "Unexpectedly recived nil result"
-			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
-		}
-		return result
-	}
-	
-	static func isStreamRoomDeletedEvent(
-		eventHolder: privmx.endpoint.core.EventHolder
-	) throws -> Bool {
-		let res = privmx.StreamApiLowEventHandler.isStreamRoomDeletedEvent(eventHolder)
-		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedQueryingEventHolder(res.error.value!)
-		}
-		guard let result = res.result.value else {
-			var err = privmx.InternalError()
-			err.name = "Value error"
-			err.description = "Unexpectedly recived nil result"
-			throw PrivMXEndpointError.failedQueryingEventHolder(err)
-		}
-		return result
-	}
-	static func extractStreamRoomDeletedEvent(
-		eventHolder: privmx.endpoint.core.EventHolder
-	) throws -> privmx.endpoint.stream.StreamRoomDeletedEvent {
-		let res = privmx.StreamApiLowEventHandler.extractStreamRoomDeletedEvent(eventHolder)
-		guard res.error.value == nil else {
-			throw PrivMXEndpointError.failedExtractingEventFromHolder(res.error.value!)
-		}
-		guard let result = res.result.value else {
-			var err = privmx.InternalError()
-			err.name = "Value error"
-			err.description = "Unexpectedly recived nil result"
-			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
-		}
-		return result
 	}
 }
 

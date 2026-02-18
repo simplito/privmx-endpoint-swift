@@ -10,7 +10,7 @@
 //
 
 
-import PrivMXEndpointStreamsLow
+import PrivMXEndpointSwiftNative
 import WebRTC
 import SwiftUI
 #if os(macOS)
@@ -87,14 +87,10 @@ public struct StreamVideoView:UIViewControllerRepresentable {
 	
 	//public typealias UIViewType = VideoViewController
 	@Binding var videoTrack: RTCVideoTrack?
-	
-	let t :test
 	init(
 		videoTrack: Binding<RTCVideoTrack?>,
-		t: test
 	) {
 		self._videoTrack = videoTrack
-		self.t = t
 	}
 	public func makeUIViewController(
 		context: Context
