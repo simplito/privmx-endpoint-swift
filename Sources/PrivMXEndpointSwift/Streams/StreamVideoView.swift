@@ -21,23 +21,33 @@ import UIKit
 
 #if os(macOS)
 public class VideoViewController: NSViewController {
-	var remoteVideoTrack: RTCVideoTrack?
+	weak var remoteVideoTrack: RTCVideoTrack?{
+		didSet{
+			if remoteVideoTrack == nil{
+				if let remoteVideoView{
+					oldValue?.remove(remoteVideoView)
+				}
+			}
+		}
+	}
 	var remoteVideoView: RTCMTLVideoView?
 	
 	override public func viewDidLoad() {
 		super.viewDidLoad()
 
-		self.remoteVideoView = RTCMTLVideoView(frame: self.view.frame)
+		self.remoteVideoView = RTCMTLVideoView(frame: self.view.bounds)
 		if let remoteVideoView = self.remoteVideoView {
 			self.view.addSubview(remoteVideoView)
 		}
+	}
+	public override func viewDidLayout() {
+		remoteVideoView?.frame = self.view.bounds
 	}
 }
 
 
 public struct StreamVideoView:NSViewControllerRepresentable {
 	public typealias NSViewControllerType = VideoViewController
-	
 	@Binding var videoTrack: RTCVideoTrack?
 	var videoViewDelegate :RTCVideoViewDelegate?
 	
@@ -48,6 +58,8 @@ public struct StreamVideoView:NSViewControllerRepresentable {
 		self._videoTrack = videoTrack
 		self.videoViewDelegate = videoViewDelegate
 	}
+	
+	
 	public func makeNSViewController(
 		context: Context
 	) -> VideoViewController {
@@ -64,33 +76,57 @@ public struct StreamVideoView:NSViewControllerRepresentable {
 		if nil != nsView.remoteVideoView{
 			videoTrack?.add(nsView.remoteVideoView!)
 		}
+		let frame = nsView.view.bounds
+		nsView.remoteVideoView?.frame = frame
 		nsView.remoteVideoView?.isEnabled = true
 	}
 }
 
 #elseif os(iOS)
 public class VideoViewController: UIViewController {
-	var remoteVideoTrack: RTCVideoTrack?
+	weak var remoteVideoTrack: RTCVideoTrack?{
+		didSet{
+			if remoteVideoTrack == nil{
+				if let remoteVideoView{
+					oldValue?.remove(remoteVideoView)
+				}
+			}
+		}
+	}
 	var remoteVideoView: RTCMTLVideoView?
-
+	
+	
+	
 	override public func viewDidLoad() {
 		super.viewDidLoad()
 
-		self.remoteVideoView = RTCMTLVideoView(frame: self.view.frame)
+		self.remoteVideoView = RTCMTLVideoView(frame: self.view.bounds)
 		if let remoteVideoView = self.remoteVideoView {
 			self.view.addSubview(remoteVideoView)
+			remoteVideoView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 		}
 	}
+	
+	override public func viewDidLayoutSubviews(){
+		super.viewDidLayoutSubviews()
+		
+		self.remoteVideoView?.frame = self.view.bounds
+	}
+	
 }
 public struct StreamVideoView:UIViewControllerRepresentable {
 	public typealias UIViewControllerType = VideoViewController
 	
 	//public typealias UIViewType = VideoViewController
 	@Binding var videoTrack: RTCVideoTrack?
-	init(
+
+	weak var videoViewDelegate: RTCVideoViewDelegate?
+	public init(
 		videoTrack: Binding<RTCVideoTrack?>,
+		videoViewDelegate: RTCVideoViewDelegate? = nil
 	) {
 		self._videoTrack = videoTrack
+		self.videoViewDelegate = videoViewDelegate
 	}
 	public func makeUIViewController(
 		context: Context
@@ -109,7 +145,10 @@ public struct StreamVideoView:UIViewControllerRepresentable {
 		if nil != nsView.remoteVideoView{
 			videoTrack?.add(nsView.remoteVideoView!)
 		}
+		var frame = nsView.view.bounds
+		nsView.remoteVideoView?.frame = frame
 		nsView.remoteVideoView?.isEnabled = true
 	}
+
 }
 #endif
