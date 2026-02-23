@@ -274,7 +274,6 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		didStartReceivingOn transceiver: RTCRtpTransceiver
 	) {
 		print("[Streams] Started receiving on transciever")
-		onStartedReceiving?(peerConnection,transceiver)
 		let receiver = transceiver.receiver
 		if let track = receiver.track, var peerConnectionFactory {
 			var pfct = PMXFrameCryptorTransformer(for: receiver, with: peerConnectionFactory, pmxKeyStore: currentKeys)
@@ -284,22 +283,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 			pfct!.setDropFramesIfCryptionFailed(true)
 				cryptors.value[track.trackId] = (pfct!,deleg)
 			}
-			if track.kind == kRTCMediaStreamTrackKindVideo {
-				if let track = track as? RTCVideoTrack{
-					print("Got a Video Track")
-					onVideoTrack?("\(streamRoomId)-\(track.trackId)", track)
-				} else {
-					print("Couldn't cast media track as video track")
-				}
-			}
-			else if track.kind == kRTCMediaStreamTrackKindAudio {
-				if let track = track as? RTCAudioTrack{
-					print("Got an Audio Track")
-					onAudioTrack?("\(streamRoomId)-\(track.trackId)",track)
-				}else{
-					print("Couldn't cast media track as audio track")
-				}
-			}
+			onStartedReceiving?(peerConnection,transceiver)
 		}
 	}
 	

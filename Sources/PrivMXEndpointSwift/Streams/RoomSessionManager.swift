@@ -13,16 +13,16 @@ import PrivMXEndpointSwiftNative
 import WebRTC
 import Foundation
 
-final class RoomSessionManager{
-	private var rtcConfiguration: RTCConfiguration = RTCConfiguration()
+final class RoomSessionManager: Sendable{
+	nonisolated(unsafe) private var rtcConfiguration: RTCConfiguration = RTCConfiguration()
 	
 	nonisolated(unsafe) var streamHandles: [privmx.endpoint.stream.StreamHandle:String] = [:]
 	nonisolated(unsafe) var roomSessions: [String:RoomJanusSession] = [:]
 	
 	private let onTrickle: @Sendable (Int64,String) throws -> Void
-	let peerConnectionFactory: RTCPeerConnectionFactory
-	private var initOptions: InitOptions?
-	
+	nonisolated(unsafe) let peerConnectionFactory: RTCPeerConnectionFactory
+	nonisolated(unsafe) private var initOptions: InitOptions?
+	nonisolated(unsafe) var track2Stream: [String:String] = [:]
 	#if os(iOS)
 	static func create(
 		onTrickle: @escaping @Sendable (Int64,String) throws -> Void,
@@ -192,17 +192,17 @@ final class RoomSessionManager{
 			sender: sender,
 			frameCryptor: cryptor)
 	}
-	var onATrack: ((String,RTCAudioTrack) -> Void)?
+	nonisolated(unsafe) var onAudioTrack: ((String,RTCAudioTrack) -> Void)?
 	func setAudioStreamsHandler(
 	_ handler: ((String,RTCAudioTrack) -> Void)?
 	) -> Void{
-		self.onATrack = handler
+		self.onAudioTrack = handler
 	}
-	var onVTrack: ((String,RTCVideoTrack) -> Void)?
+	nonisolated(unsafe)var onVideoTrack: ((String,RTCVideoTrack) -> Void)?
 	func setVideoStreamsHandler(
 	_ handler: ((String,RTCVideoTrack) -> Void)?
 	) -> Void{
-		self.onVTrack = handler
+		self.onVideoTrack = handler
 	}
 	
 	func createPeerConnection(
@@ -214,8 +214,35 @@ final class RoomSessionManager{
 			peerConnectionFactory: self.peerConnectionFactory,
 			currentKeys: &keyStore
 		)
-		observer.setOnAudioTrackCallback(onATrack)
-		observer.setOnVideoTrackCallback(onVTrack)
+		observer.setTracksAddedCallback({
+			pc, receiver, mediaStreams in
+			if let trackId = receiver.track?.trackId, mediaStreams.count > 0{
+				self.track2Stream[trackId] = mediaStreams[0].streamId
+			}
+		})
+		observer.setStartedReceivingCallback({
+			pc,transciever in
+			if let track = transciever.receiver.track, let streamId = self.track2Stream[track.trackId]{
+				if track.kind == kRTCMediaStreamTrackKindVideo {
+					if let track = track as? RTCVideoTrack{
+						print("Got a Video Track")
+						self.onVideoTrack?(streamId, track)
+					} else {
+						print("Couldn't cast media track as video track")
+					}
+				}
+				else if track.kind == kRTCMediaStreamTrackKindAudio {
+					if let track = track as? RTCAudioTrack{
+						print("Got an Audio Track")
+						self.onAudioTrack?(streamId,track)
+					}else{
+						print("Couldn't cast media track as audio track")
+					}
+				}
+			}
+		})
+		observer.setOnAudioTrackCallback(onAudioTrack)
+		observer.setOnVideoTrackCallback(onVideoTrack)
 		return (self.peerConnectionFactory.peerConnection(
 			with: RTCConfiguration(),
 			constraints: RTCMediaConstraints.init(
