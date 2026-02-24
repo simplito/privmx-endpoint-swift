@@ -41,7 +41,7 @@ public class JanusConnection: @unchecked Sendable{
 	}
 }
 
-public final class JanusPublisher:JanusConnection{
+public final class JanusPublisher:JanusConnection, @unchecked Sendable{
 	var audioTracks: [String: AudioTrackInfo] = [:]
 	var videoTracks: [String: VideoTrackInfo] = [:]
 	var videoCapturers: [String: RTCVideoCapturer] = [:]
@@ -78,7 +78,7 @@ public final class JanusPublisher:JanusConnection{
 	}
 }
 
-public final class JanusSubscriber:JanusConnection{
+public final class JanusSubscriber:JanusConnection, @unchecked Sendable{
 	override func reconfigure(
 		sdp: String,
 		type: String,
