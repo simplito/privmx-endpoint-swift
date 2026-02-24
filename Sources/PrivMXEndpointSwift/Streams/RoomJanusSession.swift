@@ -48,6 +48,10 @@ class RoomJanusSession{
 						description: "")
 				)
 			}
+			del.setPeerConnectionStateChangedCallback({
+				_, state in
+				print("[pmx][pcObserver] Publisher changed state to: ",state)
+			})
 			del.currentKeys = keyStore.value
 			del.setOnAudioTrackCallback(defaultAudioTrackHandler)
 			del.setOnVideoTrackCallback(defaultVideoTrackHandler)
@@ -70,6 +74,10 @@ class RoomJanusSession{
 						description: "")
 				)
 			}
+			del.setPeerConnectionStateChangedCallback({
+				_, state in
+				print("[pmx][pcObserver] Publisher changed state to: ",state)
+			})
 			_subJC = MutexGuarded(JanusSubscriber(
 				peerConnection: pc,
 				peerConnectionDelegate: del

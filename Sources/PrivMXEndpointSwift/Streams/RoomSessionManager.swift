@@ -216,6 +216,7 @@ final class RoomSessionManager{
 		)
 		observer.setOnAudioTrackCallback(onATrack)
 		observer.setOnVideoTrackCallback(onVTrack)
+		
 		return (self.peerConnectionFactory.peerConnection(
 			with: RTCConfiguration(),
 			constraints: RTCMediaConstraints.init(

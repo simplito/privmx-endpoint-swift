@@ -28,8 +28,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		peerConnectionFactory: RTCPeerConnectionFactory,
 		currentKeys: inout PMXKeyStore,
 		onConnectionSignalingStateChanged: ((RTCPeerConnection, RTCSignalingState) -> Void)? = nil,
-		onSubscriberConnectionStateChanged: (@Sendable(RTCPeerConnectionState) -> Void)? = nil,
-		onPublisherConnectionStateChanged: (@Sendable(RTCPeerConnectionState) -> Void)? = nil,
+		onConnectionPeerStateChanged: ((RTCPeerConnection, RTCPeerConnectionState) -> Void)? = nil,
 		onStreamAdded: ((RTCPeerConnection, RTCMediaStream) -> Void)? = nil,
 		onStreamRemoved: ((RTCPeerConnection, RTCMediaStream) -> Void)? = nil,
 		onShouldRenegotiate: ((RTCPeerConnection) -> Void)? = nil,
@@ -50,8 +49,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		self.streamRoomId = streamRoomId
 		self.currentKeys = currentKeys
 		self.onConnectionSignalingStateChanged = onConnectionSignalingStateChanged
-		self.subscriberConnectionStateChanged = onSubscriberConnectionStateChanged
-		self.publisherConnectionStateChanged = onPublisherConnectionStateChanged
+		self.onConnectionPeerStateChanged = onConnectionPeerStateChanged
 		self.onStreamAdded = onStreamAdded
 		self.onStreamRemoved = onStreamRemoved
 		self.onShouldRenegotiate = onShouldRenegotiate
@@ -70,8 +68,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 	
 	
 	private var onConnectionSignalingStateChanged: ((RTCPeerConnection,RTCSignalingState)->Void)?
-	private var publisherConnectionStateChanged: ((RTCPeerConnectionState)->Void)?
-	private var subscriberConnectionStateChanged: ((RTCPeerConnectionState)->Void)?
+	private var onConnectionPeerStateChanged: ((RTCPeerConnection,RTCPeerConnectionState)->Void)?
 	private var onStreamAdded: ((RTCPeerConnection,RTCMediaStream)->Void)?
 	private var onStreamRemoved: ((RTCPeerConnection,RTCMediaStream)->Void)?
 	private var onShouldRenegotiate: ((RTCPeerConnection)->Void)?
@@ -113,15 +110,10 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		onConnectionSignalingStateChanged = cb
 	}
 	
-	public func setPublisherConnectionStateChangedCallback(
-		_ cb :(@Sendable (RTCPeerConnectionState)->Void)?
+	public func setPeerConnectionStateChangedCallback(
+		_ cb :(@Sendable (RTCPeerConnection,RTCPeerConnectionState)->Void)?
 	){
-		publisherConnectionStateChanged = cb
-	}
-	public func setSubscriberConnectionStateChangedCallback(
-		_ cb :(@Sendable (RTCPeerConnectionState)->Void)?
-	){
-		subscriberConnectionStateChanged = cb
+		onConnectionPeerStateChanged = cb
 	}
 	public func setStreamAddedCallback(
 		_ cb :(@Sendable (RTCPeerConnection,RTCMediaStream)->Void)?
@@ -327,12 +319,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		didChange newState: RTCPeerConnectionState
 	) {
 		print("[dbg]peerconnection state changed to", newState, newState.rawValue, "on : \(peerConnection)")
-		if peerConnection.localDescription?.type == .answer ||
-			peerConnection.localDescription?.type == .prAnswer{
-			subscriberConnectionStateChanged?(newState)
-		}else if peerConnection.localDescription?.type == .offer{
-			publisherConnectionStateChanged?(newState)
-		}
+		onConnectionPeerStateChanged?(peerConnection,newState)
 	}
 	
 	public func peerConnection(
