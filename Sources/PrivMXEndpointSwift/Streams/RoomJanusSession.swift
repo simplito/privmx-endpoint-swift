@@ -20,6 +20,7 @@ class RoomJanusSession{
 		_getPeerConnectionWithDelegate: @escaping () -> (RTCPeerConnection?, PMXPeerConnectionDelegate),
 		audioTrackHandler: ((String,RTCAudioTrack) -> Void) = {_,_ in},
 		videoTrackHandler: ((String,RTCVideoTrack) -> Void) = {_,_ in},
+		connectionStateChangedCallback:((RTCPeerConnectionState) -> Void) = {_ in}
 	) {
 		self._getPeerConnectionWithDelegate = _getPeerConnectionWithDelegate
 		self.roomId = roomId

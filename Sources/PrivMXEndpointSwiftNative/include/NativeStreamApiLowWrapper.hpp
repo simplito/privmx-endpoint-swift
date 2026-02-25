@@ -81,12 +81,10 @@ public:
 	ResultWithError<std::nullptr_t> unpublishStream(const endpoint::stream::StreamHandle& streamHandle);
 	
 	ResultWithError<nullptr_t> subscribeToRemoteStreams(const std::string& streamRoomId,
-													  const StreamSubscriptiopnsVector& subscriptions,
-													  const endpoint::stream::Settings& options);
+													  const StreamSubscriptiopnsVector& subscriptions);
 	ResultWithError<nullptr_t> modifyRemoteStreamsSubscriptions(const std::string& streamRoomId,
 																const StreamSubscriptiopnsVector& subscriptionsToAdd,
-																const StreamSubscriptiopnsVector& subscriptionsToRemove,
-																const endpoint::stream::Settings& options);
+																const StreamSubscriptiopnsVector& subscriptionsToRemove);
 	ResultWithError<nullptr_t> unsubscribeFromRemoteStreams(const std::string& streamRoomId,
 														  const StreamSubscriptiopnsVector& subscriptionsToRemove);
 	

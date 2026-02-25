@@ -265,7 +265,9 @@ public class StreamApi: @unchecked Sendable{
 	public func joinStreamRoom(
 		_ streamRoomId: String,
 		audioTrackHandler: ((String,RTCAudioTrack) -> Void)?,
-		videoTrackHandler: ((String,RTCVideoTrack) -> Void)?
+		videoTrackHandler: ((String,RTCVideoTrack) -> Void)?,
+		subscriberConnectionStateChangedCallback: ((RTCPeerConnectionState)->Void)?,
+		publisherConnectionStateChangedCallback: ((RTCPeerConnectionState)->Void)?
 	) throws -> Void {
 		try roomSessionManager.addRoomSessionFor(streamRoomId)
 		guard let instance = roomSessionManager.roomSessions[streamRoomId]?.webRTCInstance
@@ -286,6 +288,7 @@ public class StreamApi: @unchecked Sendable{
 		}
 		roomSessionManager.setAudioStreamsHandler(audioTrackHandler)
 		roomSessionManager.setVideoStreamsHandler(videoTrackHandler)
+		roomSessionManager.roomSessions[streamRoomId]
 	}
 	
 	public func leaveStreamRoom(
@@ -510,7 +513,7 @@ public class StreamApi: @unchecked Sendable{
 	}
 	//MARK: -
 	public func removeTrack(
-		_ track:privmx.endpoint.stream.MediaDevice,
+		//_ track:privmx.endpoint.stream.MediaDevice,
 		from streamHandle: privmx.endpoint.stream.StreamHandle
 	) throws -> Void{
 	}
@@ -570,8 +573,7 @@ public class StreamApi: @unchecked Sendable{
 			siv.push_back(i)
 		}
 		let res = api.subscribeToRemoteStreams(std.string(streamRoomId),
-											   siv,
-											   options)
+											   siv)
 		if let err = res.error.value{
 			throw PrivMXEndpointError.otherFailure(err)
 		}
@@ -623,8 +625,7 @@ public class StreamApi: @unchecked Sendable{
 		let res = api.modifyRemoteStreamsSubscriptions(
 			std.string(streamRoomId),
 			asiv,
-			rsiv,
-			options)
+			rsiv)
 	}
 	
 	public func unsubscribeFromRemoteStreams(

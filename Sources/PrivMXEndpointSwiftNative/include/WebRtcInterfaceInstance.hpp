@@ -206,9 +206,11 @@ public:
 				.context = _ccbContext
 			};
 			std::future<void> cb = std::async(std::launch::async,[&](){
-				auto res = _ccb(&ctx);
-				if (res.name != ""){
-					throw SwiftErrorException(res);
+				if (_ccb){
+					auto res = _ccb(&ctx);
+					if (res.name != ""){
+						throw SwiftErrorException(res);
+					}
 				}
 			});
 			cb.get();

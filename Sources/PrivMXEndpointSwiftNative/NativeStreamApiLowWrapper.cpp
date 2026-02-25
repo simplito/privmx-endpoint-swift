@@ -373,13 +373,11 @@ ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::unpublishStream(const
 	return res;}
 
 ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::subscribeToRemoteStreams(const std::string& streamRoomId,
-																					const StreamSubscriptiopnsVector& subscriptions,
-																					const endpoint::stream::Settings& settings){
+																					const StreamSubscriptiopnsVector& subscriptions){
 	ResultWithError<std::nullptr_t> res;
 	try{
 		getApi()->subscribeToRemoteStreams(streamRoomId,
-										   subscriptions,
-										   settings);
+										   subscriptions);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -408,14 +406,12 @@ ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::subscribeToRemoteStre
 	return res;}
 ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::modifyRemoteStreamsSubscriptions(const std::string& streamRoomId,
 																							const StreamSubscriptiopnsVector& subscriptionsToAdd,
-																							const StreamSubscriptiopnsVector& subscriptionsToRemove,
-																							const endpoint::stream::Settings& options){
+																							const StreamSubscriptiopnsVector& subscriptionsToRemove){
 	ResultWithError<std::nullptr_t> res;
 	try{
 		getApi()->modifyRemoteStreamsSubscriptions(streamRoomId,
 												   subscriptionsToAdd,
-												   subscriptionsToRemove,
-												   options);
+												   subscriptionsToRemove);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
