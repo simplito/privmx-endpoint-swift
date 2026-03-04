@@ -139,14 +139,16 @@ public:
 				.context = _caasdcbContext
 			};
 			std::future<std::string> fstring = std::async(std::launch::async,[&](){
-				auto res = _caasdcb(&ctx);
-				if (res.errname != ""){
-					std::cout<<"got error:"<<res.errname<<std::endl;
-					throw SwiftErrorException(InternalError{.name = res.errname, .description = res.errwhat});
-				} else if (res.isvalid){
-					return res.result;
-				} else {
-					throw ObjcErrorException();
+				if (_usicb && _usicbContext){
+					auto res = _caasdcb(&ctx);
+					if (res.errname != ""){
+						std::cout<<"got error:"<<res.errname<<std::endl;
+						throw SwiftErrorException(InternalError{.name = res.errname, .description = res.errwhat});
+					} else if (res.isvalid){
+						return res.result;
+					} else {
+						throw ObjcErrorException();
+					}
 				}
 			});
 			auto res = fstring.get();
@@ -181,7 +183,7 @@ public:
 	 virtual void updateSessionId(const std::string& streamRoomId,
 						 const int64_t sessionId,
 								  const std::string& connectionType) override{
-		 if (_usicb){
+		 if (_usicb && _usicbContext){
 			 USICBParam ctx {
 				 .roomId = streamRoomId,
 				 .sessionId = sessionId,
@@ -189,9 +191,11 @@ public:
 				 .context = _usicbContext
 			 };
 			 std::future<void> cb = std::async(std::launch::async,[&](){
-				 auto res = _usicb(&ctx);
-				 if (res.name != ""){
-					 throw SwiftErrorException(res);
+				 if (_usicb && _usicbContext){
+					 auto res = _usicb(&ctx);
+					 if (res.name != ""){
+						 throw SwiftErrorException(res);
+					 }
 				 }
 			 });
 			 cb.get();
@@ -200,22 +204,32 @@ public:
 		 }
 	 }
 	virtual void close(const std::string& streamRoomId)override{
-		if(_ccb){
+		if(_ccb && _ccbContext){
 			CCBParam ctx{
 				.roomId = streamRoomId,
 				.context = _ccbContext
 			};
-			std::future<void> cb = std::async(std::launch::async,[&](){
-				if (_ccb){
-					auto res = _ccb(&ctx);
-					if (res.name != ""){
-						throw SwiftErrorException(res);
+			
+			if (_ccb && _ccbContext){
+				std::future<void> cb = std::async(std::launch::async,[&](){
+					if (_ccb && _ccbContext){
+						try{
+							auto res = _ccb(&ctx);
+							if (res.name != ""){
+								throw SwiftErrorException(InternalError());
+							}
+						}catch (std::exception& e) {
+							std::cout<<"[pmx][err][cpp] "<<e.what()<<std::endl;
+						} catch (...){
+							printf("[pmx][err][cpp] unknown error occured");
+						}
 					}
-				}
-			});
-			cb.get();
+				});
+				cb.get();
+			}
 		} else {
-			throw CallbackNotSet();
+			std::cout<<"[pmx][dbg][cpp] close callback not set"<<std::endl;
+			//throw CallbackNotSet();
 		}
 	}
 	 virtual void updateKeys(const std::string& streamRoomId,

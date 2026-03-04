@@ -293,7 +293,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		streams mediaStreams: [RTCMediaStream]
 	) {
 		print("receiver added streams")
-		onTracksAdded?(peerConnection,rtpReceiver,mediaStreams)
+		
 		print("?0")
 		
 	}

@@ -13,20 +13,20 @@ import PrivMXEndpointSwiftNative
 import WebRTC
 import Foundation
 
-final class RoomSessionManager: Sendable{
-	nonisolated(unsafe) private var rtcConfiguration: RTCConfiguration = RTCConfiguration()
+public final class RoomSessionManager: Sendable{
+	
 	
 	nonisolated(unsafe) var streamHandles: [privmx.endpoint.stream.StreamHandle:String] = [:]
 	nonisolated(unsafe) var roomSessions: [String:RoomJanusSession] = [:]
 	
 	private let onTrickle: @Sendable (Int64,String) throws -> Void
-	nonisolated(unsafe) let peerConnectionFactory: RTCPeerConnectionFactory
+	public nonisolated(unsafe) let peerConnectionFactory: RTCPeerConnectionFactory
 	nonisolated(unsafe) private var initOptions: InitOptions?
 	nonisolated(unsafe) var track2Stream: [String:String] = [:]
 	#if os(iOS)
 	static func create(
 		onTrickle: @escaping @Sendable (Int64,String) throws -> Void,
-		audioHandler: AVAudioEngineRTCAudioDevice,
+		//audioHandler: AVAudioEngineRTCAudioDevice,
 		options: InitOptions?
 	) -> RoomSessionManager {
 		var encf = RTCDefaultVideoEncoderFactory()
@@ -37,8 +37,8 @@ final class RoomSessionManager: Sendable{
 			onTrickle: onTrickle,
 			peerConnectionFactory: RTCPeerConnectionFactory(
 				encoderFactory: encf,
-			 decoderFactory: RTCDefaultVideoDecoderFactory(),
-			 audioDevice: audioHandler)
+			 decoderFactory: RTCDefaultVideoDecoderFactory())//,
+			 //audioDevice: audioHandler)
 		)
 		mgr.initOptions = options
 		//setCppCallbacksInSession(&mgr)
@@ -165,7 +165,9 @@ final class RoomSessionManager: Sendable{
 			)
 		}
 		
-		guard var sender = pub.peerConnection.add(track, streamIds: [roomId])
+		var tinit = RTCRtpTransceiverInit()
+		tinit.direction = .sendOnly
+		guard var sender = pub.peerConnection.addTransceiver(with: track,init: tinit)
 		else {
 			throw PrivMXEndpointError.otherFailure(
 				.init(
@@ -176,7 +178,7 @@ final class RoomSessionManager: Sendable{
 		}
 		
 		guard var cryptor = PMXFrameCryptorTransformer(
-			for: sender,
+			for: sender.sender,
 			   with: peerConnectionFactory,
 			pmxKeyStore: session.keyStore.value)
 		else {
@@ -189,7 +191,7 @@ final class RoomSessionManager: Sendable{
 		}
 		pub.audioTracks[track.trackId] = AudioTrackInfo(
 			track: track,
-			sender: sender,
+			sender: sender.sender,
 			frameCryptor: cryptor)
 	}
 	nonisolated(unsafe) var onAudioTrack: ((String,RTCAudioTrack) -> Void)?
@@ -321,8 +323,8 @@ final class RoomSessionManager: Sendable{
 							result = privmx.StringWithError(
 								result: "",
 								isvalid: true,
-								errname: std.__1.string("\((err as? PrivMXEndpointError)?.getName() ?? "ERROR")"),
-								errwhat: std.__1.string("\((err as? PrivMXEndpointError)?.getDescription())")
+								errname: std.string("\((err as? PrivMXEndpointError)?.getName() ?? "ERROR")"),
+								errwhat: std.string("\((err as? PrivMXEndpointError)?.getDescription())")
 							)
 						}
 					} else {

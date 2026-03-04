@@ -19,23 +19,23 @@ import ScreenCaptureKit
 public class StreamApi: @unchecked Sendable{
 	private var api: privmx.NativeStreamApiLowWrapper
 	//public var rtcClient: WebRTCClient
-	var roomSessionManager: RoomSessionManager!
+	public var roomSessionManager: RoomSessionManager!
 	#if os(iOS)
-	public private(set) var audioHandler : AVAudioEngineRTCAudioDevice
+	//public private(set) var audioHandler : AVAudioEngineRTCAudioDevice
 	private init(
 		api: privmx.NativeStreamApiLowWrapper,
-		audioHandler:AVAudioEngineRTCAudioDevice,
+		//audioHandler:AVAudioEngineRTCAudioDevice,
 		//rtcClient: WebRTCClient
 	) {
 		self.api = api
 		//self.rtcClient = rtcClient
-		self.audioHandler = audioHandler
+		//self.audioHandler = audioHandler
 		//self.rtcClient.bindTrickleImpl(){ sessionId, candidate in
 //			self.api.trickle(sessionId, std.string(candidate))}
 	//	self.rtcClient.bindCreatePeerConnectionImpl()
 	}
 	private func bindRoomSessionManger(
-		audioHandler: AVAudioEngineRTCAudioDevice,
+	//	audioHandler: AVAudioEngineRTCAudioDevice,
 		initOptions: InitOptions?
 	){
 		self.roomSessionManager = RoomSessionManager.create(
@@ -43,7 +43,7 @@ public class StreamApi: @unchecked Sendable{
 				self.api.trickle(sessionId, std.string(candidate))
 				
 			},
-			audioHandler: audioHandler,
+			//audioHandler: audioHandler,
 			options: initOptions
 		)
 	}
@@ -69,10 +69,11 @@ public class StreamApi: @unchecked Sendable{
 	/// Creates the API instance
 	public static func create(
 		connection: Connection,
-		audioHandler: AVAudioEngineRTCAudioDevice,
+		//audioHandler: AVAudioEngineRTCAudioDevice,
 		eventApi: inout EventApi,
 		initOptions: InitOptions? = nil
 	) throws -> StreamApi{
+		
 		let low = privmx.NativeStreamApiLowWrapper.create(connection.api, &eventApi.api)
 		guard var api = low.result.value
 		else {
@@ -80,11 +81,11 @@ public class StreamApi: @unchecked Sendable{
 		}
 		var sa = StreamApi(
 			api: api,
-			audioHandler:audioHandler
+		//	audioHandler:audioHandler
 			//rtcClient: WebRTCClient.create(audioHandler:audioHandler)
 		)
 		sa.bindRoomSessionManger(
-			audioHandler: audioHandler,
+		//	audioHandler: audioHandler,
 			initOptions: initOptions)
 		return sa
 	}
@@ -136,15 +137,15 @@ public class StreamApi: @unchecked Sendable{
 			mv.push_back(m)
 		}
 		
-		print(mv.size(),uv.size())
-		print("m(\(managers.count))")
-		for m in managers{
-			print(m)
-		}
-		print("u(\(users.count))")
-		for u in users{
-			print(u)
-		}
+		//print(mv.size(),uv.size())
+		//print("m(\(managers.count))")
+		//for m in managers{
+		//	print(m)
+		//}
+		//print("u(\(users.count))")
+		//for u in users{
+		//	print(u)
+		//}
 		
 		var op = privmx.OptionalContainerPolicy()
 		if let policies{
@@ -458,14 +459,19 @@ public class StreamApi: @unchecked Sendable{
 		_ track: RTCVideoTrack,
 		toRoomSession roomId:String
 	) throws -> Void {
+		print("[pmx][dbg] local video track count",roomSessionManager.roomSessions[roomId]?.publisher?.videoTracks.count)
 		try roomSessionManager.addVideoTrack(track, to: roomId)
+		print("[pmx][dbg] local video track count",roomSessionManager.roomSessions[roomId]?.publisher?.videoTracks.count)
 	}
 	
 	public func addTrack(
 		_ track: RTCAudioTrack,
 		toRoomSession roomId:String
 	) throws -> Void {
+		print("[pmx][dbg] local audio track count",roomSessionManager.roomSessions[roomId]?.publisher?.audioTracks.count)
 		try roomSessionManager.addAudioTrack(track, to: roomId)
+		print("[pmx][dbg] local audio track count",roomSessionManager.roomSessions[roomId]?.publisher?.audioTracks.count)
+		
 	}
 	
 	#if os(macOS)
@@ -521,7 +527,8 @@ public class StreamApi: @unchecked Sendable{
 	public func publishStream(
 		_ streamHandle: privmx.endpoint.stream.StreamHandle
 	) throws -> Void {
-		guard let rid = roomSessionManager.streamHandles[streamHandle]
+		
+		guard let sh = roomSessionManager.streamHandles[streamHandle]
 		else {
 			throw PrivMXEndpointError.otherFailure(.init(
 				name: "Unknown stream handle",
@@ -529,7 +536,8 @@ public class StreamApi: @unchecked Sendable{
 				description: "")
 			)
 		}
-		guard let session = roomSessionManager.roomSessions[rid]
+		print("[pmx][dbg] got sessionhandle")
+		guard let session = roomSessionManager.roomSessions[sh]
 		else {
 			throw PrivMXEndpointError.otherFailure(
 				.init(
@@ -538,17 +546,21 @@ public class StreamApi: @unchecked Sendable{
 				)
 			)
 		}
+		print("[pmx][dbg] got session")
 		var publisher = try session.getOrCreatePublisher()
+		print("[pmx][dbg] got publisher will try to publish")
 		//for t in publisher.videoTracks{
 		//	guard let track = roomSessionManager.streamTracks[t]
 		//	else {throw PrivMXEndpointError.otherFailure(privmx.InternalError(name: "missing track", message: "", description: ""))}
 		//	roomSessionManager.streamTracks[t]?.published = true
 		//}
-		publisher.peerConnection
+		//publisher.peerConnection.
 		let res = api.publishStream(streamHandle)
+		print("[pmx][dbg] publish stream returned")
 		if let err = res.error.value {
 			throw PrivMXEndpointError.otherFailure(err)
 		}
+		print("[pmx][dbg] no error in publish stream")
 	}
 	
 	
