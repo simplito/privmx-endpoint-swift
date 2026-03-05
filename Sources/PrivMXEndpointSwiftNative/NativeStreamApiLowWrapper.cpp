@@ -511,6 +511,31 @@ ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::acceptOfferOnReconfig
 	}
 	return res;}
 
+ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::setNewOfferOnReconfigure(const int64_t sessionId,
+																					const endpoint::stream::SdpWithTypeModel &sdp){
+	ResultWithError<std::nullptr_t> res;
+	try{
+		getApi()->setNewOfferOnReconfigure(sessionId, sdp);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;}
+
 
 ResultWithError<SubscriptionIdVector> NativeStreamApiLowWrapper::subscribeFor(const SubscriptionQueryVector& subscriptionQueries){
 	ResultWithError<SubscriptionIdVector> res;

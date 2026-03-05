@@ -93,6 +93,8 @@ public:
 											const std::string& candidateAsJson);
 	ResultWithError<std::nullptr_t> acceptOfferOnReconfigure(const int64_t sessionId,
 															 const endpoint::stream::SdpWithTypeModel& sdp);
+	ResultWithError<std::nullptr_t> setNewOfferOnReconfigure(const int64_t sessionId,
+															 const endpoint::stream::SdpWithTypeModel& sdp);
 	
 	ResultWithError<SubscriptionIdVector> subscribeFor(const SubscriptionQueryVector& subscriptionQueries);
 	ResultWithError<std::nullptr_t> unsubscribeFrom(const SubscriptionQueryVector& subscriptionIds);
