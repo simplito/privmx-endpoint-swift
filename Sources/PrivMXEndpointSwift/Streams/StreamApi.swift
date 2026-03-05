@@ -453,9 +453,18 @@ public class StreamApi: @unchecked Sendable{
 	
 	public func dropBrokenFrames(
 		_ enable: Bool,
-		in roomId:Bool
+		in roomId:String
 	) throws -> Void{
-		
+		guard let session = roomSessionManager.roomSessions[roomId]
+		else {
+			throw PrivMXEndpointError.otherFailure(.init(name: "", message: "", description: ""))
+		}
+		for c in session.subscriber?.peerConnectionDelegate.cryptors.value ?? [:] {
+			c.value.0.setDropFramesIfCryptionFailed(enable)
+		}
+		for c in session.publisher?.peerConnectionDelegate.cryptors.value ?? [:] {
+			c.value.0.setDropFramesIfCryptionFailed(enable)
+		}
 	}
 	
 	// MARK: EVENTS
