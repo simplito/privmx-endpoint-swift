@@ -21,33 +21,10 @@ public final class RoomSessionManager: Sendable{
 	
 	private let onTrickle: @Sendable (Int64,String) throws -> Void
 	public nonisolated(unsafe) let peerConnectionFactory: RTCPeerConnectionFactory
-	nonisolated(unsafe) private var initOptions: InitOptions?
 	nonisolated(unsafe) var track2Stream: [String:String] = [:]
-	#if os(iOS)
+	
 	static func create(
 		onTrickle: @escaping @Sendable (Int64,String) throws -> Void,
-		//audioHandler: AVAudioEngineRTCAudioDevice,
-		options: InitOptions?
-	) -> RoomSessionManager {
-		var encf = RTCDefaultVideoEncoderFactory()
-		
-		encf.preferredCodec = .init(name: kRTCVp8CodecName)
-		
-		var mgr = RoomSessionManager(
-			onTrickle: onTrickle,
-			peerConnectionFactory: RTCPeerConnectionFactory(
-				encoderFactory: encf,
-			 decoderFactory: RTCDefaultVideoDecoderFactory())//,
-			 //audioDevice: audioHandler)
-		)
-		mgr.initOptions = options
-		//setCppCallbacksInSession(&mgr)
-		return mgr
-	}
-	#else
-	static func create(
-		onTrickle: @escaping @Sendable (Int64,String) throws -> Void,
-		options: InitOptions? = nil
 	) -> RoomSessionManager {
 		var encf = RTCDefaultVideoEncoderFactory()
 		
@@ -59,11 +36,8 @@ public final class RoomSessionManager: Sendable{
 				encoderFactory: encf,
 			 decoderFactory: RTCDefaultVideoDecoderFactory())
 		)
-		//setCppCallbacksInManager(&mgr)
-		mgr.initOptions = options
 		return mgr
 	}
-	#endif
 	
 	func addRoomSessionFor(
 		_ roomId: String
@@ -227,18 +201,18 @@ public final class RoomSessionManager: Sendable{
 			if let track = transciever.receiver.track, let streamId = self.track2Stream[track.trackId]{
 				if track.kind == kRTCMediaStreamTrackKindVideo {
 					if let track = track as? RTCVideoTrack{
-						print("Got a Video Track")
+						RTCLogEx(.info,"Got a Video Track")
 						self.onVideoTrack?(streamId, track)
 					} else {
-						print("Couldn't cast media track as video track")
+						RTCLogEx(.info,"Couldn't cast media track as video track")
 					}
 				}
 				else if track.kind == kRTCMediaStreamTrackKindAudio {
 					if let track = track as? RTCAudioTrack{
-						print("Got an Audio Track")
+						RTCLogEx(.info,"Got an Audio Track")
 						self.onAudioTrack?(streamId,track)
 					}else{
-						print("Couldn't cast media track as audio track")
+						RTCLogEx(.info,"Couldn't cast media track as audio track")
 					}
 				}
 			}
@@ -281,7 +255,7 @@ public final class RoomSessionManager: Sendable{
 							isvalid: true,
 							errname: "",
 							errwhat: "")
-						print("create offer set loc desc")
+						RTCLogEx(.info,"create offer set loc desc")
 						try await pc.setLocalDescription(res)
 						done=true
 					} catch let err{
@@ -306,7 +280,7 @@ public final class RoomSessionManager: Sendable{
 				nonisolated(unsafe) let streamRoomId = context!.pointee.roomId,
 										sdp = context!.pointee.sdp,
 										type = context!.pointee.type
-				//print(sdp)
+				//RTCLogEx(.info,sdp)
 				Task.detached{
 					@Sendable in
 					defer {done = true}
@@ -349,10 +323,8 @@ public final class RoomSessionManager: Sendable{
 										sdp = String(context!.pointee.sdp),
 										type = String(context!.pointee.type)
 				
-				//print(sdp)
 				Task.detached{@Sendable in
 					do{
-						print("set answer and set rem desc")
 						try await this.getOrCreatePublisher()
 							.reconfigure(
 								sdp: sdp,
@@ -373,7 +345,7 @@ public final class RoomSessionManager: Sendable{
 				return res
 			},
 			{ context in//UpdateSessionId
-				print("update sessionid")
+				RTCLogEx(RTCLoggingSeverity.info, "[PMX] Updating Session Id")
 				var res = privmx.InternalError()
 				var this = Unmanaged<RoomJanusSession>.fromOpaque(context!.pointee.context).takeUnretainedValue()
 				let streamRoomId = context!.pointee.roomId,
@@ -399,16 +371,13 @@ public final class RoomSessionManager: Sendable{
 				return res
 			},
 			{ context in//UpdateKeys
-				print("Updating Keys")
+				RTCLogEx(RTCLoggingSeverity.info, "[PMX] Updating Keys")
 				var res = privmx.InternalError()
 				var this = Unmanaged<RoomJanusSession>.fromOpaque(context!.pointee.context).takeUnretainedValue()
 				var nkeys = [PMXKSKey]()
-				//var dbug = 0
 				for k in context!.pointee.keys{
 					let ktype = if k.type == privmx.endpoint.stream.LOCAL{PMXKSKeyType.LOCAL} else {PMXKSKeyType.REMOTE}
 					let kkey = k.key.getData() ?? Data()
-					//print("converted to", kkey.count, "sized Data")
-					//print("got key \(k.type) id \(k.keyId) : \(privmx.endpoint.core.Hex.encode(k.key))")
 					nkeys.append(PMXKSKey.init(
 						keyId: String(k.keyId),
 						key: kkey,
@@ -420,26 +389,38 @@ public final class RoomSessionManager: Sendable{
 				return ""
 			},
 			{ context in//Close
-				var this = Unmanaged<RoomJanusSession>.fromOpaque(context!).takeUnretainedValue()
+				RTCLogEx(.info,"[PMX][swift][dbg][close] callback called")
 				var res = privmx.InternalError()
-				let streamRoomId = context!.pointee.roomId
-				let srid = String(streamRoomId)
-				do{
-					try this.publisher?
-						.peerConnection.close()
-					
-					try this.subscriber?
-						.peerConnection.close()
-					
-				}catch let err{
-					res = privmx.InternalError(
-						name: "Error Updating Session",
-						message: "",
-						description: err.localizedDescription)
+				if nil != context{
+					RTCLogEx(.info,"[PMX][swift][dbg][close] has context")
+					var this = Unmanaged<RoomJanusSession>.fromOpaque(context!.pointee.context).takeRetainedValue()
+					RTCLogEx(.info,"[PMX][swift][dbg][close] has this from context")
+					let streamRoomId = context!.pointee.roomId
+					RTCLogEx(.info,"[PMX][swift][dbg][close] has roomid from context")
+					let srid = String(streamRoomId)
+					RTCLogEx(.info,"[PMX][swift][dbg][close] got values")
+					do{
+						try this.publisher?
+							.peerConnection.close()
+						RTCLogEx(.info,"[PMX][swift][dbg][close] closed publisher")
+						try this.subscriber?
+							.peerConnection.close()
+						RTCLogEx(.info,"[PMX][swift][dbg][close] closed subscriber")
+						
+					}catch let err{
+						res = privmx.InternalError(
+							name: "Error Closing Session",
+							message: "",
+							description: err.localizedDescription)
+						RTCLogEx(.info,"[PMX][swift][dbg][close] caught error")
+					}
+				} else {
+					res.name = "Missing Context"
+					RTCLogEx(.info,"[PMX][swift][dbg][close] Missing Context")
 				}
 				return res
 			},
-			Unmanaged.passUnretained(session).toOpaque())
+			Unmanaged.passRetained(session).toOpaque())
 
 	}
 	

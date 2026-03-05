@@ -40,7 +40,8 @@ using WebRTCInterfaceReference = std::shared_ptr<endpoint::stream::WebRTCInterfa
 class NativeStreamApiLowWrapper{
 public:
 	static ResultWithError<NativeStreamApiLowWrapper> create(const NativeConnectionWrapper& connection,
-															 NativeEventApiWrapper& eventApi);
+															 NativeEventApiWrapper& eventApi,
+															 endpoint::stream::StreamEncryptionMode streamEncryptionMode = endpoint::stream::StreamEncryptionMode::SINGLE_KEY);
 	
 	ResultWithError<TurnCredentialsVector> getTurnCredentials();
 
@@ -112,7 +113,8 @@ private:
 	NativeStreamApiLowWrapper() = default;
 	
 	NativeStreamApiLowWrapper(const NativeConnectionWrapper& connection,
-							  NativeEventApiWrapper& eventApi);
+							  NativeEventApiWrapper& eventApi,
+							  endpoint::stream::StreamEncryptionMode streamEncryptionMode = endpoint::stream::StreamEncryptionMode::SINGLE_KEY);
 	
 	std::shared_ptr<endpoint::stream::StreamApiLow> api;
 	

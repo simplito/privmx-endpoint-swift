@@ -15,10 +15,11 @@ namespace privmx {
 using namespace endpoint;
 
 ResultWithError<NativeStreamApiLowWrapper> NativeStreamApiLowWrapper::create(const NativeConnectionWrapper &connection,
-																			 NativeEventApiWrapper &eventApi){
+																			 NativeEventApiWrapper &eventApi,
+																			 stream::StreamEncryptionMode streamEncryptionMode){
 	ResultWithError<NativeStreamApiLowWrapper> res;
 	try{
-		res.result = NativeStreamApiLowWrapper(connection, eventApi);
+		res.result = NativeStreamApiLowWrapper(connection, eventApi, streamEncryptionMode);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -42,9 +43,11 @@ ResultWithError<NativeStreamApiLowWrapper> NativeStreamApiLowWrapper::create(con
 }
 
 NativeStreamApiLowWrapper::NativeStreamApiLowWrapper(const NativeConnectionWrapper &connection,
-													 NativeEventApiWrapper &eventApi){
+													 NativeEventApiWrapper &eventApi,
+													 stream::StreamEncryptionMode streamEncryptionMode){
 	api = std::make_shared<stream::StreamApiLow>(stream::StreamApiLow::create(*(connection.api),
-																			  *eventApi.api)
+																			  *eventApi.api,
+																			  streamEncryptionMode)
 												 );
 }
 
