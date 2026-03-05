@@ -40,7 +40,8 @@ using WebRTCInterfaceReference = std::shared_ptr<endpoint::stream::WebRTCInterfa
 class NativeStreamApiLowWrapper{
 public:
 	static ResultWithError<NativeStreamApiLowWrapper> create(const NativeConnectionWrapper& connection,
-															 NativeEventApiWrapper& eventApi);
+															 NativeEventApiWrapper& eventApi,
+															 endpoint::stream::StreamEncryptionMode streamEncryptionMode = endpoint::stream::StreamEncryptionMode::SINGLE_KEY);
 	
 	ResultWithError<TurnCredentialsVector> getTurnCredentials();
 
@@ -81,12 +82,10 @@ public:
 	ResultWithError<std::nullptr_t> unpublishStream(const endpoint::stream::StreamHandle& streamHandle);
 	
 	ResultWithError<nullptr_t> subscribeToRemoteStreams(const std::string& streamRoomId,
-													  const StreamSubscriptiopnsVector& subscriptions,
-													  const endpoint::stream::Settings& options);
+													  const StreamSubscriptiopnsVector& subscriptions);
 	ResultWithError<nullptr_t> modifyRemoteStreamsSubscriptions(const std::string& streamRoomId,
 																const StreamSubscriptiopnsVector& subscriptionsToAdd,
-																const StreamSubscriptiopnsVector& subscriptionsToRemove,
-																const endpoint::stream::Settings& options);
+																const StreamSubscriptiopnsVector& subscriptionsToRemove);
 	ResultWithError<nullptr_t> unsubscribeFromRemoteStreams(const std::string& streamRoomId,
 														  const StreamSubscriptiopnsVector& subscriptionsToRemove);
 	
@@ -114,7 +113,8 @@ private:
 	NativeStreamApiLowWrapper() = default;
 	
 	NativeStreamApiLowWrapper(const NativeConnectionWrapper& connection,
-							  NativeEventApiWrapper& eventApi);
+							  NativeEventApiWrapper& eventApi,
+							  endpoint::stream::StreamEncryptionMode streamEncryptionMode = endpoint::stream::StreamEncryptionMode::SINGLE_KEY);
 	
 	std::shared_ptr<endpoint::stream::StreamApiLow> api;
 	

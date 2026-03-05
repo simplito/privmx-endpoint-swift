@@ -16,7 +16,7 @@ import WebRTC
 
 @available(*, deprecated)
 public final class PeerConnectionManager: Sendable {
-	
+	/*
 	nonisolated(unsafe) var _createPeerConnection : (@Sendable (String) -> (RTCPeerConnection?,PMXPeerConnectionDelegate))?
 	nonisolated(unsafe) var _onTrickle : (@Sendable (Int64,String) throws -> Void)?
 	nonisolated(unsafe) var connections = [String : [ConnectionType:JanusConnection]]()
@@ -118,5 +118,5 @@ public final class PeerConnectionManager: Sendable {
 		}
 		return connections[streamRoomId]![connectionType]!
 	}
-}
+*/}
 // #endif // Streams

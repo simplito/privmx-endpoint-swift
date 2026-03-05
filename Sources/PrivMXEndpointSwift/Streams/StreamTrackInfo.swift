@@ -16,7 +16,7 @@ import PrivMXEndpointSwiftNative
 
 public struct DataChannelMeta: Hashable{
 	var name: String
-	// TODO: fill Data Channel Metadata
+	// TODO: fill Data Channel Metadata or remove
 }
 
 

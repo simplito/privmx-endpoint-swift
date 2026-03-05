@@ -14,26 +14,7 @@ import Foundation
 import PrivMXEndpointSwiftNative
 import WebRTC
 
-public final class JanusConnection: @unchecked Sendable{
-	var peerConnection : RTCPeerConnection
-	var delegate: PMXPeerConnectionDelegate
-	var sessionId: Int64
-	var hasSubscriptions : Bool
-	var senders: [RTCRtpSender] = []
-	init(
-		peerConnection: RTCPeerConnection,
-		sessionId: Int64,
-		delegate:PMXPeerConnectionDelegate,
-		hasSubscriptions: Bool
-	) {
-		self.peerConnection = peerConnection
-		self.sessionId = sessionId
-		self.hasSubscriptions = hasSubscriptions
-		self.delegate = delegate
-	}
-}
-
-public class JanusConnection2: @unchecked Sendable{
+public class JanusConnection: @unchecked Sendable{
 	var peerConnection : RTCPeerConnection
 	var peerConnectionDelegate: PMXPeerConnectionDelegate
 	var sessionId: Int64 = -1
@@ -60,10 +41,11 @@ public class JanusConnection2: @unchecked Sendable{
 	}
 }
 
-public final class JanusPublisher:JanusConnection2{
+public final class JanusPublisher:JanusConnection, @unchecked Sendable{
 	var audioTracks: [String: AudioTrackInfo] = [:]
 	var videoTracks: [String: VideoTrackInfo] = [:]
 	var videoCapturers: [String: RTCVideoCapturer] = [:]
+	
 	
 	override func reconfigure(
 		sdp: String,
@@ -96,7 +78,7 @@ public final class JanusPublisher:JanusConnection2{
 	}
 }
 
-public final class JanusSubscriber:JanusConnection2{
+public final class JanusSubscriber:JanusConnection, @unchecked Sendable{
 	override func reconfigure(
 		sdp: String,
 		type: String,
