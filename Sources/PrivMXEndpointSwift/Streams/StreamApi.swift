@@ -451,6 +451,11 @@ public class StreamApi: @unchecked Sendable{
 		}
 	}
 	
+	public func listCameras(
+	) -> [AVCaptureDevice]{
+		RTCCameraVideoCapturer.captureDevices()
+	}
+	
 	public func dropBrokenFrames(
 		_ enable: Bool,
 		in roomId:String
