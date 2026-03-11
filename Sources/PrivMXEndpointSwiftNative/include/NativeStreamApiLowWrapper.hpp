@@ -26,6 +26,7 @@ namespace privmx {
 
 using StreamInfoVector = std::vector<endpoint::stream::StreamInfo>;
 using StreamSubscriptiopnsVector = std::vector<endpoint::stream::StreamSubscription>;
+using RecordingEncKeyVector = std::vector<endpoint::stream::RecordingEncKey>;
 
 using StreamRoomList = endpoint::core::PagingList<endpoint::stream::StreamRoom>;
 using TurnCredentialsVector = std::vector<endpoint::stream::TurnCredentials>;
@@ -75,6 +76,7 @@ public:
 	ResultWithError<StreamInfoVector> listStreams(const std::string& streamRoomId);
 	ResultWithError<std::nullptr_t> joinStreamRoom(const std::string& streamRoomId, WebRTCInterfaceReference webRtc); // required before createStream and openStream
 	ResultWithError<std::nullptr_t> enableStreamRoomRecording(const std::string& streamRoomId);
+	ResultWithError<RecordingEncKeyVector> getStreamRoomRecordingKeys(const std::string& streamRoomId);
 	ResultWithError<std::nullptr_t> leaveStreamRoom(const std::string& streamRoomId);
 	
 	ResultWithError<endpoint::stream::StreamHandle> createStream(const std::string& streamRoomId);

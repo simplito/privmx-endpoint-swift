@@ -275,6 +275,30 @@ ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::enableStreamRoomRecor
 		};
 	}
 	return res;}
+
+ResultWithError<RecordingEncKeyVector> NativeStreamApiLowWrapper::getStreamRoomRecordingKeys(const std::string &streamRoomId){
+	ResultWithError<RecordingEncKeyVector> res;
+	try{
+		res.result = getApi()->getStreamRoomRecordingKeys(streamRoomId);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;}
 ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::leaveStreamRoom(const std::string &streamRoomId){
 	ResultWithError<std::nullptr_t> res;
 	try{

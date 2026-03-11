@@ -229,6 +229,35 @@ public class StreamApi: @unchecked Sendable{
 	}
 	
 	
+	public func enableStreamRoomRecordingIn(
+		_ streamRoomId: String
+	) throws -> Void {
+		let res = api.enableStreamRoomRecording(std.string(streamRoomId))
+		
+		if let err = res.error.value{
+			throw PrivMXEndpointError.otherFailure(err)
+		}
+	}
+	
+	public func getStreamRoomRecordingKeys(
+		_ streamRoomId: String
+	) throws -> [privmx.endpoint.stream.RecordingEncKey] {
+		var result = [privmx.endpoint.stream.RecordingEncKey]()
+		let res = api.getStreamRoomRecordingKeys(std.string(streamRoomId))
+		
+		if let err = res.error.value{
+			throw PrivMXEndpointError.otherFailure(err)
+		}
+		guard let rv = res.result.value
+		else {
+			throw PrivMXEndpointError.otherFailure(.init(name: "missing value", message: "", description: ""))
+		}
+		rv.forEach {
+			result.append($0)
+		}
+		return result
+	}
+	
 	public func leaveStreamRoom(
 		_ roomId: String
 	) throws -> Void {
