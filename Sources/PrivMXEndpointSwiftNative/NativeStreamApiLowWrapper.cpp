@@ -252,6 +252,29 @@ ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::joinStreamRoom(const 
 	}
 	return res;}
 
+ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::enableStreamRoomRecording(const std::string &streamRoomId){
+	ResultWithError<std::nullptr_t> res;
+	try{
+		getApi()->enableStreamRoomRecording(streamRoomId);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;}
 ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::leaveStreamRoom(const std::string &streamRoomId){
 	ResultWithError<std::nullptr_t> res;
 	try{
@@ -491,6 +514,31 @@ ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::acceptOfferOnReconfig
 	ResultWithError<std::nullptr_t> res;
 	try{
 		getApi()->acceptOfferOnReconfigure(sessionId, sdp);
+	}catch(core::Exception& err){
+		res.error = {
+			.name = err.getName(),
+			.code = err.getCode(),
+			.description = err.getDescription(),
+			.message = err.what()
+		};
+	}catch (std::exception & err) {
+		res.error ={
+			.name = "std::Exception",
+			.message = err.what()
+		};
+	}catch (...) {
+		res.error ={
+			.name = "Unknown Exception",
+			.message = "Failed to work"
+		};
+	}
+	return res;}
+
+ResultWithError<std::nullptr_t> NativeStreamApiLowWrapper::setNewOfferOnReconfigure(const int64_t sessionId,
+																					const endpoint::stream::SdpWithTypeModel &sdp){
+	ResultWithError<std::nullptr_t> res;
+	try{
+		getApi()->setNewOfferOnReconfigure(sessionId, sdp);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),

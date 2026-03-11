@@ -17,29 +17,19 @@ import WebRTC
 import ScreenCaptureKit
 #endif
 public class StreamApi: @unchecked Sendable{
-	private var api: privmx.NativeStreamApiLowWrapper
 	public var roomSessionManager: RoomSessionManager!
-	private init(
-		api: privmx.NativeStreamApiLowWrapper,
-	) {
-		self.api = api
-	}
-	private func bindRoomSessionManger(
-	//	initOptions: InitOptions?
-	){
-		self.roomSessionManager = RoomSessionManager.create(
-			onTrickle: { sessionId, candidate in
-				self.api.trickle(sessionId, std.string(candidate))
-			},
-		//	options: initOptions
-		)
-	}
 	
 	/// Creates the API instance
+	///
+	/// - Parameter connection:
+	/// - Parameter eventApi:
+	///
+	/// - Throws:
+	///
+	/// - Returns:
 	public static func create(
 		connection: Connection,
 		eventApi: inout EventApi,
-		//initOptions: InitOptions? = nil
 	) throws -> StreamApi{
 		
 		let low = privmx.NativeStreamApiLowWrapper.create(connection.api, &eventApi.api)
@@ -53,8 +43,7 @@ public class StreamApi: @unchecked Sendable{
 		var sa = StreamApi(
 			api: api
 		)
-		sa.bindRoomSessionManger(
-			//initOptions: initOptions
+		try sa.bindRoomSessionManger(
 		)
 		return sa
 	}
@@ -62,6 +51,16 @@ public class StreamApi: @unchecked Sendable{
 	// MARK: - Rooms
 	
 	/// Creates a StreamRoom on the Bridge
+	///
+	/// - Parameter contextId:
+	/// - Parameter users:
+	/// - Parameter managers:
+	/// - Parameter publicMeta:
+	/// - Parameter privateMeta:
+	/// - Parameter policies:
+	///
+	/// - Throws:
+	///
 	/// - Returns: StreamRoomId
 	public func createStreamRoom(
 		in contextId: String,
@@ -201,13 +200,13 @@ public class StreamApi: @unchecked Sendable{
 	
 	public func joinStreamRoom(
 		_ streamRoomId: String,
-		audioTrackHandler: ((String,RTCAudioTrack) -> Void)?,
-		videoTrackHandler: ((String,RTCVideoTrack) -> Void)?,
+		audioTrackHandler: ((_ streamId:String,_ track:RTCAudioTrack) -> Void)?,
+		videoTrackHandler: ((_ streamId:String,_ track:RTCVideoTrack) -> Void)?,
 		subscriberConnectionStateChangedCallback: ((RTCPeerConnectionState)->Void)?,
 		publisherConnectionStateChangedCallback: ((RTCPeerConnectionState)->Void)?
 	) throws -> Void {
-		try roomSessionManager.addRoomSessionFor(streamRoomId)
-		guard let instance = roomSessionManager.roomSessions[streamRoomId]?.webRTCInstance
+		var session = try roomSessionManager.addRoomSessionFor(streamRoomId)
+		guard let instance = session.webRTCInstance
 		else {
 			throw PrivMXEndpointError.otherFailure(
 				.init(
@@ -225,8 +224,10 @@ public class StreamApi: @unchecked Sendable{
 		}
 		roomSessionManager.setAudioStreamsHandler(audioTrackHandler)
 		roomSessionManager.setVideoStreamsHandler(videoTrackHandler)
-		roomSessionManager.roomSessions[streamRoomId]
+		session.subscriber?.peerConnectionDelegate.setOnAudioTrackCallback(audioTrackHandler)
+		session.subscriber?.peerConnectionDelegate.setOnVideoTrackCallback(videoTrackHandler)
 	}
+	
 	
 	public func leaveStreamRoom(
 		_ roomId: String
@@ -248,7 +249,7 @@ public class StreamApi: @unchecked Sendable{
 	public func createStreamIn(
 		_ streamRoomId: String
 	) throws -> privmx.endpoint.stream.StreamHandle {
-		try roomSessionManager.roomSessions[streamRoomId]?.getOrCreatePublisher()
+		_ = try roomSessionManager.roomSessions[streamRoomId]?.getOrCreatePublisher()
 		let res = api.createStream(std.string(streamRoomId))
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.otherFailure(res.error.value!)
@@ -263,9 +264,156 @@ public class StreamApi: @unchecked Sendable{
 		return streamHandle
 	}
 	
+	public func updateStream(
+		_ handle: privmx.endpoint.stream.StreamHandle
+	) throws -> privmx.endpoint.stream.StreamPublishResult {
+		let res = api.updateStream(handle)
+		if let err = res.error.value {
+			throw PrivMXEndpointError.otherFailure(err)
+		}
+		guard let result = res.result.value
+		else {
+			throw PrivMXEndpointError.otherFailure(.init(name: "Missing value", message: "", description: ""))
+		}
+		
+		return result
+	}
+	
+	public func publishStream(
+		_ streamHandle: privmx.endpoint.stream.StreamHandle
+	) throws -> privmx.endpoint.stream.StreamPublishResult {
+		
+		guard let sh = roomSessionManager.streamHandles[streamHandle]
+		else {
+			throw PrivMXEndpointError.otherFailure(.init(
+				name: "Unknown stream handle",
+				message: "",
+				description: "")
+			)
+		}
+		
+		guard let session = roomSessionManager.roomSessions[sh]
+		else {
+			throw PrivMXEndpointError.otherFailure(
+				.init(
+					name: "Couldn't create cryptor",
+					message: "", description: ""
+				)
+			)
+		}
+		var publisher = try session.getOrCreatePublisher()
+		
+		let res = api.publishStream(streamHandle)
+		
+		if let err = res.error.value {
+			throw PrivMXEndpointError.otherFailure(err)
+		}
+		guard let result = res.result.value
+		else {
+			throw PrivMXEndpointError.otherFailure(.init(name: "Missing result", message: "", description: ""))
+		}
+		
+		return result
+	}
+	
+	public func listStreams(
+		in streamRoomId: String
+	) throws -> privmx.StreamInfoVector {
+		let res = api.listStreams(std.string(streamRoomId))
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.otherFailure(res.error.value!)
+		}
+		guard let result = res.result.value else {
+			var err = privmx.InternalError()
+			err.name = "Value error"
+			err.description = "Unexpectedly recived nil result"
+			throw PrivMXEndpointError.otherFailure(err)
+		}
+		return result
+	}
+	
+	public func unpublishStream(
+		localStreamId: Int64
+	) throws -> Void {
+		let res = api.unpublishStream(localStreamId)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.otherFailure(res.error.value!)
+		}
+	}
+	
+	public func subscribeToRemoteStreams(
+		in streamRoomId: String,
+		subscriptions: [privmx.endpoint.stream.StreamSubscription]
+	) throws -> Void {
+		
+		var siv = privmx.StreamSubscriptiopnsVector()
+		siv.reserve(subscriptions.count)
+		for i in subscriptions{
+			siv.push_back(i)
+		}
+		let res = api.subscribeToRemoteStreams(std.string(streamRoomId),
+											   siv)
+		if let err = res.error.value{
+			throw PrivMXEndpointError.otherFailure(err)
+		}
+	}
+	
+	public func modifyRemoteStreamsSubscriptions(
+		streamRoomId: String,
+		subscriptionsToAdd: [privmx.endpoint.stream.StreamSubscription],
+		subscriptionsToRemove: [privmx.endpoint.stream.StreamSubscription]
+	) throws -> Void{
+		var rsiv = privmx.StreamSubscriptiopnsVector()
+		rsiv.reserve(subscriptionsToRemove.count)
+		for i in subscriptionsToRemove{
+			rsiv.push_back(i)
+		}
+		var asiv = privmx.StreamSubscriptiopnsVector()
+		asiv.reserve(subscriptionsToAdd.count)
+		for i in subscriptionsToAdd{
+			asiv.push_back(i)
+		}
+		
+		let res = api.modifyRemoteStreamsSubscriptions(
+			std.string(streamRoomId),
+			asiv,
+			rsiv)
+	}
+	
+	public func unsubscribeFromRemoteStreams(
+		_ subscriptionsToRemove: [privmx.endpoint.stream.StreamSubscription],
+		in streamRoomId:String
+	) throws -> Void {
+		var siv = privmx.StreamSubscriptiopnsVector()
+		siv.reserve(subscriptionsToRemove.count)
+		for i in subscriptionsToRemove{
+			siv.push_back(i)
+		}
+		let res = api.unsubscribeFromRemoteStreams(std.string(streamRoomId), siv)
+		guard res.error.value == nil else {
+			throw PrivMXEndpointError.otherFailure(res.error.value!)
+		}
+	}
+	
 	public func listCameras(
 	) -> [AVCaptureDevice]{
 		RTCCameraVideoCapturer.captureDevices()
+	}
+	
+	public func dropBrokenFrames(
+		_ enable: Bool,
+		in roomId:String
+	) throws -> Void{
+		guard let session = roomSessionManager.roomSessions[roomId]
+		else {
+			throw PrivMXEndpointError.otherFailure(.init(name: "", message: "", description: ""))
+		}
+		for c in session.subscriber?.peerConnectionDelegate.cryptors.value ?? [:] {
+			c.value.0.setDropFramesIfCryptionFailed(enable)
+		}
+		for c in session.publisher?.peerConnectionDelegate.cryptors.value ?? [:] {
+			c.value.0.setDropFramesIfCryptionFailed(enable)
+		}
 	}
 	
 	//MARK: - Tracks
@@ -311,6 +459,7 @@ public class StreamApi: @unchecked Sendable{
 		id: String
 	) -> (track:RTCAudioTrack, source: RTCAudioSource) {
 		var src = roomSessionManager.peerConnectionFactory.audioSource(with: nil)
+		
 		var trk = roomSessionManager.peerConnectionFactory.audioTrack(with: src, trackId: id)
 		return (trk,src)
 	}
@@ -326,148 +475,18 @@ public class StreamApi: @unchecked Sendable{
 
 	public func removeTrack(
 		_ track: RTCVideoTrack,
-		fromStreamWithHandle: privmx.endpoint.stream.StreamHandle//RoomID?
+		fromStreamWithHandle handle: privmx.endpoint.stream.StreamHandle//RoomID?
 	) -> Bool{
 		return false
 	}
 	public func removeTrack(
 		_ track: RTCAudioTrack,
-		from roomId: privmx.endpoint.stream.StreamHandle//RoomID?
+		fromStreamWithHandle handle: privmx.endpoint.stream.StreamHandle//RoomID?
 	) -> Bool{
 		return false
 	}
 	
-	//MARK: -
-	
-	public func publishStream(
-		_ streamHandle: privmx.endpoint.stream.StreamHandle
-	) throws -> Void {
-		
-		guard let sh = roomSessionManager.streamHandles[streamHandle]
-		else {
-			throw PrivMXEndpointError.otherFailure(.init(
-				name: "Unknown stream handle",
-				message: "",
-				description: "")
-			)
-		}
-		
-		guard let session = roomSessionManager.roomSessions[sh]
-		else {
-			throw PrivMXEndpointError.otherFailure(
-				.init(
-					name: "Couldn't create cryptor",
-					message: "", description: ""
-				)
-			)
-		}
-		var publisher = try session.getOrCreatePublisher()
-		
-		let res = api.publishStream(streamHandle)
-		
-		if let err = res.error.value {
-			throw PrivMXEndpointError.otherFailure(err)
-		}
-		
-	}
-	
-	public func subscribeToRemoteStreams(
-		in streamRoomId: String,
-		subscriptions: [privmx.endpoint.stream.StreamSubscription]
-	) throws -> Void {
-		
-		var siv = privmx.StreamSubscriptiopnsVector()
-		siv.reserve(subscriptions.count)
-		for i in subscriptions{
-			siv.push_back(i)
-		}
-		let res = api.subscribeToRemoteStreams(std.string(streamRoomId),
-											   siv)
-		if let err = res.error.value{
-			throw PrivMXEndpointError.otherFailure(err)
-		}
-	}
-	
-	
-	public func listStreams(
-		in streamRoomId: String
-	) throws -> privmx.StreamInfoVector {
-		let res = api.listStreams(std.string(streamRoomId))
-		guard res.error.value == nil else {
-			throw PrivMXEndpointError.otherFailure(res.error.value!)
-		}
-		guard let result = res.result.value else {
-			var err = privmx.InternalError()
-			err.name = "Value error"
-			err.description = "Unexpectedly recived nil result"
-			throw PrivMXEndpointError.otherFailure(err)
-		}
-		return result
-	}
-	
-	public func unpublishStream(
-		localStreamId: Int64
-	) throws -> Void {
-		let res = api.unpublishStream(localStreamId)
-		guard res.error.value == nil else {
-			throw PrivMXEndpointError.otherFailure(res.error.value!)
-		}
-	}
-	
-	public func modifyRemoteStreamsSubscriptions(
-		streamRoomId: String,
-		subscriptionsToAdd: [privmx.endpoint.stream.StreamSubscription],
-		subscriptionsToRemove: [privmx.endpoint.stream.StreamSubscription]
-	) throws -> Void{
-		var rsiv = privmx.StreamSubscriptiopnsVector()
-		rsiv.reserve(subscriptionsToRemove.count)
-		for i in subscriptionsToRemove{
-			rsiv.push_back(i)
-		}
-		var asiv = privmx.StreamSubscriptiopnsVector()
-		asiv.reserve(subscriptionsToAdd.count)
-		for i in subscriptionsToAdd{
-			asiv.push_back(i)
-		}
-		
-		let res = api.modifyRemoteStreamsSubscriptions(
-			std.string(streamRoomId),
-			asiv,
-			rsiv)
-	}
-	
-	public func unsubscribeFromRemoteStreams(
-		_ subscriptionsToRemove: [privmx.endpoint.stream.StreamSubscription],
-		in streamRoomId:String
-	) throws -> Void {
-		var siv = privmx.StreamSubscriptiopnsVector()
-		siv.reserve(subscriptionsToRemove.count)
-		for i in subscriptionsToRemove{
-			siv.push_back(i)
-		}
-		let res = api.unsubscribeFromRemoteStreams(std.string(streamRoomId), siv)
-		guard res.error.value == nil else {
-			throw PrivMXEndpointError.otherFailure(res.error.value!)
-		}
-	}
-	
-	public func dropBrokenFrames(
-		_ enable: Bool,
-		in roomId:String
-	) throws -> Void{
-		guard let session = roomSessionManager.roomSessions[roomId]
-		else {
-			throw PrivMXEndpointError.otherFailure(.init(name: "", message: "", description: ""))
-		}
-		for c in session.subscriber?.peerConnectionDelegate.cryptors.value ?? [:] {
-			c.value.0.setDropFramesIfCryptionFailed(enable)
-		}
-		for c in session.publisher?.peerConnectionDelegate.cryptors.value ?? [:] {
-			c.value.0.setDropFramesIfCryptionFailed(enable)
-		}
-	}
-	
-	// MARK: EVENTS
+	// MARK: - EVENTS
 	
 	/// Subscribe for the Stream events on the given subscription query.
 	///
@@ -543,6 +562,39 @@ public class StreamApi: @unchecked Sendable{
 	) -> Void {
 		roomSessionManager.setAudioStreamsHandler(handler)
 	}
+	
+	//MARK: - PRIVATE
+	private var api: privmx.NativeStreamApiLowWrapper
+	private init(
+		api: privmx.NativeStreamApiLowWrapper,
+	) {
+		self.api = api
+	}
+	private func bindRoomSessionManger(
+	) throws -> Void {
+		self.roomSessionManager = RoomSessionManager.create(
+			onTrickle: { sessionId, candidate in
+				self.api.trickle(sessionId, std.string(candidate))
+			},
+			setNewOfferOnReconfigure: {
+				sessionId, sdp in
+				let res = self.api.setNewOfferOnReconfigure(sessionId, sdp)
+				if let err = res.error.value{
+					throw PrivMXEndpointError.otherFailure(err)
+				}
+				RTCLogEx(.info, "[PMX] called setNewOffer on Reonfigure")
+			},
+			acceptOfferOnReconfigure: {
+				sessionId, sdp in
+				let res = self.api.acceptOfferOnReconfigure(sessionId, sdp)
+				if let err = res.error.value{
+					throw PrivMXEndpointError.otherFailure(err)
+				}
+				RTCLogEx(.info, "[PMX] called acceptOffer on Reonfigure")
+			}
+		)
+	}
+	
 }
 
 // #endif // Streams

@@ -74,6 +74,7 @@ public:
 	// Stream
 	ResultWithError<StreamInfoVector> listStreams(const std::string& streamRoomId);
 	ResultWithError<std::nullptr_t> joinStreamRoom(const std::string& streamRoomId, WebRTCInterfaceReference webRtc); // required before createStream and openStream
+	ResultWithError<std::nullptr_t> enableStreamRoomRecording(const std::string& streamRoomId);
 	ResultWithError<std::nullptr_t> leaveStreamRoom(const std::string& streamRoomId);
 	
 	ResultWithError<endpoint::stream::StreamHandle> createStream(const std::string& streamRoomId);
@@ -92,6 +93,8 @@ public:
 	ResultWithError<std::nullptr_t> trickle(const int64_t sesionId,
 											const std::string& candidateAsJson);
 	ResultWithError<std::nullptr_t> acceptOfferOnReconfigure(const int64_t sessionId,
+															 const endpoint::stream::SdpWithTypeModel& sdp);
+	ResultWithError<std::nullptr_t> setNewOfferOnReconfigure(const int64_t sessionId,
 															 const endpoint::stream::SdpWithTypeModel& sdp);
 	
 	ResultWithError<SubscriptionIdVector> subscribeFor(const SubscriptionQueryVector& subscriptionQueries);
