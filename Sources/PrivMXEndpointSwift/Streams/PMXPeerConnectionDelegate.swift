@@ -114,7 +114,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		onConnectionSignalingStateChanged = cb
 	}
 	
-	public func setConnectionPeerStateChangedCallback(
+	public func setPeerConnectionStateChangedCallback(
 		_ cb :(@Sendable (RTCPeerConnection,RTCPeerConnectionState)->Void)?
 	){
 		onConnectionPeerStateChanged = cb
