@@ -23,9 +23,10 @@ final class StreamOutput:NSObject, SCStreamOutput{
 		of type: SCStreamOutputType
 	) -> Void {
 		if type == SCStreamOutputType.screen{
-			if let imbuf = CMSampleBufferGetImageBuffer(sampleBuffer){
+			if let imbuf = CMSampleBufferGetImageBuffer(sampleBuffer), let capturer{
 				let pixbuf = RTCCVPixelBuffer(pixelBuffer: imbuf)
-				capturer?.delegate?.capturer(capturer!, didCapture: RTCVideoFrame(
+				
+				capturer.delegate?.capturer(capturer, didCapture: RTCVideoFrame(
 					buffer: pixbuf,
 					rotation: RTCVideoRotation._0,
 					timeStampNs: Int64(sampleBuffer.decodeTimeStamp.value)))

@@ -40,7 +40,8 @@ using WebRTCInterfaceReference = std::shared_ptr<endpoint::stream::WebRTCInterfa
 class NativeStreamApiLowWrapper{
 public:
 	static ResultWithError<NativeStreamApiLowWrapper> create(const NativeConnectionWrapper& connection,
-															 NativeEventApiWrapper& eventApi);
+															 NativeEventApiWrapper& eventApi,
+															 endpoint::stream::StreamEncryptionMode streamEncryptionMode = endpoint::stream::StreamEncryptionMode::SINGLE_KEY);
 	
 	ResultWithError<TurnCredentialsVector> getTurnCredentials();
 
@@ -73,6 +74,7 @@ public:
 	// Stream
 	ResultWithError<StreamInfoVector> listStreams(const std::string& streamRoomId);
 	ResultWithError<std::nullptr_t> joinStreamRoom(const std::string& streamRoomId, WebRTCInterfaceReference webRtc); // required before createStream and openStream
+	ResultWithError<std::nullptr_t> enableStreamRoomRecording(const std::string& streamRoomId);
 	ResultWithError<std::nullptr_t> leaveStreamRoom(const std::string& streamRoomId);
 	
 	ResultWithError<endpoint::stream::StreamHandle> createStream(const std::string& streamRoomId);
@@ -81,18 +83,18 @@ public:
 	ResultWithError<std::nullptr_t> unpublishStream(const endpoint::stream::StreamHandle& streamHandle);
 	
 	ResultWithError<nullptr_t> subscribeToRemoteStreams(const std::string& streamRoomId,
-													  const StreamSubscriptiopnsVector& subscriptions,
-													  const endpoint::stream::Settings& options);
+													  const StreamSubscriptiopnsVector& subscriptions);
 	ResultWithError<nullptr_t> modifyRemoteStreamsSubscriptions(const std::string& streamRoomId,
 																const StreamSubscriptiopnsVector& subscriptionsToAdd,
-																const StreamSubscriptiopnsVector& subscriptionsToRemove,
-																const endpoint::stream::Settings& options);
+																const StreamSubscriptiopnsVector& subscriptionsToRemove);
 	ResultWithError<nullptr_t> unsubscribeFromRemoteStreams(const std::string& streamRoomId,
 														  const StreamSubscriptiopnsVector& subscriptionsToRemove);
 	
 	ResultWithError<std::nullptr_t> trickle(const int64_t sesionId,
 											const std::string& candidateAsJson);
 	ResultWithError<std::nullptr_t> acceptOfferOnReconfigure(const int64_t sessionId,
+															 const endpoint::stream::SdpWithTypeModel& sdp);
+	ResultWithError<std::nullptr_t> setNewOfferOnReconfigure(const int64_t sessionId,
 															 const endpoint::stream::SdpWithTypeModel& sdp);
 	
 	ResultWithError<SubscriptionIdVector> subscribeFor(const SubscriptionQueryVector& subscriptionQueries);
@@ -114,7 +116,8 @@ private:
 	NativeStreamApiLowWrapper() = default;
 	
 	NativeStreamApiLowWrapper(const NativeConnectionWrapper& connection,
-							  NativeEventApiWrapper& eventApi);
+							  NativeEventApiWrapper& eventApi,
+							  endpoint::stream::StreamEncryptionMode streamEncryptionMode = endpoint::stream::StreamEncryptionMode::SINGLE_KEY);
 	
 	std::shared_ptr<endpoint::stream::StreamApiLow> api;
 	

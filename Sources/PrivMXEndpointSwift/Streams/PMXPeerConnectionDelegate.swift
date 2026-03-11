@@ -23,6 +23,8 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 	
 	var cryptors = MutexGuarded<[String : (PMXFrameCryptorTransformer,PMXFrameCryptorDelegate)]>([:])
 	
+	var unprocessedTracks = [String:RTCMediaStreamTrack]()
+	var track2Stream: [String:String] = [:]
 	public init(
 		streamRoomId: String,
 		peerConnectionFactory: RTCPeerConnectionFactory,
@@ -89,18 +91,20 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 	
 	private var onLocalCandidateChanged:((RTCPeerConnection,RTCIceCandidate,RTCIceCandidate,Int32,String)->Void)?
 	
-	private nonisolated(unsafe) var onVideoTrack: ((String, RTCVideoTrack) -> Void)?
-	private nonisolated(unsafe) var onAudioTrack: ((String, RTCAudioTrack) -> Void)?
+	nonisolated(unsafe) var onVideoTrack: ((String, RTCVideoTrack) -> Void)?
+	nonisolated(unsafe) var onAudioTrack: ((String, RTCAudioTrack) -> Void)?
 	
 	public func setOnVideoTrackCallback(
 		_ cb: ((String, RTCVideoTrack) -> Void)?
 	) {
+		RTCLogEx(.info, "[PMX][Observer] received new onVideoTrack callback")
 		onVideoTrack = cb
 	}
 	
 	public func setOnAudioTrackCallback(
 		_ cb: ((String, RTCAudioTrack) -> Void)?
 	) {
+		RTCLogEx(.info, "[PMX][Observer] received new onAudioTrack callback")
 		onAudioTrack = cb
 	}
 	
@@ -118,6 +122,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 	public func setStreamAddedCallback(
 		_ cb :(@Sendable (RTCPeerConnection,RTCMediaStream)->Void)?
 	){
+		RTCLogEx(.info, "[PMX][Observer] received new onStreamAdded callback")
 		onStreamAdded = cb
 	}
 	public func setStreamRemovedCallback(
@@ -198,7 +203,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didChange stateChanged: RTCSignalingState
 	) -> Void {
-		//print("Signaling state changed to ",stateChanged.rawValue)
+		RTCLogEx(.info, "[PMX][observer] PC Signaling state changed to \(stateChanged.rawValue)")
 		onConnectionSignalingStateChanged?(peerConnection,stateChanged)
 	}
 	
@@ -206,26 +211,32 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didAdd stream: RTCMediaStream
 	) -> Void {
-		//print("StreamAdded")
+		RTCLogEx(.info, "[PMX][observer] PC StreamAdded with \(stream.videoTracks.count) video and \(stream.audioTracks.count) audio tracks")
+		
 		onStreamAdded?(peerConnection,stream)
-		for vt in stream.videoTracks{
-			onVideoTrack?("\(streamRoomId)-\(vt.trackId)", vt)
+		let streamId = stream.streamId
+		for vtr in stream.videoTracks {
+			self.track2Stream[vtr.trackId] = streamId
+			onVideoTrack?(streamId,vtr)
 		}
-		print("SA done")
+		for vtr in stream.audioTracks {
+			self.track2Stream[vtr.trackId] = streamId
+			onAudioTrack?(streamId,vtr)
+		}
 	}
 	
 	public func peerConnection(
 		_ peerConnection: RTCPeerConnection,
 		didRemove stream: RTCMediaStream
 	) {
-		//print("StreamRemoved")
+		RTCLogEx(.info, "[PMX][observer] PC StreamRemoved")
 		onStreamRemoved?(peerConnection,stream)
 	}
 	
 	public func peerConnectionShouldNegotiate(
 		_ peerConnection: RTCPeerConnection
 	) {
-		//print("shouldrenegotiate")
+		RTCLogEx(.info, "[PMX][observer] PC should renegotiate")
 		onShouldRenegotiate?(peerConnection)
 	}
 	
@@ -233,7 +244,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didChange newState: RTCIceConnectionState
 	) {
-		//print("ICE connection state changed to", newState)
+		RTCLogEx(.info, "[PMX][observer] PC ICE connection state changed to \(newState)")
 		onIceConnectionStateChanged?(peerConnection,newState)
 	}
 	
@@ -241,7 +252,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didChange newState: RTCIceGatheringState
 	) {
-		//print("ICE gathering state changed")
+		RTCLogEx(.info, "[PMX][observer] PC ICE gathering state changed")
 		onIceGatheringStateChanged?(peerConnection,newState)
 	}
 	
@@ -249,7 +260,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didGenerate candidate: RTCIceCandidate
 	) {
-		//print("generated ICE candidate")
+		RTCLogEx(.info, "[PMX][observer] PC generated ICE candidate")
 		onIceCandidateGenerated?(peerConnection,candidate)
 	}
 	
@@ -257,7 +268,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didRemove candidates: [RTCIceCandidate]
 	) {
-		//print("ICE candidate removed")
+		RTCLogEx(.info, "[PMX][observer] PC ICE candidate removed")
 		onIceCandidatesRemoved?(peerConnection,candidates)
 	}
 	
@@ -265,7 +276,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didOpen dataChannel: RTCDataChannel
 	) {
-		//print("DATA channel opened")
+		RTCLogEx(.info, "[PMX][observer] PC DATA channel opened")
 		onDataChannelOpened?(peerConnection,dataChannel)
 	}
 	
@@ -273,8 +284,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didStartReceivingOn transceiver: RTCRtpTransceiver
 	) {
-		print("[Streams] Started receiving on transciever")
-		onStartedReceiving?(peerConnection,transceiver)
+		RTCLogEx(.info, "[PMX][observer] PC Started receiving on transciever")
 		let receiver = transceiver.receiver
 		if let track = receiver.track, var peerConnectionFactory {
 			var pfct = PMXFrameCryptorTransformer(for: receiver, with: peerConnectionFactory, pmxKeyStore: currentKeys)
@@ -284,22 +294,8 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 			pfct!.setDropFramesIfCryptionFailed(true)
 				cryptors.value[track.trackId] = (pfct!,deleg)
 			}
-			if track.kind == kRTCMediaStreamTrackKindVideo {
-				if let track = track as? RTCVideoTrack{
-					print("Got a Video Track")
-					onVideoTrack?("\(streamRoomId)-\(track.trackId)", track)
-				} else {
-					print("Couldn't cast media track as video track")
-				}
-			}
-			else if track.kind == kRTCMediaStreamTrackKindAudio {
-				if let track = track as? RTCAudioTrack{
-					print("Got an Audio Track")
-					onAudioTrack?("\(streamRoomId)-\(track.trackId)",track)
-				}else{
-					print("Couldn't cast media track as audio track")
-				}
-			}
+			unprocessedTracks[track.trackId] = track
+			//onStartedReceiving?(peerConnection,transceiver)
 		}
 	}
 	
@@ -308,17 +304,15 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		didAdd rtpReceiver: RTCRtpReceiver,
 		streams mediaStreams: [RTCMediaStream]
 	) {
-		print("receiver added streams")
+		RTCLogEx(.info, "[PMX][observer] PC  receiver added streams")
 		onTracksAdded?(peerConnection,rtpReceiver,mediaStreams)
-		print("?0")
-		
 	}
 	
 	public func peerConnection(
 		_ peerConnection: RTCPeerConnection,
 		didChange newState: RTCPeerConnectionState
 	) {
-		print("[dbg]peerconnection state changed to", newState, newState.rawValue, "on : \(peerConnection)")
+		RTCLogEx(.info, "[PMX][observer] PC state changed to  \(newState), \(newState.rawValue) on : \(peerConnection)")
 		onConnectionPeerStateChanged?(peerConnection,newState)
 	}
 	
@@ -326,7 +320,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didRemove rtpReceiver: RTCRtpReceiver
 	) {
-		print("peerConnection removed receiver")
+		RTCLogEx(.info, "[PMX][observer] PC removed receiver")
 		onStoppedReceiving?(peerConnection,rtpReceiver)
 	}
 	
@@ -334,7 +328,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didFailToGatherIceCandidate event: RTCIceCandidateErrorEvent
 	) {
-		print("failed gathering ICE candidates")
+		RTCLogEx(.info, "[PMX][observer] PC failed gathering ICE candidates")
 		onIceCandidateErrorEvent?(peerConnection,event)
 	}
 	
@@ -342,7 +336,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		_ peerConnection: RTCPeerConnection,
 		didChangeStandardizedIceConnectionState newState: RTCIceConnectionState
 	) {
-		print("standardised Ice connection state changed: \(newState) raw: \(newState.rawValue)")
+		RTCLogEx(.info, "[PMX][observer] PC standardised Ice connection state changed: \(newState) raw: \(newState.rawValue)")
 		onIceConnectionStateChanged?(peerConnection,newState)
 	}
 	
@@ -353,7 +347,7 @@ final class PMXPeerConnectionDelegate:NSObject,RTCPeerConnectionDelegate, @unche
 		lastReceivedMs lastDataReceivedMs: Int32,
 		changeReason reason: String
 	) {
-		print("PC changed local candidate")
+		RTCLogEx(.info, "[PMX][observer] PC changed local candidate")
 		onLocalCandidateChanged?(peerConnection,
 								 local,
 								 remote,

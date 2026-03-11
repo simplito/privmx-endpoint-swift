@@ -18,12 +18,15 @@ class RoomJanusSession{
 		keyStore: PMXKeyStore,
 		roomId: String,
 		_getPeerConnectionWithDelegate: @escaping () -> (RTCPeerConnection?, PMXPeerConnectionDelegate),
-		audioTrackHandler: ((String,RTCAudioTrack) -> Void) = {_,_ in},
-		videoTrackHandler: ((String,RTCVideoTrack) -> Void) = {_,_ in},
+		audioTrackHandler: (@escaping @Sendable (String,RTCAudioTrack) -> Void) = {_,_ in},
+		videoTrackHandler: (@escaping @Sendable (String,RTCVideoTrack) -> Void) = {_,_ in},
+		connectionStateChangedCallback:((RTCPeerConnectionState) -> Void) = {_ in}
 	) {
 		self._getPeerConnectionWithDelegate = _getPeerConnectionWithDelegate
 		self.roomId = roomId
 		self.keyStore = MutexGuarded(keyStore)
+		self.defaultAudioTrackHandler = audioTrackHandler
+		self.defaultVideoTrackHandler = videoTrackHandler
 	}
 	
 	nonisolated(unsafe)var webRTCInstance: privmx.WRTCIIHolder!
@@ -100,13 +103,11 @@ class RoomJanusSession{
 	}
 		
 	public func hasPublisher(
-		_ type: ConnectionType
 	) -> Bool {
 		nil != _pubJC
 	}
 	
 	public func hasSubscriber(
-		_ type: ConnectionType
 	) -> Bool {
 		nil != _subJC
 	}
