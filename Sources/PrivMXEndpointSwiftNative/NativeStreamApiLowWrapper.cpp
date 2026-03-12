@@ -1002,10 +1002,10 @@ ResultWithError<stream::StreamLeftEvent> StreamApiLowEventHandler::extractStream
 	return res;
 }
 
-ResultWithError<bool> StreamApiLowEventHandler::isStreamNewStreamsEvent(const core::EventHolder& eventHolder){
+ResultWithError<bool> StreamApiLowEventHandler::isRemoteStreamsChangedEvent(const core::EventHolder& eventHolder){
 	ResultWithError<bool> res;
 	try{
-		res.result = privmx::endpoint::stream::Events::isStreamNewStreamsEvent(eventHolder);
+		res.result = privmx::endpoint::stream::Events::isRemoteStreamsChangedEvent(eventHolder);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -1026,10 +1026,10 @@ ResultWithError<bool> StreamApiLowEventHandler::isStreamNewStreamsEvent(const co
 	}
 	return res;
 }
-ResultWithError<stream::StreamNewStreamsEvent> StreamApiLowEventHandler::extractStreamNewStreamsEvent(const endpoint::core::EventHolder& eventHolder){
-	ResultWithError<stream::StreamNewStreamsEvent> res;
+ResultWithError<stream::RemoteStreamsChangedEvent> StreamApiLowEventHandler::extractRemoteStreamsChangedEvent(const endpoint::core::EventHolder& eventHolder){
+	ResultWithError<stream::RemoteStreamsChangedEvent> res;
 	try{
-		res.result = privmx::endpoint::stream::Events::extractStreamNewStreamsEvent(eventHolder);
+		res.result = privmx::endpoint::stream::Events::extractRemoteStreamsChangedEvent(eventHolder);
 	}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),

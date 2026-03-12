@@ -1925,10 +1925,10 @@ public enum EventHandler{
 	}
 	
 	
-	public static func isStreamNewStreamsEvent(
+	public static func isRemoteStreamsChangedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
 	) throws -> Bool {
-		let res = privmx.StreamApiLowEventHandler.isStreamNewStreamsEvent(eventHolder)
+		let res = privmx.StreamApiLowEventHandler.isRemoteStreamsChangedEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedQueryingEventHolder(err)
 		}
@@ -1941,10 +1941,10 @@ public enum EventHandler{
 		}
 		return result
 	}
-	public static func extractStreamNewStreamsEvent(
+	public static func extractRemoteStreamsChangedEvent(
 		eventHolder: privmx.endpoint.core.EventHolder
-	) throws -> privmx.endpoint.stream.StreamNewStreamsEvent {
-		let res = privmx.StreamApiLowEventHandler.extractStreamNewStreamsEvent(eventHolder)
+	) throws -> privmx.endpoint.stream.RemoteStreamsChangedEvent {
+		let res = privmx.StreamApiLowEventHandler.extractRemoteStreamsChangedEvent(eventHolder)
 		if let err = res.error.value {
 			throw PrivMXEndpointError.failedExtractingEventFromHolder(err)
 		}

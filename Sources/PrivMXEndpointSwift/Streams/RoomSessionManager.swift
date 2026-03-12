@@ -154,8 +154,10 @@ public final class RoomSessionManager: Sendable{
 				)
 			)
 		}
-		
-		guard var sender = pub.peerConnection.add(track, streamIds: [roomId])
+		var tinit = RTCRtpTransceiverInit()
+		tinit.direction = .sendOnly
+		guard var sender = pub.peerConnection.addTransceiver(with: track, init: tinit)
+
 		else {
 			throw PrivMXEndpointError.otherFailure(
 				.init(
@@ -166,7 +168,7 @@ public final class RoomSessionManager: Sendable{
 		}
 		
 		guard var cryptor = PMXFrameCryptorTransformer(
-			for: sender,
+			for: sender.sender,
 			   with: peerConnectionFactory,
 			pmxKeyStore: session.keyStore.value)
 		else {
@@ -179,8 +181,9 @@ public final class RoomSessionManager: Sendable{
 		}
 		pub.videoTracks[track.trackId] = VideoTrackInfo(
 			track: track,
-			sender: sender,
+			sender: sender.sender,
 			frameCryptor: cryptor)
+		sender.sender.track
 	}
 	
 	func addAudioTrack(
@@ -221,7 +224,7 @@ public final class RoomSessionManager: Sendable{
 		
 		guard var cryptor = PMXFrameCryptorTransformer(
 			for: sender.sender,
-			   with: peerConnectionFactory,
+			with: peerConnectionFactory,
 			pmxKeyStore: session.keyStore.value)
 		else {
 			throw PrivMXEndpointError.otherFailure(
@@ -236,6 +239,38 @@ public final class RoomSessionManager: Sendable{
 			sender: sender.sender,
 			frameCryptor: cryptor)
 	}
+	
+	func removeVideoTrack(
+		_ track: RTCVideoTrack,
+		from handle: privmx.endpoint.stream.StreamHandle
+	) throws -> Bool {
+		guard let rid = streamHandles[handle], let publisher = roomSessions[rid]?.publisher
+		else {
+			throw PrivMXEndpointError.otherFailure(.init(name: "No publisher found", message: "", description: ""))
+		}
+		if let sender = publisher.videoTracks[track.trackId]?.sender {
+			return publisher.peerConnection.removeTrack(sender)
+		} else {
+			throw PrivMXEndpointError.otherFailure(.init(name: "No sender for track", message: "", description: ""))
+		}
+	}
+	
+	func removeAudioTrack(
+		_ track: RTCAudioTrack,
+		from handle: privmx.endpoint.stream.StreamHandle
+	) throws -> Bool {
+		guard let rid = streamHandles[handle], let publisher = roomSessions[rid]?.publisher
+		else {
+			throw PrivMXEndpointError.otherFailure(.init(name: "No publisher found", message: "", description: ""))
+		}
+		if let sender = publisher.audioTracks[track.trackId]?.sender {
+			return publisher.peerConnection.removeTrack(sender)
+		} else {
+			throw PrivMXEndpointError.otherFailure(.init(name: "No sender for track", message: "", description: ""))
+		}
+		
+	}
+	
 	func setAudioStreamsHandler(
 	_ handler: ((String,RTCAudioTrack) -> Void)?
 	) -> Void{

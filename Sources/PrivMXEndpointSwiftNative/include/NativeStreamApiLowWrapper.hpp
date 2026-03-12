@@ -139,8 +139,8 @@ public:
 	static ResultWithError<endpoint::stream::StreamUnpublishedEvent> extractStreamUnpublishedEvent(const endpoint::core::EventHolder& eventHolder);
 	static ResultWithError<bool> isStreamLeftEvent(const endpoint::core::EventHolder& eventHolder);
 	static ResultWithError<endpoint::stream::StreamLeftEvent> extractStreamLeftEvent(const endpoint::core::EventHolder& eventHolder);
-	static ResultWithError<bool> isStreamNewStreamsEvent(const endpoint::core::EventHolder& eventHolder);
-	static ResultWithError<endpoint::stream::StreamNewStreamsEvent> extractStreamNewStreamsEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<bool> isRemoteStreamsChangedEvent(const endpoint::core::EventHolder& eventHolder);
+	static ResultWithError<endpoint::stream::RemoteStreamsChangedEvent> extractRemoteStreamsChangedEvent(const endpoint::core::EventHolder& eventHolder);
 	static ResultWithError<bool> isStreamsUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
 	static ResultWithError<endpoint::stream::StreamsUpdatedEvent> extractStreamsUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
 	static ResultWithError<bool> isStreamUpdatedEvent(const endpoint::core::EventHolder& eventHolder);
@@ -169,7 +169,7 @@ static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::str
 static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::StreamLeftEvent& event){
 	return endpoint::wrapper::_get_subIds_from_event(event);
 }
-static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::StreamNewStreamsEvent& event){
+static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::RemoteStreamsChangedEvent& event){
 	return endpoint::wrapper::_get_subIds_from_event(event);
 }
 static privmx::SubscriptionIdVector _get_subIds_from(const privmx::endpoint::stream::StreamsUpdatedEvent& event){

@@ -421,20 +421,22 @@ public class StreamApi: @unchecked Sendable{
 		_ track: RTCVideoTrack,
 		toRoomSession roomId:String
 	) throws -> Void {
-		print("[pmx][dbg] local video track count",roomSessionManager.roomSessions[roomId]?.publisher?.videoTracks.count)
+		//print("[pmx][dbg] local video track count",roomSessionManager.roomSessions[roomId]?.publisher?.videoTracks.count)
 		try roomSessionManager.addVideoTrack(track, to: roomId)
-		print("[pmx][dbg] local video track count",roomSessionManager.roomSessions[roomId]?.publisher?.videoTracks.count)
+		//print("[pmx][dbg] local video track count",roomSessionManager.roomSessions[roomId]?.publisher?.videoTracks.count)
 	}
 	
 	public func addTrack(
 		_ track: RTCAudioTrack,
 		toRoomSession roomId:String
 	) throws -> Void {
-		print("[pmx][dbg] local audio track count",roomSessionManager.roomSessions[roomId]?.publisher?.audioTracks.count)
+		//print("[pmx][dbg] local audio track count",roomSessionManager.roomSessions[roomId]?.publisher?.audioTracks.count)
 		try roomSessionManager.addAudioTrack(track, to: roomId)
-		print("[pmx][dbg] local audio track count",roomSessionManager.roomSessions[roomId]?.publisher?.audioTracks.count)
+		//print("[pmx][dbg] local audio track count",roomSessionManager.roomSessions[roomId]?.publisher?.audioTracks.count)
 		
 	}
+	
+	
 	
 	#if os(macOS)
 	public func createVideoTrackAndSource(
@@ -475,15 +477,15 @@ public class StreamApi: @unchecked Sendable{
 
 	public func removeTrack(
 		_ track: RTCVideoTrack,
-		fromStreamWithHandle handle: privmx.endpoint.stream.StreamHandle//RoomID?
-	) -> Bool{
-		return false
+		fromStreamWithHandle handle: privmx.endpoint.stream.StreamHandle
+	) throws -> Void {
+		try roomSessionManager.removeVideoTrack(track, from: handle)
 	}
 	public func removeTrack(
 		_ track: RTCAudioTrack,
-		fromStreamWithHandle handle: privmx.endpoint.stream.StreamHandle//RoomID?
-	) -> Bool{
-		return false
+		fromStreamWithHandle handle: privmx.endpoint.stream.StreamHandle
+	) throws -> Void {
+		try roomSessionManager.removeAudioTrack(track, from: handle)
 	}
 	
 	// MARK: - EVENTS
