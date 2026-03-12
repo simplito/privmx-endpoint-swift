@@ -154,10 +154,10 @@ public final class RoomSessionManager: Sendable{
 				)
 			)
 		}
-		
 		var tinit = RTCRtpTransceiverInit()
 		tinit.direction = .sendOnly
-		guard var sender = pub.peerConnection.addTransceiver(with: track,init: tinit)
+		guard var sender = pub.peerConnection.addTransceiver(with: track, init: tinit)
+
 		else {
 			throw PrivMXEndpointError.otherFailure(
 				.init(
@@ -209,40 +209,35 @@ public final class RoomSessionManager: Sendable{
 				)
 			)
 		}
-		var sender = pub.peerConnection.senders.first(where: {$0.track == nil})
-		if var sender{
-			sender.track = track
-			//pub.
-		} else {
-			var tinit = RTCRtpTransceiverInit()
-			tinit.direction = .sendOnly
-			guard var sender = pub.peerConnection.addTransceiver(with: track,init: tinit)
-			else {
-				throw PrivMXEndpointError.otherFailure(
-					.init(
-						name: "Couldn't create sender",
-						message: "", description: ""
-					)
+		
+		var tinit = RTCRtpTransceiverInit()
+		tinit.direction = .sendOnly
+		guard var sender = pub.peerConnection.addTransceiver(with: track,init: tinit)
+		else {
+			throw PrivMXEndpointError.otherFailure(
+				.init(
+					name: "Couldn't create sender",
+					message: "", description: ""
 				)
-			}
-			
-			guard var cryptor = PMXFrameCryptorTransformer(
-				for: sender.sender,
-				with: peerConnectionFactory,
-				pmxKeyStore: session.keyStore.value)
-			else {
-				throw PrivMXEndpointError.otherFailure(
-					.init(
-						name: "Couldn't create cryptor",
-						message: "", description: ""
-					)
-				)
-			}
-			pub.audioTracks[track.trackId] = AudioTrackInfo(
-				track: track,
-				sender: sender.sender,
-				frameCryptor: cryptor)
+			)
 		}
+		
+		guard var cryptor = PMXFrameCryptorTransformer(
+			for: sender.sender,
+			with: peerConnectionFactory,
+			pmxKeyStore: session.keyStore.value)
+		else {
+			throw PrivMXEndpointError.otherFailure(
+				.init(
+					name: "Couldn't create cryptor",
+					message: "", description: ""
+				)
+			)
+		}
+		pub.audioTracks[track.trackId] = AudioTrackInfo(
+			track: track,
+			sender: sender.sender,
+			frameCryptor: cryptor)
 	}
 	
 	func removeVideoTrack(
