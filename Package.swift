@@ -21,21 +21,6 @@ let package = Package(
 					  "OpenSSL",
 					 ]
 		),
-		.library(
-			name: "PrivMXEndpointSwiftWithStreams",
-			targets: [
-				"PrivMXEndpointSwift",
-				"PrivMXEndpointSwiftNative",
-				"PrivMXEndpoint",
-				"WebRTC",
-				"POCO",
-				"PSON",
-				"GMP",
-				"OpenSSL",])
-	],
-	traits:[
-		"Streams",
-		.default(enabledTraits: ["Streams"])
 	],
 	targets: [
 		.target(
@@ -48,17 +33,10 @@ let package = Package(
 			name: "PrivMXEndpointSwift",
 			dependencies: [
 				"PrivMXEndpointSwiftNative",
-				.target(
-					name: "WebRTC",
-						//condition: .when(traits: ["Streams"])
-					   )
 			],
 			swiftSettings: [
 				.interoperabilityMode(.Cxx),
 			]),
-		.binaryTarget(
-			name:"WebRTC",
-			path: "../Frameworks/WebRTC.xcframework"),
 		.binaryTarget(
 			name:"GMP",
 			//url: "https://github.com/simplito/privmx-endpoint-xcframeworks/releases/download/2.6.4/gmp-6.3.0.xcframework.zip",
