@@ -14,7 +14,7 @@ import Foundation
 
 /// 'KvdbApi' is a class representing Endpoint's API for Kvdbs and their messages.
 public class KvdbApi: @unchecked Sendable{
-	package var api:privmx.NativeKvdbApiWrapper
+	internal var api:privmx.NativeKvdbApiWrapper
 	
 	init(
 		api:privmx.NativeKvdbApiWrapper

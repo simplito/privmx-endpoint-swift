@@ -18,7 +18,7 @@ import PrivMXEndpointSwiftNative
 public class StoreApi{
 	
 	/// An instance of the wrapped C++ class.
-    package var api: privmx.NativeStoreApiWrapper
+    internal var api: privmx.NativeStoreApiWrapper
 	
 	/// Creates an instance of 'StoreApi'Gets a list of Stores in given Context.
 	///

@@ -16,7 +16,7 @@ import PrivMXEndpointSwiftNative
 public class EventQueue {
 	
 	/// Instance of the native event queue wrapper.
-	package var api: privmx.NativeEventQueueWrapper
+	internal var api: privmx.NativeEventQueueWrapper
 	
 	/// Initializes a new `EventQueue` with the provided native wrapper.
 	///

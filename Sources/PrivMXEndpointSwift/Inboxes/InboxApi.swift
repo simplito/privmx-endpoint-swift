@@ -16,7 +16,7 @@ import PrivMXEndpointSwiftNative
 public class InboxApi{
 	
 	/// An instance of the wrapped C++ class.
-	package var api: privmx.NativeInboxApiWrapper
+	internal var api: privmx.NativeInboxApiWrapper
 	
 	
 	/// Creates an instance of 'InboxApi'.
