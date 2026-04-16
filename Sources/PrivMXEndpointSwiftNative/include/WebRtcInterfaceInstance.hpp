@@ -25,7 +25,7 @@ namespace privmx{
 class ObjcErrorException : std::exception{
 public:
 	const char * what() const noexcept override{
-		return "Objc returned an error";
+		return "ObjC returned an error";
 	}
 };
 
@@ -142,7 +142,6 @@ public:
 				if (_usicb && _usicbContext){
 					auto res = _caasdcb(&ctx);
 					if (res.errname != ""){
-						std::cout<<"got error:"<<res.errname<<std::endl;
 						throw SwiftErrorException(InternalError{.name = res.errname, .description = res.errwhat});
 					} else if (res.isvalid){
 						return res.result;
@@ -150,6 +149,7 @@ public:
 						throw ObjcErrorException();
 					}
 				}
+				throw ObjcErrorException();
 			});
 			auto res = fstring.get();
 			return res;
@@ -160,7 +160,6 @@ public:
 	virtual void setAnswerAndSetRemoteDescription(const std::string& streamRoomId,
 										  const std::string& sdp,
 												  const std::string& type)override{
-		std::cout<<"setting Answer and Setting Remote Description.."<<std::endl;
 		if (_saasrdcb){
 			SAASRDCBParam ctx {
 				.roomId = streamRoomId,
@@ -213,23 +212,16 @@ public:
 			if (_ccb && _ccbContext){
 				std::future<void> cb = std::async(std::launch::async,[&](){
 					if (_ccb && _ccbContext){
-						try{
-							auto res = _ccb(&ctx);
-							if (res.name != ""){
-								throw SwiftErrorException(InternalError());
-							}
-						}catch (std::exception& e) {
-							std::cout<<"[pmx][err][cpp] "<<e.what()<<std::endl;
-						} catch (...){
-							printf("[pmx][err][cpp] unknown error occured");
+						auto res = _ccb(&ctx);
+						if (res.name != ""){
+							throw SwiftErrorException(InternalError());
 						}
 					}
 				});
 				cb.get();
 			}
 		} else {
-			std::cout<<"[pmx][dbg][cpp] close callback not set"<<std::endl;
-			//throw CallbackNotSet();
+			throw CallbackNotSet();
 		}
 	}
 	 virtual void updateKeys(const std::string& streamRoomId,
@@ -248,7 +240,6 @@ public:
 				 if (res != ""){
 					 throw SwiftErrorException(InternalError());
 				 }
-				 std::cout<<res<<std::endl;
 			 });
 			 cb.get();
 		 } else {
