@@ -18,7 +18,7 @@ import PrivMXEndpointSwiftNative
 public class StoreApi{
 	
 	/// An instance of the wrapped C++ class.
-    public var api: privmx.NativeStoreApiWrapper
+    public var cxxApi: privmx.NativeStoreApiWrapper
 	
 	/// Creates an instance of 'StoreApi'Gets a list of Stores in given Context.
 	///
@@ -30,7 +30,7 @@ public class StoreApi{
 	public static func create(
 		connection: inout Connection
 	) throws -> StoreApi {
-		let res = privmx.NativeStoreApiWrapper.create(&connection.api)
+		let res = privmx.NativeStoreApiWrapper.create(&connection.cxxApi)
 		guard res.error.value == nil else{
 			throw PrivMXEndpointError.failedInstantiatingStoreApi(res.error.value!)
 		}
@@ -47,7 +47,7 @@ public class StoreApi{
 	private init(
 		api: privmx.NativeStoreApiWrapper
 	){
-		self.api = api
+		self.cxxApi = api
 	}
 	
 	/// struct containing list of Stores
@@ -62,7 +62,7 @@ public class StoreApi{
 		contextId: std.string,
 		pagingQuery: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.StoreList {
-		let res = api.listStores(contextId, pagingQuery)
+		let res = cxxApi.listStores(contextId, pagingQuery)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedListingStores(res.error.value!)
 		}
@@ -94,7 +94,7 @@ public class StoreApi{
 		storeId: std.string
 	) throws -> privmx.endpoint.store.Store{
 		
-		let res = api.getStore(storeId)
+		let res = cxxApi.getStore(storeId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGettingStore(res.error.value!)
 		}
@@ -134,7 +134,7 @@ public class StoreApi{
 			optPolicies = privmx.makeOptional(policies)
 		}
 		
-		let res = api.createStore(contextId,
+		let res = cxxApi.createStore(contextId,
 								  users, 
 								  managers,
 								  publicMeta,
@@ -182,7 +182,7 @@ public class StoreApi{
 			optPolicies = privmx.makeOptional(policies)
 		}
 		
-		let res = api.updateStore(storeId,
+		let res = cxxApi.updateStore(storeId,
 								  users,
 								  managers,
 								  publicMeta,
@@ -205,7 +205,7 @@ public class StoreApi{
 		storeId: std.string
 	) throws -> Void {
 		
-		let res = api.deleteStore(storeId)
+		let res = cxxApi.deleteStore(storeId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedDeletingStore(res.error.value!)
 		}
@@ -222,7 +222,7 @@ public class StoreApi{
 		fileId: std.string
 	) throws -> privmx.endpoint.store.File{
 		
-		let res = api.getFile(fileId)
+		let res = cxxApi.getFile(fileId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGettingFile(res.error.value!)
 		}
@@ -247,7 +247,7 @@ public class StoreApi{
 		storeId: std.string,
 		pagingQuery: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.FileList{
-		let res = api.listFiles(storeId, pagingQuery)
+		let res = cxxApi.listFiles(storeId, pagingQuery)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedListingFiles(res.error.value!)
 		}
@@ -286,7 +286,7 @@ public class StoreApi{
 		size: Int64,
 		randomWriteSupport: Bool = false
 	) throws -> privmx.StoreFileHandle{
-		let res = api.createFile(storeId,publicMeta,privateMeta,size,randomWriteSupport)
+		let res = cxxApi.createFile(storeId,publicMeta,privateMeta,size,randomWriteSupport)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedCreatingFile(res.error.value!)
 		}
@@ -309,7 +309,7 @@ public class StoreApi{
 		handle: privmx.StoreFileHandle,
 		position: Int64
 	) throws -> Void {
-		let res = api.seekInFile(handle, position)
+		let res = cxxApi.seekInFile(handle, position)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSeekingInFile(res.error.value!)
 		}
@@ -331,7 +331,7 @@ public class StoreApi{
 		privateMeta:privmx.endpoint.core.Buffer,
 		size: Int64
 	) throws -> privmx.StoreFileHandle {
-		let res = api.updateFile(fileId, publicMeta, privateMeta, size)
+		let res = cxxApi.updateFile(fileId, publicMeta, privateMeta, size)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUpdatingFile(res.error.value!)
 		}
@@ -356,7 +356,7 @@ public class StoreApi{
 		publicMeta:privmx.endpoint.core.Buffer,
 		privateMeta:privmx.endpoint.core.Buffer
 	) throws -> Void {
-		let res = api.updateFileMeta(fileId, publicMeta, privateMeta)
+		let res = cxxApi.updateFileMeta(fileId, publicMeta, privateMeta)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUpdatingFile(res.error.value!)
 		}
@@ -372,7 +372,7 @@ public class StoreApi{
    public func closeFile(
 		handle: privmx.StoreFileHandle
 	) throws -> std.string {
-		let res = api.closeFile(handle)
+		let res = cxxApi.closeFile(handle)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedClosingFile(res.error.value!)
 		}
@@ -395,7 +395,7 @@ public class StoreApi{
    public func openFile(
 		fileId: std.string
 	) throws -> privmx.StoreFileHandle {
-		let res = api.openFile(fileId)
+		let res = cxxApi.openFile(fileId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedOpeningFile(res.error.value!)
 		}
@@ -422,7 +422,7 @@ public class StoreApi{
 		handle: privmx.StoreFileHandle,
 		length: Int64
 	) throws -> privmx.endpoint.core.Buffer{
-		let res = api.readFromFile(handle,length)
+		let res = cxxApi.readFromFile(handle,length)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedReadingFromFile(res.error.value!)
 		}
@@ -448,7 +448,7 @@ public class StoreApi{
 		truncate: Bool = false
 	) throws -> Void{
 		
-		let res = api.writeToFile(handle,dataChunk,truncate)
+		let res = cxxApi.writeToFile(handle,dataChunk,truncate)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedWritingToFile(res.error.value!)
 		}
@@ -462,7 +462,7 @@ public class StoreApi{
     public func deleteFile(
 		fileId: std.string
 	) throws -> Void {
-		let res = api.deleteFile(fileId)
+		let res = cxxApi.deleteFile(fileId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedDeletingFile(res.error.value!)
 		}
@@ -476,7 +476,7 @@ public class StoreApi{
 	public func syncFile(
 		fileHandle: privmx.StoreFileHandle
 	) throws -> Void {
-		let res = api.syncFile(fileHandle)
+		let res = cxxApi.syncFile(fileHandle)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSyncingFile(res.error.value!)
 		}
@@ -492,7 +492,7 @@ public class StoreApi{
 	public func subscribeFor(
 		subscriptionQueries: privmx.SubscriptionQueryVector
 	) throws -> privmx.SubscriptionIdVector {
-		let res = api.subscribeFor(subscriptionQueries)
+		let res = cxxApi.subscribeFor(subscriptionQueries)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
 		}
@@ -513,7 +513,7 @@ public class StoreApi{
 	public func unsubscribeFrom(
 		subscriptionIds: privmx.SubscriptionIdVector
 	) throws -> Void {
-		let res = api.unsubscribeFrom(subscriptionIds)
+		let res = cxxApi.unsubscribeFrom(subscriptionIds)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
 		}
@@ -533,7 +533,7 @@ public class StoreApi{
 	selectorType: privmx.endpoint.store.EventSelectorType,
 	selectorId: std.string
 	) throws -> privmx.SubscriptionQuery {
-		let res = api.buildSubscriptionQuery(eventType, selectorType, selectorId)
+		let res = cxxApi.buildSubscriptionQuery(eventType, selectorType, selectorId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(res.error.value!)
 		}

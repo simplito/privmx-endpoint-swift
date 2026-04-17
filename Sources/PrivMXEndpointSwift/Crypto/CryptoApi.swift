@@ -20,7 +20,7 @@ import PrivMXEndpointSwiftNative
 public class CryptoApi{
 	
 	/// An instance of the wrapped C++ class.
-	public var api: privmx.NativeCryptoApiWrapper
+	public var cxxApi: privmx.NativeCryptoApiWrapper
 	
 	/// Creates instance of 'CryptoApi'.
 	///
@@ -33,7 +33,7 @@ public class CryptoApi{
 	init(
 		api: privmx.NativeCryptoApiWrapper
 	){
-		self.api = api
+		self.cxxApi = api
 	}
 	
 	/// Creates a signature of data using given key.
@@ -49,7 +49,7 @@ public class CryptoApi{
 		privateKey: std.string
 	) throws -> privmx.endpoint.core.Buffer {
 		
-		let res = api.signData(data, privateKey)
+		let res = cxxApi.signData(data, privateKey)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSigning(res.error.value!)
 		}
@@ -76,7 +76,7 @@ public class CryptoApi{
 		signature: privmx.endpoint.core.Buffer,
 		publicKey: std.string
 	) throws -> Bool {
-		let res = api.verifySignature(data,
+		let res = cxxApi.verifySignature(data,
 									  signature,
 									  publicKey)
 		guard res.error.value == nil else {
@@ -98,7 +98,7 @@ public class CryptoApi{
 	/// - Throws: `PrivMXEndpointError.failedGeneratingSymmetricKey` if there is an issue generating the key, for instance due to insufficient entropy or a system-level error.
 	public func generateKeySymmetric(
 	) throws -> privmx.endpoint.core.Buffer {
-		let res = api.generateKeySymmetric()
+		let res = cxxApi.generateKeySymmetric()
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGeneratingSymmetricKey(res.error.value!)
 		}
@@ -126,7 +126,7 @@ public class CryptoApi{
 		if let randomSeed{
 			rs = privmx.makeOptional(randomSeed)
 		}
-		let res = api.generatePrivateKey(rs)
+		let res = cxxApi.generatePrivateKey(rs)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGeneratingPrivKey(res.error.value!)
 		}
@@ -153,7 +153,7 @@ public class CryptoApi{
 		salt: std.string
 	) throws -> std.string{
 		
-		let res = api.derivePrivateKey(password, salt)
+		let res = cxxApi.derivePrivateKey(password, salt)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGeneratingPrivKey(res.error.value!)
 		}
@@ -181,7 +181,7 @@ public class CryptoApi{
 		salt: std.string
 	) throws -> std.string{
 		
-		let res = api.derivePrivateKey2(password, salt)
+		let res = cxxApi.derivePrivateKey2(password, salt)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGeneratingPrivKey(res.error.value!)
 		}
@@ -204,7 +204,7 @@ public class CryptoApi{
 	public func derivePublicKey(
 		privKey: std.string
 	) throws -> std.string {
-		let res = api.derivePublicKey(privKey)
+		let res = cxxApi.derivePublicKey(privKey)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGeneratingPubKey(res.error.value!)
 		}
@@ -231,7 +231,7 @@ public class CryptoApi{
 		symmetricKey: privmx.endpoint.core.Buffer
 	) throws -> privmx.endpoint.core.Buffer{
 		
-		let res = api.encryptDataSymmetric(data, symmetricKey)
+		let res = cxxApi.encryptDataSymmetric(data, symmetricKey)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedEncrypting(res.error.value!)
 		}
@@ -259,7 +259,7 @@ public class CryptoApi{
 		symmetricKey: privmx.endpoint.core.Buffer
 	) throws -> privmx.endpoint.core.Buffer{
 		
-		let res = api.decryptDataSymmetric(data, symmetricKey)
+		let res = cxxApi.decryptDataSymmetric(data, symmetricKey)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedDecrypting(res.error.value!)
 		}
@@ -284,7 +284,7 @@ public class CryptoApi{
 		pemKey: std.string
 	)throws -> std.string{
 		
-		let res = api.convertPEMKeyToWIFKey(pemKey)
+		let res = cxxApi.convertPEMKeyToWIFKey(pemKey)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedConvertingKeyToWIF(res.error.value!)
 		}
@@ -308,7 +308,7 @@ public class CryptoApi{
 	public func convertPGPAsn1KeyToBase58DERKey(
 		pgpKey: std.string
 	) throws -> std.string {
-		let res = api.convertPGPAsn1KeyToBase58DERKey(pgpKey)
+		let res = cxxApi.convertPGPAsn1KeyToBase58DERKey(pgpKey)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedConvertingKeyToBase58DER(res.error.value!)
 		}
@@ -334,7 +334,7 @@ public class CryptoApi{
 		strength: size_t,
 		password: std.string = std.string()
 	) throws -> BIP39 {
-		let res = api.generateBip39(strength,
+		let res = cxxApi.generateBip39(strength,
 									password)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGeneratingBIP39(res.error.value!)
@@ -361,7 +361,7 @@ public class CryptoApi{
 		mnemonic: std.string,
 		password: std.string = std.string()
 	) throws -> BIP39 {
-		let res = api.fromMnemonic(mnemonic,
+		let res = cxxApi.fromMnemonic(mnemonic,
 								   password)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGeneratingBIP39(res.error.value!)
@@ -388,7 +388,7 @@ public class CryptoApi{
 		entropy: privmx.endpoint.core.Buffer,
 		password: std.string = std.string()
 	)throws -> BIP39 {
-		let res = api.fromEntropy(entropy,
+		let res = cxxApi.fromEntropy(entropy,
 								  password)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGeneratingBIP39(res.error.value!)
@@ -413,7 +413,7 @@ public class CryptoApi{
 	public func entropyToMnemonic(
 		entropy: privmx.endpoint.core.Buffer
 	) throws -> std.string {
-		let res = api.entropyToMnemonic(entropy)
+		let res = cxxApi.entropyToMnemonic(entropy)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedConvertingEntropyToMnemonic(res.error.value!)
 		}
@@ -437,7 +437,7 @@ public class CryptoApi{
 	public func mnemonicToEntropy(
 		mnemonic: std.string
 	) throws -> privmx.endpoint.core.Buffer {
-		let res = api.mnemonicToEntropy(mnemonic)
+		let res = cxxApi.mnemonicToEntropy(mnemonic)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedConvertingMnemonicToEntropy(res.error.value!)
 		}
@@ -463,7 +463,7 @@ public class CryptoApi{
 		mnemonic: std.string,
 		password: std.string = std.string()
 	) throws -> privmx.endpoint.core.Buffer {
-		let res = api.mnemonicToSeed(mnemonic,
+		let res = cxxApi.mnemonicToSeed(mnemonic,
 									 password)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGeneratingSeedFromMnemonic(res.error.value!)

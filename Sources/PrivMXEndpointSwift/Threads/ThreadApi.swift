@@ -18,10 +18,10 @@ import PrivMXEndpointSwiftNative
 public class ThreadApi{
 	
 	/// An instance of the wrapped C++ class.
-	public var api: privmx.NativeThreadApiWrapper
+	public var cxxApi: privmx.NativeThreadApiWrapper
 	
 	private init(api: privmx.NativeThreadApiWrapper) {
-		self.api = api
+		self.cxxApi = api
 	}
 	
 	/// Creates an instance of 'ThreadApi'.
@@ -34,7 +34,7 @@ public class ThreadApi{
 	public static func create(
 		connection: inout Connection
 	) throws -> ThreadApi{
-		let res = privmx.NativeThreadApiWrapper.create(&connection.api)
+		let res = privmx.NativeThreadApiWrapper.create(&connection.cxxApi)
 		guard res.error.value == nil  else {
 			throw PrivMXEndpointError.failedInstantiatingThreadApi(res.error.value!)
 		}
@@ -74,7 +74,7 @@ public class ThreadApi{
 			optPolicies = privmx.makeOptional(policies)
 		}
 		
-		let res = api.createThread(contextId,
+		let res = cxxApi.createThread(contextId,
 								   users,
 								   managers,
 								   publicMeta,
@@ -103,7 +103,7 @@ public class ThreadApi{
 		threadId: std.string
 	) throws -> privmx.endpoint.thread.Thread {
 		
-		let res = api.getThread(threadId)
+		let res = cxxApi.getThread(threadId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGettingThread(res.error.value!)
 		}
@@ -146,7 +146,7 @@ public class ThreadApi{
 			optPolicies = privmx.makeOptional(policies)
 		}
 		
-		let res = api.updateThread(threadId,
+		let res = cxxApi.updateThread(threadId,
 								   users,
 								   managers,
 								   publicMeta,
@@ -169,7 +169,7 @@ public class ThreadApi{
 		threadId: std.string
 	) throws -> Void {
 		
-		let res = api.deleteThread(threadId)
+		let res = cxxApi.deleteThread(threadId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedDeletingThread(res.error.value!)
 		}
@@ -187,7 +187,7 @@ public class ThreadApi{
 		contextId: std.string,
 		pagingQuery: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.ThreadList {
-		let res = api.listThreads(contextId,pagingQuery)
+		let res = cxxApi.listThreads(contextId,pagingQuery)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedListingThreads(res.error.value!)
 		}
@@ -223,7 +223,7 @@ public class ThreadApi{
 		privateMeta: privmx.endpoint.core.Buffer,
 		data: privmx.endpoint.core.Buffer
 	) throws -> std.string{
-		let res = api.sendMessage(threadId,
+		let res = cxxApi.sendMessage(threadId,
 								  publicMeta,
 								  privateMeta,
 								  data)
@@ -247,7 +247,7 @@ public class ThreadApi{
 	public func deleteMessage(
 		_ messageId: std.string
 	) throws -> Void {
-		let res = api.deleteMessage(messageId)
+		let res = cxxApi.deleteMessage(messageId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedDeletingMessage(res.error.value!)
 		}
@@ -264,7 +264,7 @@ public class ThreadApi{
 		_ messageId: std.string
 	) throws -> privmx.endpoint.thread.Message {
 		
-		let res = api.getMessage(messageId)
+		let res = cxxApi.getMessage(messageId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGettingMessage(res.error.value!)
 		}
@@ -289,7 +289,7 @@ public class ThreadApi{
 		threadId: std.string,
 		pagingQuery: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.MessageList {
-		let res = api.listMessages(threadId,pagingQuery)
+		let res = cxxApi.listMessages(threadId,pagingQuery)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedListingMessages(res.error.value!)
 		}
@@ -324,7 +324,7 @@ public class ThreadApi{
 		privateMeta: privmx.endpoint.core.Buffer,
 		data: privmx.endpoint.core.Buffer
 	) throws -> Void {
-		let res = api.updateMessage(messageId,
+		let res = cxxApi.updateMessage(messageId,
 									publicMeta, privateMeta,
 									data)
 		guard res.error.value == nil else {
@@ -342,7 +342,7 @@ public class ThreadApi{
 	public func subscribeFor(
 		subscriptionQueries: privmx.SubscriptionQueryVector
 	) throws -> privmx.SubscriptionIdVector {
-		let res = api.subscribeFor(subscriptionQueries)
+		let res = cxxApi.subscribeFor(subscriptionQueries)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
 		}
@@ -363,7 +363,7 @@ public class ThreadApi{
 	public func unsubscribeFrom(
 		subscriptionIds: privmx.SubscriptionIdVector
 	) throws -> Void {
-		let res = api.unsubscribeFrom(subscriptionIds)
+		let res = cxxApi.unsubscribeFrom(subscriptionIds)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
 		}
@@ -383,7 +383,7 @@ public class ThreadApi{
 		selectorType: privmx.endpoint.thread.EventSelectorType,
 		selectorId: std.string
 	) throws -> privmx.SubscriptionQuery {
-		let res = api.buildSubscriptionQuery(eventType, selectorType, selectorId)
+		let res = cxxApi.buildSubscriptionQuery(eventType, selectorType, selectorId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(res.error.value!)
 		}

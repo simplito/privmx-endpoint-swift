@@ -16,7 +16,7 @@ import PrivMXEndpointSwiftNative
 public class InboxApi{
 	
 	/// An instance of the wrapped C++ class.
-	public var api: privmx.NativeInboxApiWrapper
+	public var cxxApi: privmx.NativeInboxApiWrapper
 	
 	
 	/// Creates an instance of 'InboxApi'.
@@ -33,9 +33,9 @@ public class InboxApi{
 		threadApi: inout ThreadApi,
 		storeApi: inout StoreApi
 	) throws -> InboxApi{
-		let res = privmx.NativeInboxApiWrapper.create(&connection.api,
-													  &threadApi.api,
-													  &storeApi.api)
+		let res = privmx.NativeInboxApiWrapper.create(&connection.cxxApi,
+													  &threadApi.cxxApi,
+													  &storeApi.cxxApi)
 		guard res.error.value == nil else{
 			throw PrivMXEndpointError.failedInstantiatingInboxApi(res.error.value!)
 		}
@@ -52,7 +52,7 @@ public class InboxApi{
 	private init(
 		api: privmx.NativeInboxApiWrapper
 	){
-		self.api = api
+		self.cxxApi = api
 	}
 	
 	/// Creates a new Inbox.
@@ -89,7 +89,7 @@ public class InboxApi{
 			optPolicies = privmx.makeOptional(policies)
 		}
 		
-		let res = api.createInbox(contextId,
+		let res = cxxApi.createInbox(contextId,
 								  users,
 								  managers,
 								  publicMeta,
@@ -148,7 +148,7 @@ public class InboxApi{
 			optPolicies = privmx.makeOptional(policies)
 		}
 		
-		let res = api.updateInbox(inboxId,
+		let res = cxxApi.updateInbox(inboxId,
 								  users,
 								  managers,
 								  publicMeta,
@@ -175,7 +175,7 @@ public class InboxApi{
 		inboxId: std.string
 	) throws -> privmx.endpoint.inbox.Inbox{
 		
-		let res = api.getInbox(inboxId)
+		let res = cxxApi.getInbox(inboxId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGettingInbox(res.error.value!)
 		}
@@ -201,7 +201,7 @@ public class InboxApi{
 		pagingQuery: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.InboxList {
 		
-		let res = api.listInboxes(contextId,
+		let res = cxxApi.listInboxes(contextId,
 								  pagingQuery)
 		
 		guard res.error.value == nil else {
@@ -228,7 +228,7 @@ public class InboxApi{
 		inboxId: std.string
 	) throws -> privmx.endpoint.inbox.InboxPublicView {
 		
-		let res = api.getInboxPublicView(inboxId)
+		let res = cxxApi.getInboxPublicView(inboxId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGettingInboxPublicView(res.error.value!)
 		}
@@ -250,7 +250,7 @@ public class InboxApi{
 		inboxId: std.string
 	) throws -> Void {
 		
-		let res = api.deleteInbox(inboxId)
+		let res = cxxApi.deleteInbox(inboxId)
 		
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedDeletingInbox(res.error.value!)
@@ -281,7 +281,7 @@ public class InboxApi{
 			opk = privmx.makeOptional(userPrivKey)
 		}
 		
-		let res = api.prepareEntry(inboxId,
+		let res = cxxApi.prepareEntry(inboxId,
 								   data,
 								   inboxFileHandles,
 								   opk)
@@ -307,7 +307,7 @@ public class InboxApi{
 		entryHandle: privmx.EntryHandle
 	) throws -> Void {
 		
-		let res = api.sendEntry(entryHandle)
+		let res = cxxApi.sendEntry(entryHandle)
 		
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSendingEntry(res.error.value!)
@@ -319,7 +319,7 @@ public class InboxApi{
 		inboxHandle: privmx.InboxHandle
 	) throws -> Void {
 		
-		let res = api.sendEntry(inboxHandle)
+		let res = cxxApi.sendEntry(inboxHandle)
 		
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSendingEntry(res.error.value!)
@@ -336,7 +336,7 @@ public class InboxApi{
 	public func readEntry(
 		inboxEntryId: std.string
 	) throws -> privmx.endpoint.inbox.InboxEntry {
-		let res = api.readEntry(inboxEntryId)
+		let res = cxxApi.readEntry(inboxEntryId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedReadingEntry(res.error.value!)
 		}
@@ -361,7 +361,7 @@ public class InboxApi{
 		inboxId: std.string,
 		pagingQuery: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.InboxEntryList {
-		let res = api.listEntries(inboxId,
+		let res = cxxApi.listEntries(inboxId,
 								  pagingQuery)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedListingEntries(res.error.value!)
@@ -383,7 +383,7 @@ public class InboxApi{
 	public func deleteEntry(
 		inboxEntryId: std.string
 	) throws -> Void {
-		let res = api.deleteEntry(inboxEntryId)
+		let res = cxxApi.deleteEntry(inboxEntryId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedDeletingEntry(res.error.value!)
 		}
@@ -404,7 +404,7 @@ public class InboxApi{
 		privateMeta:privmx.endpoint.core.Buffer,
 		fileSize: Int64
 	) throws -> privmx.InboxFileHandle {
-		let res = api.createFileHandle(publicMeta,
+		let res = cxxApi.createFileHandle(publicMeta,
 									   privateMeta,
 									   fileSize)
 		guard res.error.value == nil else {
@@ -433,7 +433,7 @@ public class InboxApi{
 		inboxFileHandle: privmx.InboxFileHandle,
 		dataChunk: privmx.endpoint.core.Buffer
 	) throws -> Void {
-		let res = api.writeToFile(entryHandle,
+		let res = cxxApi.writeToFile(entryHandle,
 								  inboxFileHandle,
 								  dataChunk)
 		guard res.error.value == nil else {
@@ -448,7 +448,7 @@ public class InboxApi{
 		inboxFileHandle: privmx.InboxFileHandle,
 		dataChunk: privmx.endpoint.core.Buffer
 	) throws -> Void {
-		let res = api.writeToFile(inboxHandle,
+		let res = cxxApi.writeToFile(inboxHandle,
 								  inboxFileHandle,
 								  dataChunk)
 		guard res.error.value == nil else {
@@ -466,7 +466,7 @@ public class InboxApi{
 	public func openFile(
 		fileId: std.string
 	) throws -> privmx.InboxFileHandle {
-		let res = api.openFile(fileId)
+		let res = cxxApi.openFile(fileId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedOpeningFile(res.error.value!)
 		}
@@ -492,7 +492,7 @@ public class InboxApi{
 		fileHandle: privmx.InboxFileHandle,
 		length: Int64
 	) throws -> privmx.endpoint.core.Buffer {
-		let res = api.readFromFile(fileHandle,
+		let res = cxxApi.readFromFile(fileHandle,
 								   length)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedReadingFromFile(res.error.value!)
@@ -516,7 +516,7 @@ public class InboxApi{
 		fileHandle: privmx.InboxFileHandle,
 		position: Int64
 	) throws -> Void {
-		let res = api.seekInFile(fileHandle,
+		let res = cxxApi.seekInFile(fileHandle,
 								 position)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSeekingInFile(res.error.value!)
@@ -533,7 +533,7 @@ public class InboxApi{
 	public func closeFile(
 		fileHandle: privmx.InboxFileHandle
 	) throws -> std.string {
-		let res = api.closeFile(fileHandle)
+		let res = cxxApi.closeFile(fileHandle)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedClosingFile(res.error.value!)
 		}
@@ -556,7 +556,7 @@ public class InboxApi{
 	public func subscribeFor(
 		subscriptionQueries: privmx.SubscriptionQueryVector
 	) throws -> privmx.SubscriptionIdVector {
-		let res = api.subscribeFor(subscriptionQueries)
+		let res = cxxApi.subscribeFor(subscriptionQueries)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
 		}
@@ -577,7 +577,7 @@ public class InboxApi{
 	public func unsubscribeFrom(
 		subscriptionIds: privmx.SubscriptionIdVector
 	) throws -> Void {
-		let res = api.unsubscribeFrom(subscriptionIds)
+		let res = cxxApi.unsubscribeFrom(subscriptionIds)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
 		}
@@ -597,7 +597,7 @@ public class InboxApi{
 	selectorType: privmx.endpoint.inbox.EventSelectorType,
 	selectorId: std.string
 	) throws -> privmx.SubscriptionQuery {
-		let res = api.buildSubscriptionQuery(eventType, selectorType, selectorId)
+		let res = cxxApi.buildSubscriptionQuery(eventType, selectorType, selectorId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(res.error.value!)
 		}

@@ -37,7 +37,7 @@ public class Connection{
 	}
 	
 	/// An instance of the wrapped C++ class.
-	public var api: privmx.NativeConnectionWrapper
+	public var cxxApi: privmx.NativeConnectionWrapper
 	
 	/// Connects to the PrivMX Bridge server.
 	///
@@ -174,7 +174,7 @@ public class Connection{
     /// - Returns: ID of the connection
     public func getConnectionId(
 	) throws -> Int64 {
-		let res = api.getConnectionId()
+		let res = cxxApi.getConnectionId()
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGettingConnectionId(res.error.value!)
 		}
@@ -190,7 +190,7 @@ public class Connection{
 	private init(
 		api:privmx.NativeConnectionWrapper
 	){
-		self.api = api
+		self.cxxApi = api
 	}
 	
 	///Disconnects from the PrivMX Bridge server.
@@ -198,7 +198,7 @@ public class Connection{
     /// - Throws: `PrivMXEndpointError.failedDisconnecting` if the disconnection process fails.
     public func disconnect(
 	) throws -> Void {
-		let res = api.disconnect()
+		let res = cxxApi.disconnect()
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedDisconnecting(res.error.value!)
 		}
@@ -216,7 +216,7 @@ public class Connection{
     public func listContexts(
 		query: privmx.endpoint.core.PagingQuery
 	)throws -> privmx.ContextList{
-		let res = api.listContexts(query)
+		let res = cxxApi.listContexts(query)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedListingContexts(res.error.value!)
 		}
@@ -240,7 +240,7 @@ public class Connection{
 		contextId: std.string,
 		query: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.UserInfoList {
-		let res = api.listContextUsers(contextId,query)
+		let res = cxxApi.listContextUsers(contextId,query)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGettingContextUsers(res.error.value!)
 		}
@@ -266,7 +266,7 @@ public class Connection{
 	public func setUserVerifier(
 		_ verifier: privmx.VerificationImplementation
 	) throws -> Void {
-		let res = api.setUserVerifier(privmx.UserVerifier.init(verifier))
+		let res = cxxApi.setUserVerifier(privmx.UserVerifier.init(verifier))
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSettingUserVerifier(res.error.value!)
 		}
@@ -282,7 +282,7 @@ public class Connection{
 	public func subscribeFor(
 		subscriptionQueries: privmx.SubscriptionQueryVector
 	) throws -> privmx.SubscriptionIdVector {
-		let res = api.subscribeFor(subscriptionQueries)
+		let res = cxxApi.subscribeFor(subscriptionQueries)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
 		}
@@ -303,7 +303,7 @@ public class Connection{
 	public func unsubscribeFrom(
 		subscriptionIds: privmx.SubscriptionIdVector
 	) throws -> Void {
-		let res = api.unsubscribeFrom(subscriptionIds)
+		let res = cxxApi.unsubscribeFrom(subscriptionIds)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
 		}
@@ -319,7 +319,7 @@ public class Connection{
 		selectorType: privmx.endpoint.core.EventSelectorType,
 		selectorId: std.string
 	) throws -> std.string {
-		let res = api.buildSubscriptionQuery(eventType,selectorType,selectorId)
+		let res = cxxApi.buildSubscriptionQuery(eventType,selectorType,selectorId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(res.error.value!)
 		}

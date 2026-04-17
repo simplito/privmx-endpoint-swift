@@ -13,12 +13,12 @@ import PrivMXEndpointSwiftNative
 
 /// 'EventApi' is a class representing Endpoint's API for context custom events.
 public class EventApi{
-	public var api : privmx.NativeEventApiWrapper
+	public var cxxApi : privmx.NativeEventApiWrapper
 	
 	private init(
 		api: privmx.NativeEventApiWrapper
 	) {
-		self.api = api
+		self.cxxApi = api
 	}
 	
 	/// Creates an instance of 'EventApi'.
@@ -32,7 +32,7 @@ public class EventApi{
 		connection: inout Connection
 	) throws -> EventApi {
 		let res = privmx.NativeEventApiWrapper.create(
-			&connection.api)
+			&connection.cxxApi)
 		
 		guard nil == res.error.value
 		else {
@@ -63,7 +63,7 @@ public class EventApi{
 		channelName: std.string,
 		eventData: privmx.endpoint.core.Buffer,
 	) throws -> Void {
-		let res = api.emitEvent(
+		let res = cxxApi.emitEvent(
 			contextId,
 			users,
 			channelName,
@@ -84,7 +84,7 @@ public class EventApi{
 	public func subscribeFor(
 		subscriptionQueries: privmx.SubscriptionQueryVector
 	) throws -> privmx.SubscriptionIdVector {
-		let res = api.subscribeFor(subscriptionQueries)
+		let res = cxxApi.subscribeFor(subscriptionQueries)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
 		}
@@ -105,7 +105,7 @@ public class EventApi{
 	public func unsubscribeFrom(
 		subscriptionIds: privmx.SubscriptionIdVector
 	) throws -> Void {
-		let res = api.unsubscribeFrom(subscriptionIds)
+		let res = cxxApi.unsubscribeFrom(subscriptionIds)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
 		}
@@ -123,7 +123,7 @@ public class EventApi{
 		selectorType: privmx.endpoint.event.EventSelectorType,
 		selectorId: std.string
 	) throws -> privmx.SubscriptionQuery {
-		let res = api.buildSubscriptionQuery(channelName, selectorType, selectorId)
+		let res = cxxApi.buildSubscriptionQuery(channelName, selectorType, selectorId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(res.error.value!)
 		}

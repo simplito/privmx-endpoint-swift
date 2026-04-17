@@ -14,12 +14,12 @@ import Foundation
 
 /// 'KvdbApi' is a class representing Endpoint's API for Kvdbs and their messages.
 public class KvdbApi: @unchecked Sendable{
-	public var api:privmx.NativeKvdbApiWrapper
+	public var cxxApi:privmx.NativeKvdbApiWrapper
 	
 	init(
 		api:privmx.NativeKvdbApiWrapper
 	){
-		self.api = api
+		self.cxxApi = api
 	}
 	
 	/// Creates an instance of 'KvdbApi'.
@@ -30,7 +30,7 @@ public class KvdbApi: @unchecked Sendable{
 	public static func create(
 		connection: inout Connection
 	) throws -> KvdbApi {
-		let res = privmx.NativeKvdbApiWrapper.create(&connection.api)
+		let res = privmx.NativeKvdbApiWrapper.create(&connection.cxxApi)
 		guard nil == res.error.value
 		else{
 			throw PrivMXEndpointError.failedInstantiatingKvdbApi(res.error.value!)
@@ -71,7 +71,7 @@ public class KvdbApi: @unchecked Sendable{
 			optPolicies = privmx.makeOptional(policies)
 		}
 		
-		let res = api.createKvdb(
+		let res = cxxApi.createKvdb(
 			contextId,
 			users,
 			managers,
@@ -120,7 +120,7 @@ public class KvdbApi: @unchecked Sendable{
 			op = privmx.makeOptional(policies)
 		}
 		
-		let res = api.updateKvdb(
+		let res = cxxApi.updateKvdb(
 			kvdbId,
 			users,
 			managers,
@@ -143,7 +143,7 @@ public class KvdbApi: @unchecked Sendable{
 	public func deleteKvdb(
 		kvdbId: std.string
 	) throws -> Void {
-		let res = api.deleteKvdb(kvdbId)
+		let res = cxxApi.deleteKvdb(kvdbId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedDeletingKvdb(res.error.value!)
 		}
@@ -160,7 +160,7 @@ public class KvdbApi: @unchecked Sendable{
 		kvdbId: std.string,
 		key: std.string
 	) throws -> Bool {
-		let res = api.hasEntry(kvdbId, key)
+		let res = cxxApi.hasEntry(kvdbId, key)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedCheckingIfEntryExists(res.error.value!)
 		}
@@ -183,7 +183,7 @@ public class KvdbApi: @unchecked Sendable{
 	public func getKvdb(
 		kvdbId:std.string
 	) throws -> privmx.endpoint.kvdb.Kvdb {
-		let res = api.getKvdb(kvdbId)
+		let res = cxxApi.getKvdb(kvdbId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGettingKvdb(res.error.value!)
 		}
@@ -208,7 +208,7 @@ public class KvdbApi: @unchecked Sendable{
 		contextId:std.string,
 		pagingQuery: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.KvdbList {
-		let res = api.listKvdbs(contextId,
+		let res = cxxApi.listKvdbs(contextId,
 								pagingQuery)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedListingKvdbs(res.error.value!)
@@ -234,7 +234,7 @@ public class KvdbApi: @unchecked Sendable{
 		kvdbId: std.string,
 		key: std.string
 	) throws -> privmx.endpoint.kvdb.KvdbEntry {
-		let res = api.getEntry(kvdbId,
+		let res = cxxApi.getEntry(kvdbId,
 							  key)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedGettingKvdbEntry(res.error.value!)
@@ -260,7 +260,7 @@ public class KvdbApi: @unchecked Sendable{
 		kvdbId: std.string,
 		pagingQuery: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.StringList {
-		let res = api.listEntriesKeys(kvdbId,
+		let res = cxxApi.listEntriesKeys(kvdbId,
 								   pagingQuery)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedListingKvdbEntriesKeys(res.error.value!)
@@ -286,7 +286,7 @@ public class KvdbApi: @unchecked Sendable{
 		kvdbId: std.string,
 		pagingQuery: privmx.endpoint.core.PagingQuery
 	) throws -> privmx.KvdbEntryList {
-		let res = api.listEntries(kvdbId,
+		let res = cxxApi.listEntries(kvdbId,
 								pagingQuery)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedListingKvdbEntries(res.error.value!)
@@ -318,7 +318,7 @@ public class KvdbApi: @unchecked Sendable{
 		data: privmx.endpoint.core.Buffer,
 		version: Int64 = 0
 	) throws -> Void {
-		let res = api.setEntry(kvdbId,
+		let res = cxxApi.setEntry(kvdbId,
 							  key,
 							  publicMeta,
 							  privateMeta,
@@ -339,7 +339,7 @@ public class KvdbApi: @unchecked Sendable{
 		kvdbId: std.string,
 		key: std.string
 	) throws -> Void {
-		let res = api.deleteEntry(kvdbId,
+		let res = cxxApi.deleteEntry(kvdbId,
 								 key)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedDeletingKvdbEntry(res.error.value!)
@@ -358,7 +358,7 @@ public class KvdbApi: @unchecked Sendable{
 		kvdbId: std.string,
 		keys: privmx.StringVector
 	) throws -> privmx.StringBoolMap {
-		let res = api.deleteEntries(kvdbId,
+		let res = cxxApi.deleteEntries(kvdbId,
 								  keys)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedDeletingKvdbEntries(res.error.value!)
@@ -382,7 +382,7 @@ public class KvdbApi: @unchecked Sendable{
 	public func subscribeFor(
 		subscriptionQueries: privmx.SubscriptionQueryVector
 	) throws -> privmx.SubscriptionIdVector {
-		let res = api.subscribeFor(subscriptionQueries)
+		let res = cxxApi.subscribeFor(subscriptionQueries)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedSubscribingForEvents(res.error.value!)
 		}
@@ -403,7 +403,7 @@ public class KvdbApi: @unchecked Sendable{
 	public func unsubscribeFrom(
 		subscriptionIds: privmx.SubscriptionIdVector
 	) throws -> Void {
-		let res = api.unsubscribeFrom(subscriptionIds)
+		let res = cxxApi.unsubscribeFrom(subscriptionIds)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedUnsubscribingFromEvents(res.error.value!)
 		}
@@ -423,7 +423,7 @@ public class KvdbApi: @unchecked Sendable{
 	selectorType: privmx.endpoint.kvdb.EventSelectorType,
 	selectorId: std.string
 	) throws -> privmx.SubscriptionQuery {
-		let res = api.buildSubscriptionQuery(eventType, selectorType, selectorId)
+		let res = cxxApi.buildSubscriptionQuery(eventType, selectorType, selectorId)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(res.error.value!)
 		}
@@ -450,7 +450,7 @@ public class KvdbApi: @unchecked Sendable{
 	kvdbId: std.string,
 	kvdbEntryKey: std.string
 	) throws -> privmx.SubscriptionQuery {
-		let res = api.buildSubscriptionQueryForSelectedEntry(eventType, kvdbId, kvdbEntryKey)
+		let res = cxxApi.buildSubscriptionQueryForSelectedEntry(eventType, kvdbId, kvdbEntryKey)
 		guard res.error.value == nil else {
 			throw PrivMXEndpointError.failedBuildingSubscriptionQuery(res.error.value!)
 		}
