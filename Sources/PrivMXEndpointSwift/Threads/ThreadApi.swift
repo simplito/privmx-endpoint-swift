@@ -18,7 +18,7 @@ import PrivMXEndpointSwiftNative
 public class ThreadApi{
 	
 	/// An instance of the wrapped C++ class.
-	internal var api: privmx.NativeThreadApiWrapper
+	public var api: privmx.NativeThreadApiWrapper
 	
 	private init(api: privmx.NativeThreadApiWrapper) {
 		self.api = api
