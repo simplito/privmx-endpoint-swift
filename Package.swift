@@ -51,11 +51,11 @@ let package = Package(
 			checksum: "c67be747660f0af237e55cdc7c96cc5e9567b8507a13d5709c0cbffea0fc5b18"),
 		.binaryTarget(
 			name:"OpenSSL",
-			url:"https://github.com/simplito/privmx-endpoint-xcframeworks/releases/download/2.7.3/openssl-3.0.18.xcframework.zip",
+			url:"https://github.com/simplito/privmx-endpoint-xcframeworks/releases/download/2.7.3/openssl-3.0.19.xcframework.zip",
 			checksum: "26d44cdb4d3b42894e79e6230509934d4710c8306b2188bf4f478876b0187513"),
 		.binaryTarget(
 			name:"PrivMXEndpoint",
-			url: "https://github.com/simplito/privmx-endpoint-xcframeworks/releases/download/2.7.3/privmx-endpoint-v2.7.3.xcframework.zip",
+			url: "https://github.com/simplito/privmx-endpoint-xcframeworks/releases/download/2.7.3/privmx-endpoint-2.7.3.xcframework.zip",
 			checksum: "a98c06fb7d653efc0d805a28550b7604bd1d3baa2576a74bae00b021b762d089")
 
 	],
