@@ -49,7 +49,7 @@ ResultWithError<StoreList> NativeStoreApiWrapper::listStores(const std::string& 
 															const core::PagingQuery& pagingQuery){
 	ResultWithError<StoreList> res;
 	try{
-		res.result = getapi()->listStores(contextId, pagingQuery);
+		res.result = getApi()->listStores(contextId, pagingQuery);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -75,7 +75,7 @@ ResultWithError<StoreList> NativeStoreApiWrapper::listStores(const std::string& 
 ResultWithError<store::Store> NativeStoreApiWrapper::getStore(const std::string &storeId){
 	ResultWithError<store::Store> res;
 	try{
-		res.result = getapi()->getStore(storeId);
+		res.result = getApi()->getStore(storeId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -106,7 +106,7 @@ ResultWithError<std::string> NativeStoreApiWrapper::createStore(const std::strin
 																const OptionalContainerPolicy& policies){
 	ResultWithError<std::string> res;
 	try{
-		res.result = getapi()->createStore(contextId,
+		res.result = getApi()->createStore(contextId,
 										   users,
 										   managers,
 										   publicMeta,
@@ -145,7 +145,7 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::updateStore(const std::st
 																   const OptionalContainerPolicy& policies){
 	ResultWithError<std::nullptr_t> res;
 	try{
-		getapi()->updateStore(storeId,
+		getApi()->updateStore(storeId,
 							  users,
 							  managers,
 							  publicMeta,
@@ -179,7 +179,7 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::updateStore(const std::st
 ResultWithError<store::File> NativeStoreApiWrapper::getFile(const std::string &fileId){
 	ResultWithError<store::File> res;
 	try{
-		res.result = getapi()->getFile(fileId);
+		res.result = getApi()->getFile(fileId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -206,7 +206,7 @@ ResultWithError<FileList> NativeStoreApiWrapper::listFiles(const std::string& st
 														   const core::PagingQuery& query){
 	ResultWithError<FileList> res;
 	try{
-		res.result = getapi()->listFiles(storeId,query);
+		res.result = getApi()->listFiles(storeId,query);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -236,7 +236,7 @@ ResultWithError<StoreFileHandle> NativeStoreApiWrapper::createFile(const std::st
 																   bool randomWriteSupport){
 	ResultWithError<StoreFileHandle> res;
 	try{
-		res.result = getapi()->createFile(storeId, publicMeta, privateMeta, size,randomWriteSupport);
+		res.result = getApi()->createFile(storeId, publicMeta, privateMeta, size,randomWriteSupport);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -265,7 +265,7 @@ ResultWithError<StoreFileHandle> NativeStoreApiWrapper::updateFile(const std::st
 																 int64_t size){
 	ResultWithError<StoreFileHandle> res;
 	try{
-		res.result = getapi()->updateFile(fileId, publicMeta, privateMeta, size);
+		res.result = getApi()->updateFile(fileId, publicMeta, privateMeta, size);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -293,7 +293,7 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::updateFileMeta(const std:
 																 const core::Buffer& privateMeta){
 	ResultWithError<std::nullptr_t> res;
 	try{
-		getapi()->updateFileMeta(fileId, publicMeta, privateMeta);
+		getApi()->updateFileMeta(fileId, publicMeta, privateMeta);
 		} catch(core::Exception& err) {
 		res.error = {
 			.name = err.getName(),
@@ -319,7 +319,7 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::updateFileMeta(const std:
 ResultWithError<StoreFileHandle> NativeStoreApiWrapper::openFile(const std::string& fileId){
 	ResultWithError<StoreFileHandle> res;
 	try{
-		res.result = getapi()->openFile(fileId);
+		res.result = getApi()->openFile(fileId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -346,7 +346,7 @@ ResultWithError<core::Buffer> NativeStoreApiWrapper::readFromFile(StoreFileHandl
 																			int64_t length){
 	ResultWithError<core::Buffer> res;
 	try{
-		res.result = getapi()->readFromFile(handle,length);
+		res.result = getApi()->readFromFile(handle,length);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -374,7 +374,7 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::writeToFile(StoreFileHand
 																   bool truncate){
 	ResultWithError<std::nullptr_t> res;
 	try{
-		getapi()->writeToFile(handle, dataChunk,truncate);
+		getApi()->writeToFile(handle, dataChunk,truncate);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -400,7 +400,7 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::writeToFile(StoreFileHand
 ResultWithError<std::nullptr_t> NativeStoreApiWrapper::deleteFile(const std::string &fileId){
 	ResultWithError<std::nullptr_t> res;
 	try{
-		getapi()->deleteFile(fileId);
+		getApi()->deleteFile(fileId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -427,7 +427,7 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::seekInFile(StoreFileHandl
 																	 int64_t position){
 	ResultWithError<std::nullptr_t> res;
 	try{
-		getapi()->seekInFile(handle, position);
+		getApi()->seekInFile(handle, position);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -453,7 +453,7 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::seekInFile(StoreFileHandl
 ResultWithError<std::string> NativeStoreApiWrapper::closeFile(StoreFileHandle handle){
 	ResultWithError<std::string> res;
 	try{
-		res.result = getapi()->closeFile(handle);
+		res.result = getApi()->closeFile(handle);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -479,7 +479,7 @@ ResultWithError<std::string> NativeStoreApiWrapper::closeFile(StoreFileHandle ha
 ResultWithError<std::nullptr_t> NativeStoreApiWrapper::deleteStore(const std::string &storeId){
 	ResultWithError<std::nullptr_t> res;
 	try {
-		getapi()->deleteStore(storeId);
+		getApi()->deleteStore(storeId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -505,7 +505,7 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::deleteStore(const std::st
 ResultWithError<std::nullptr_t> NativeStoreApiWrapper::syncFile(const StoreFileHandle handle){
 	ResultWithError<std::nullptr_t> res;
 	try {
-		getapi()->syncFile(handle);
+		getApi()->syncFile(handle);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -531,7 +531,7 @@ ResultWithError<std::nullptr_t> NativeStoreApiWrapper::syncFile(const StoreFileH
 ResultWithError<SubscriptionIdVector> NativeStoreApiWrapper::subscribeFor(const SubscriptionQueryVector& subscriptionQueries){
 	ResultWithError<SubscriptionIdVector> res;
 	try {
-		res.result = getapi()->subscribeFor(subscriptionQueries);
+		res.result = getApi()->subscribeFor(subscriptionQueries);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -557,7 +557,7 @@ ResultWithError<SubscriptionIdVector> NativeStoreApiWrapper::subscribeFor(const 
 ResultWithError<std::nullptr_t> NativeStoreApiWrapper::unsubscribeFrom(const SubscriptionIdVector& subscriptionIds){
 	ResultWithError<std::nullptr_t> res;
 	try {
-		getapi()->unsubscribeFrom(subscriptionIds);
+		getApi()->unsubscribeFrom(subscriptionIds);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -585,7 +585,7 @@ ResultWithError<SubscriptionQuery> NativeStoreApiWrapper::buildSubscriptionQuery
 																				  const std::string& selectorId){
 	ResultWithError<SubscriptionQuery> res;
 	try {
-		res.result = getapi()->buildSubscriptionQuery(eventType, selectorType, selectorId);
+		res.result = getApi()->buildSubscriptionQuery(eventType, selectorType, selectorId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),

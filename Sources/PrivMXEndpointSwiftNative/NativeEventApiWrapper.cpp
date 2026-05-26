@@ -51,7 +51,7 @@ ResultWithError<std::nullptr_t> NativeEventApiWrapper::emitEvent(const std::stri
 																 ) {
 	auto res = ResultWithError<>();
 	try {
-		getapi()->emitEvent(contextId,
+		getApi()->emitEvent(contextId,
 							users,
 							channelName,
 							eventData);
@@ -81,7 +81,7 @@ ResultWithError<std::nullptr_t> NativeEventApiWrapper::emitEvent(const std::stri
 ResultWithError<SubscriptionIdVector> NativeEventApiWrapper::subscribeFor(const SubscriptionQueryVector& subscriptionQueries){
 	ResultWithError<SubscriptionIdVector> res;
 	try {
-		res.result = getapi()->subscribeFor(subscriptionQueries);
+		res.result = getApi()->subscribeFor(subscriptionQueries);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -107,7 +107,7 @@ ResultWithError<SubscriptionIdVector> NativeEventApiWrapper::subscribeFor(const 
 ResultWithError<std::nullptr_t> NativeEventApiWrapper::unsubscribeFrom(const SubscriptionIdVector& subscriptionIds){
 	ResultWithError<std::nullptr_t> res;
 	try {
-		getapi()->unsubscribeFrom(subscriptionIds);
+		getApi()->unsubscribeFrom(subscriptionIds);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -135,7 +135,7 @@ ResultWithError<SubscriptionQuery> NativeEventApiWrapper::buildSubscriptionQuery
 																				  const std::string& selectorId){
 	ResultWithError<SubscriptionQuery> res;
 	try {
-		res.result = getapi()->buildSubscriptionQuery(channelName, selectorType, selectorId);
+		res.result = getApi()->buildSubscriptionQuery(channelName, selectorType, selectorId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),

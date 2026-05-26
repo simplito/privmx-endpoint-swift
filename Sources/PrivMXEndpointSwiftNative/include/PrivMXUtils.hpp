@@ -80,6 +80,8 @@ static const endpoint::thread::MessageDataSchema::Version CurrentMessageSchema =
 static const endpoint::inbox::InboxDataSchema::Version CurrentInboxSchema = endpoint::inbox::CURRENT_INBOX_DATA_SCHEMA_VERSION;
 static const endpoint::inbox::EntryDataSchema::Version CurrentEntrySchema = endpoint::inbox::CURRENT_ENTRY_DATA_SCHEMA_VERSION;
 
+
+
 using StoreFileHandle = int64_t;
 using InboxHandle [[deprecated("Use EntryHandle instead")]] = int64_t;
 using EntryHandle = int64_t;
@@ -166,6 +168,7 @@ struct InternalError{
 	 */
 	std::optional<std::string> scope;
 };
+using OptionalError = std::optional<InternalError>;
 
 /**
  * Holds the optional result of called method.\n
@@ -189,6 +192,11 @@ struct ResultWithError{
 static OptionalString makeOptional(const std::string& val){
 	return std::make_optional(val);
 }
+/// Creates a C++ `std::optional` containing the provided `InternalError`
+static OptionalError makeOptional(const InternalError& val){
+	return std::make_optional(val);
+}
+
 
 /// Creates a C++ `std::optional` containing the provided `FilesConfig`
 static OptionalInboxFilesConfig makeOptional(const endpoint::inbox::FilesConfig& val){

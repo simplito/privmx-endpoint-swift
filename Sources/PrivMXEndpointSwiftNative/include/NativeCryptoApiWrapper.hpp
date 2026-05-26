@@ -74,7 +74,7 @@ private:
 	
 	NativeCryptoApiWrapper();
 	
-	std::shared_ptr<endpoint::crypto::CryptoApi> getapi(){
+	std::shared_ptr<endpoint::crypto::CryptoApi> getApi(){
 		if (!api) throw NullApiException();
 		return api;
 	}

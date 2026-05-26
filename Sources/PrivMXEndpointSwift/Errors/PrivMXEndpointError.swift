@@ -45,7 +45,7 @@ public enum PrivMXEndpointError : Error{
 	case failedDisconnecting(privmx.InternalError)
 	/// Failed to list Contexts.
 	case failedListingContexts(privmx.InternalError)
-
+	
 	/// Failed to get a list of Users from a Context.
 	case failedGettingContextUsers(privmx.InternalError)
 	
@@ -169,7 +169,7 @@ public enum PrivMXEndpointError : Error{
 	
 	/// Failed to emit a `CustomEvent`.
 	case failedEmittingCustomEvent(privmx.InternalError)
-
+	
 	/// Failed to subscribe for Custom Events.
 	case failedSubscribingForCustomEvents(privmx.InternalError)
 	
@@ -179,7 +179,7 @@ public enum PrivMXEndpointError : Error{
 	/// Failed to set a User Verifier.
 	case failedSettingUserVerifier(privmx.InternalError)
 	
- 	/// Failed to instantiate ExtKey.
+	/// Failed to instantiate ExtKey.
 	case failedInstantiatingExtKey(privmx.InternalError)
 	/// Failed to derive ExtKey.
 	case failedDerivingExtKey(privmx.InternalError)
@@ -201,7 +201,7 @@ public enum PrivMXEndpointError : Error{
 	case failedVerifyingCompactSignature(privmx.InternalError)
 	/// Failed to check if ExtKey is private.
 	case failedCheckingIfExtKeyIsPrivate(privmx.InternalError)
-
+	
 	/// Failed to convert a PGP Asn1 key to Base58DER.
 	case failedConvertingKeyToBase58DER(privmx.InternalError)
 	
@@ -269,7 +269,7 @@ public enum PrivMXEndpointError : Error{
 	case failedDeletingKvdbEntries(privmx.InternalError)
 	
 	case failedSyncingFile(privmx.InternalError)
-  
+		
 	/// Gets the Message of the error.
 	///
 	///  - Returns: Message of the error
@@ -877,7 +877,6 @@ public enum PrivMXEndpointError : Error{
 				} else {
 					return nil
 				}
-				
 		}
 	}
 }

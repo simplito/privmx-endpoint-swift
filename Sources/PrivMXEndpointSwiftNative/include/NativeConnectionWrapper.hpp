@@ -28,6 +28,7 @@ class NativeConnectionWrapper {
 	friend class NativeInboxApiWrapper;
 	friend class NativeEventApiWrapper;
 	friend class NativeKvdbApiWrapper;
+	friend class NativeStreamApiLowWrapper;
 public:
 	
 	static ResultWithError<std::shared_ptr<NativeConnectionWrapper>> connect(const std::string& userPrivKey,
@@ -72,8 +73,8 @@ public:
 															  endpoint::core::EventSelectorType selectorType,
 															  const std::string& selectorId);
 private:
-	
 	std::shared_ptr<endpoint::core::Connection> getApi();
+	
 	
 	NativeConnectionWrapper() = default;
 	

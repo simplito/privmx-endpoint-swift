@@ -24,8 +24,8 @@ ResultWithError<NativeInboxApiWrapper> NativeInboxApiWrapper::create(NativeConne
 	ResultWithError<NativeInboxApiWrapper> res;
 	try {
 		res.result = NativeInboxApiWrapper(std::make_shared<endpoint::inbox::InboxApi>(endpoint::inbox::InboxApi::create(*(connection.getApi()),
-																														 *(threadApi.getapi()),
-																														 *(storeApi.getapi()))));
+																														 *(threadApi.getApi()),
+																														 *(storeApi.getApi()))));
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -57,7 +57,7 @@ ResultWithError<std::string> NativeInboxApiWrapper::createInbox(const std::strin
 																const OptionalContainerPolicyWithoutItem& policies) {
 	ResultWithError<std::string> res;
 	try {
-		res.result = getapi()->createInbox(contextId,
+		res.result = getApi()->createInbox(contextId,
 										   users,
 										   managers,
 										   publicMeta,
@@ -98,7 +98,7 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::updateInbox(const std::string&
 															  const OptionalContainerPolicyWithoutItem& policies){
 	ResultWithError<nullptr_t> res;
 	try {
-		getapi()->updateInbox(inboxId,
+		getApi()->updateInbox(inboxId,
 							  users,
 							  managers,
 							  publicMeta,
@@ -133,7 +133,7 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::updateInbox(const std::string&
 ResultWithError<inbox::Inbox> NativeInboxApiWrapper::getInbox(const std::string &inboxId){
 	ResultWithError<inbox::Inbox> res;
 	try {
-		res.result = getapi()->getInbox(inboxId);
+		res.result = getApi()->getInbox(inboxId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -160,7 +160,7 @@ ResultWithError<InboxList> NativeInboxApiWrapper::listInboxes(const std::string&
 															  const core::PagingQuery& pagingQuery){
 	ResultWithError<InboxList> res;
 	try {
-		res.result = getapi()->listInboxes(contextId,
+		res.result = getApi()->listInboxes(contextId,
 										   pagingQuery);
 		}catch(core::Exception& err){
 		res.error = {
@@ -186,7 +186,7 @@ ResultWithError<InboxList> NativeInboxApiWrapper::listInboxes(const std::string&
 ResultWithError<inbox::InboxPublicView> NativeInboxApiWrapper::getInboxPublicView(const std::string &inboxId){
 	ResultWithError<inbox::InboxPublicView> res;
 	try {
-		res.result = getapi()->getInboxPublicView(inboxId);
+		res.result = getApi()->getInboxPublicView(inboxId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -212,7 +212,7 @@ ResultWithError<inbox::InboxPublicView> NativeInboxApiWrapper::getInboxPublicVie
 ResultWithError<nullptr_t> NativeInboxApiWrapper::deleteInbox(const std::string &inboxId){
 	ResultWithError<nullptr_t> res;
 	try {
-		getapi()->deleteInbox(inboxId);
+		getApi()->deleteInbox(inboxId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -241,7 +241,7 @@ ResultWithError<EntryHandle> NativeInboxApiWrapper::prepareEntry(const std::stri
 																 const OptionalString& userPrivKey){
 	ResultWithError<EntryHandle> res;
 	try {
-		res.result = getapi()->prepareEntry(inboxId,
+		res.result = getApi()->prepareEntry(inboxId,
 											data,
 											inboxFileHandles,
 											userPrivKey);
@@ -271,7 +271,7 @@ ResultWithError<EntryHandle> NativeInboxApiWrapper::prepareEntry(const std::stri
 ResultWithError<nullptr_t> NativeInboxApiWrapper::sendEntry(const EntryHandle entryHandle){
 	ResultWithError<nullptr_t> res;
 	try {
-		getapi()->sendEntry(entryHandle);
+		getApi()->sendEntry(entryHandle);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -297,7 +297,7 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::sendEntry(const EntryHandle en
 ResultWithError<inbox::InboxEntry> NativeInboxApiWrapper::readEntry(const std::string& inboxEntryId){
 	ResultWithError<inbox::InboxEntry> res;
 	try {
-		res.result = getapi()->readEntry(inboxEntryId);
+		res.result = getApi()->readEntry(inboxEntryId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -324,7 +324,7 @@ ResultWithError<InboxEntryList> NativeInboxApiWrapper::listEntries(const std::st
 																   const endpoint::core::PagingQuery& pagingQuery){
 	ResultWithError<InboxEntryList> res;
 	try {
-		res.result = getapi()->listEntries(inboxId,
+		res.result = getApi()->listEntries(inboxId,
 										   pagingQuery);
 		}catch(core::Exception& err){
 		res.error = {
@@ -351,7 +351,7 @@ ResultWithError<InboxEntryList> NativeInboxApiWrapper::listEntries(const std::st
 ResultWithError<nullptr_t> NativeInboxApiWrapper::deleteEntry(const std::string& inboxEntryId){
 	ResultWithError<nullptr_t> res;
 	try {
-		getapi()->deleteEntry(inboxEntryId);
+		getApi()->deleteEntry(inboxEntryId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -379,7 +379,7 @@ ResultWithError<InboxFileHandle> NativeInboxApiWrapper::createFileHandle(const e
 																		 const int64_t& fileSize){
 	ResultWithError<InboxFileHandle> res;
 	try {
-		res.result = getapi()->createFileHandle(publicMeta,
+		res.result = getApi()->createFileHandle(publicMeta,
 												privateMeta,
 												fileSize);
 		}catch(core::Exception& err){
@@ -409,7 +409,7 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::writeToFile(const EntryHandle 
 															  const endpoint::core::Buffer& dataChunk){
 	ResultWithError<nullptr_t> res;
 	try {
-		getapi()->writeToFile(entryHandle,
+		getApi()->writeToFile(entryHandle,
 							  inboxFileHandle,
 							  dataChunk);
 		}catch(core::Exception& err){
@@ -437,7 +437,7 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::writeToFile(const EntryHandle 
 ResultWithError<InboxFileHandle> NativeInboxApiWrapper::openFile(const std::string& fileId){
 	ResultWithError<InboxFileHandle> res;
 	try {
-		res.result = getapi()->openFile(fileId);
+		res.result = getApi()->openFile(fileId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -464,7 +464,7 @@ ResultWithError<core::Buffer> NativeInboxApiWrapper::readFromFile(const InboxFil
 																  const int64_t length){
 	ResultWithError<core::Buffer> res;
 	try {
-		res.result = getapi()->readFromFile(fileHandle,
+		res.result = getApi()->readFromFile(fileHandle,
 											length);
 		}catch(core::Exception& err){
 		res.error = {
@@ -492,7 +492,7 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::seekInFile(const InboxFileHand
 															 const int64_t position){
 	ResultWithError<nullptr_t> res;
 	try {
-		getapi()->seekInFile(fileHandle,
+		getApi()->seekInFile(fileHandle,
 							 position);
 		}catch(core::Exception& err){
 		res.error = {
@@ -519,7 +519,7 @@ ResultWithError<nullptr_t> NativeInboxApiWrapper::seekInFile(const InboxFileHand
 ResultWithError<std::string> NativeInboxApiWrapper::closeFile(const InboxFileHandle fileHandle){
 	ResultWithError<std::string> res;
 	try {
-		res.result = getapi()->closeFile(fileHandle);
+		res.result = getApi()->closeFile(fileHandle);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -545,7 +545,7 @@ ResultWithError<std::string> NativeInboxApiWrapper::closeFile(const InboxFileHan
 ResultWithError<SubscriptionIdVector> NativeInboxApiWrapper::subscribeFor(const SubscriptionQueryVector& subscriptionQueries){
 	ResultWithError<SubscriptionIdVector> res;
 	try {
-		res.result = getapi()->subscribeFor(subscriptionQueries);
+		res.result = getApi()->subscribeFor(subscriptionQueries);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -571,7 +571,7 @@ ResultWithError<SubscriptionIdVector> NativeInboxApiWrapper::subscribeFor(const 
 ResultWithError<std::nullptr_t> NativeInboxApiWrapper::unsubscribeFrom(const SubscriptionIdVector& subscriptionIds){
 	ResultWithError<std::nullptr_t> res;
 	try {
-		getapi()->unsubscribeFrom(subscriptionIds);
+		getApi()->unsubscribeFrom(subscriptionIds);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
@@ -599,7 +599,7 @@ ResultWithError<SubscriptionQuery> NativeInboxApiWrapper::buildSubscriptionQuery
 																				  const std::string& selectorId){
 	ResultWithError<SubscriptionQuery> res;
 	try {
-		res.result = getapi()->buildSubscriptionQuery(eventType, selectorType, selectorId);
+		res.result = getApi()->buildSubscriptionQuery(eventType, selectorType, selectorId);
 		}catch(core::Exception& err){
 		res.error = {
 			.name = err.getName(),
